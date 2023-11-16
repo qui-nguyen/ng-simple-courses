@@ -15,7 +15,9 @@ export class Product {
     name: string;
     quantity: number;
     category: number;
+    categoryName?: string;
     status: boolean;
+    statusName?: string;
     createdDate: Date;
     constructor(
         id: number = 0,

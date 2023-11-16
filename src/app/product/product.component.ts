@@ -1,16 +1,17 @@
 
 import { Component, OnInit } from '@angular/core';
 import { Table } from 'primeng/table';
-import { Product } from '../type';
+import { Category, Product } from '../type';
 import { ProductService } from '../services/product.service';
+import { CategoryService } from '../services/category.service';
 
 @Component({
-  selector: 'app-product',
-  templateUrl: 'product.component.html',
-  styleUrls: ['product.component.scss']
+    selector: 'app-product',
+    templateUrl: 'product.component.html',
+    styleUrls: ['product.component.scss']
 })
 export class ProductComponent implements OnInit {
-  productDialog: boolean = false;
+    productDialog: boolean = false;
 
     products!: Product[];
 
@@ -23,14 +24,24 @@ export class ProductComponent implements OnInit {
     statuses!: any[];
 
     constructor(
-      private productService: ProductService, 
-      // private messageService: MessageService, 
-      // private confirmationService: ConfirmationService
-      ) {}
+        private productService: ProductService,
+        private categoryService: CategoryService,
+        // private messageService: MessageService, 
+        // private confirmationService: ConfirmationService
+    ) { }
 
     ngOnInit() {
         // this.productService.getProducts().then((data) => (this.products = data));
-        this.products = this.productService.products;
+        let tmp = this.productService.products.map((p: Product) => {
+            return {
+                ...p,
+                categoryName: this.categoryService.categories
+                    .find((c: Category) => c.id === p.category)?.name || 'Autre',
+                statusName: p.status ? 'Reste' : ''
+            }
+        })
+
+        this.products = tmp;
         this.statuses = [
             { label: 'INSTOCK', value: 'instock' },
             { label: 'LOWSTOCK', value: 'lowstock' },

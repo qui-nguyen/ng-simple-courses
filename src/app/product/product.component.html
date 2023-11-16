@@ -40,10 +40,10 @@
         <th style="width: 10%">
           <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
         </th>
-        <th pSortableColumn="name" style="width: 15%;" >
+        <th pSortableColumn="name" style="width: 15%">
           Name<p-sortIcon field="name"></p-sortIcon>
         </th>
-        <th pSortableColumn="quantity" style="width: 15%" >
+        <th pSortableColumn="quantity" style="width: 15%">
           Quantité <p-sortIcon field="quantity"></p-sortIcon>
         </th>
         <th pSortableColumn="date" style="width: 15%">
@@ -66,11 +66,25 @@
         <td>{{ product.name }}</td>
         <td>{{ product.quantity }}</td>
         <td>{{ product.createdDate | date : "dd/MM/yyyy" }}</td>
-        <td>{{ product.status }}</td>
         <td>
-          <p-chip>
-            <div class="p-2">{{ product.category }}</div>
-          </p-chip>
+          <div
+            *ngIf="product.status"
+            class="flex justify-center border rounded bg-blue max-w-[86px]"
+          >
+            <div class="p-1 text-white text-xs">
+              {{ product.statusName }}
+            </div>
+          </div>
+        </td>
+        <td>
+          <div
+            class="flex justify-center border rounded"
+            [class]="[product.category | categoryBadge]"
+          >
+            <div class="p-2 text-white  text-xs">
+              {{ product.categoryName }}
+            </div>
+          </div>
         </td>
         <td>
           <button
@@ -85,12 +99,10 @@
     </ng-template>
     <ng-template pTemplate="summary">
       <div class="flex align-items-center justify-content-between">
-        In total there are {{ products ? products.length : 0 }} products.
+        Nombre de produits : {{ products ? products.length : 0 }}
       </div>
     </ng-template>
   </p-table>
-
-
 </div>
 <!-- <p-dialog [(visible)]="productDialog" [style]="{ width: '450px' }" header="Product Details" [modal]="true" styleClass="p-fluid">
     <ng-template pTemplate="content">

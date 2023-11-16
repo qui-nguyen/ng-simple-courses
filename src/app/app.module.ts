@@ -15,14 +15,17 @@ import { HomeComponent } from './home/home.component';
 import { RecipeComponent } from './recipe/recipe.component';
 import { ShoppingListComponent } from './shopping-list/shopping-list.component';
 
+import { CategoryBadgePipe } from './pipe/category-badge.pipe';
+
 @NgModule({
   declarations: [
     AppComponent,
+    CategoryBadgePipe,
     MenuComponent,
     ProductComponent,
     HomeComponent,
     RecipeComponent,
-    ShoppingListComponent
+    ShoppingListComponent,
   ],
   imports: [
     BrowserModule,
