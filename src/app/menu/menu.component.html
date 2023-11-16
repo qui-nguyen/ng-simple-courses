@@ -1,0 +1,31 @@
+<p-menubar [model]="items" class="w-full">
+  <ng-template pTemplate="start">
+    <div class="w-[50px]">
+      <img
+        src="assets/images/bulbasaur.png"
+        class="w-10 h-auto mr-5 cursor-pointer"
+        alt="logo images"
+        (click)="goToHome()"
+      />
+    </div>
+  </ng-template>
+  <label class="flex">
+      <input
+        type="checkbox"
+        class="filled-in"
+        id="darkMode"
+        [value]="isDarkMode"
+        [checked]="isDarkMode"
+        (change)="switchDarkMode($event)"
+      />
+      <span class="ml-[10px]">
+        <div class="">Mode sombre</div>
+      </span>
+    </label>
+
+  <!-- <p-inputSwitch
+    [(ngModel)]="checked"
+  ></p-inputSwitch> -->
+
+
+</p-menubar>

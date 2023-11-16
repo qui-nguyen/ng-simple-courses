@@ -1,10 +1,21 @@
 import { Component } from '@angular/core';
+import { PrimeNGConfig } from 'primeng/api';
+import { ThemeService } from './theme.service';
 
 @Component({
   selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  templateUrl: './app.component.html'
 })
 export class AppComponent {
-  title = 'ng-simple-courses';
+  title = 'Simple Courses';
+
+  constructor(private primengConfig: PrimeNGConfig, private themeService: ThemeService) { }
+
+  ngOnInit() {
+    this.primengConfig.ripple = true;
+  }
+
+  changeTheme(theme: string) {
+    this.themeService.switchTheme(theme);
+  }
 }
