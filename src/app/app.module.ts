@@ -6,6 +6,8 @@ import { MenubarModule } from 'primeng/menubar';
 import { TableModule } from 'primeng/table';
 import { ChipModule } from 'primeng/chip';
 import { InputSwitchModule } from 'primeng/inputswitch';
+import { ToolbarModule } from 'primeng/toolbar';
+import { ButtonModule } from 'primeng/button';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -20,12 +22,12 @@ import { CategoryBadgePipe } from './pipe/category-badge.pipe';
 @NgModule({
   declarations: [
     AppComponent,
-    CategoryBadgePipe,
     MenuComponent,
     ProductComponent,
     HomeComponent,
     RecipeComponent,
     ShoppingListComponent,
+    CategoryBadgePipe,
   ],
   imports: [
     BrowserModule,
@@ -34,7 +36,9 @@ import { CategoryBadgePipe } from './pipe/category-badge.pipe';
     TableModule,
     ChipModule,
     InputSwitchModule,
-    FormsModule
+    FormsModule,
+    ToolbarModule,
+    ButtonModule
   ],
   providers: [],
   bootstrap: [AppComponent]

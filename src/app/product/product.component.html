@@ -1,16 +1,23 @@
 <div class="card">
   <!-- <p-toast></p-toast> -->
   <!-- <p-toolbar styleClass="mb-4 gap-2">
-        <ng-template pTemplate="left">
-            <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success mr-2" (click)="openNew()"></button>
-            <button pButton pRipple [label]="Delete" icon="pi pi-trash" class="p-button-danger" (click)="deleteSelectedProducts()" [disabled]="!selectedProducts || !selectedProducts.length"></button>
-        </ng-template>
+    <ng-template pTemplate="right">
+     <button
+        pButton
+        pRipple
+        label="New"
+        icon="pi pi-plus"
+        class="p-button-success mr-2"
+        (click)="openNew()"
+      ></button>
 
-        <ng-template pTemplate="right">
-            <p-fileUpload mode="basic" accept="image/*" [maxFileSize]="1000000" label="Import" chooseLabel="Import" class="mr-2 inline-block"></p-fileUpload>
-            <button pButton pRipple label="Export" icon="pi pi-upload" class="p-button-help"></button>
-        </ng-template>
-    </p-toolbar> -->
+   
+    </ng-template>
+  </p-toolbar> -->
+
+  <div class="card flex justify-content-center">
+    <button pButton pRipple label="Submit"></button>
+  </div>
 
   <p-table
     #dt
@@ -44,7 +51,8 @@
           Name<p-sortIcon field="name" class="inline-block"></p-sortIcon>
         </th>
         <th pSortableColumn="quantity" style="width: 15%">
-          Quantité <p-sortIcon field="quantity" class="inline-block"></p-sortIcon>
+          Quantité
+          <p-sortIcon field="quantity" class="inline-block"></p-sortIcon>
         </th>
         <th pSortableColumn="date" style="width: 15%">
           Date <p-sortIcon field="date" class="inline-block"></p-sortIcon>
@@ -53,7 +61,8 @@
           Status <p-sortIcon field="status" class="inline-block"></p-sortIcon>
         </th>
         <th pSortableColumn="category" style="width: 15%">
-          Catégorie <p-sortIcon field="category" class="inline-block"></p-sortIcon>
+          Catégorie
+          <p-sortIcon field="category" class="inline-block"></p-sortIcon>
         </th>
         <th style="width: 15%"></th>
       </tr>
@@ -78,10 +87,9 @@
         </td>
         <td>
           <div
-            class="flex justify-center border rounded"
-            [class]="[product.category | categoryBadge]"
+            class="flex justify-center border rounded {{ product.category | categoryBadge }}"
           >
-            <div class="p-2 text-white  text-xs">
+            <div class="p-2 text-white text-xs">
               {{ product.categoryName }}
             </div>
           </div>
@@ -103,6 +111,10 @@
       </div>
     </ng-template>
   </p-table>
+</div>
+
+<div *ngFor="let p of products">
+  <p class="{{p.category | categoryBadge}}">{{p.category | categoryBadge}}</p>
 </div>
 <!-- <p-dialog [(visible)]="productDialog" [style]="{ width: '450px' }" header="Product Details" [modal]="true" styleClass="p-fluid">
     <ng-template pTemplate="content">

@@ -4,6 +4,7 @@ import { Table } from 'primeng/table';
 import { Category, Product } from '../type';
 import { ProductService } from '../services/product.service';
 import { CategoryService } from '../services/category.service';
+import { CategoryBadgePipe } from '../pipe/category-badge.pipe';
 
 @Component({
     selector: 'app-product',
@@ -55,18 +56,19 @@ export class ProductComponent implements OnInit {
     //     this.productDialog = true;
     // }
 
-    // deleteSelectedProducts() {
-    //     this.confirmationService.confirm({
-    //         message: 'Are you sure you want to delete the selected products?',
-    //         header: 'Confirm',
-    //         icon: 'pi pi-exclamation-triangle',
-    //         accept: () => {
-    //             this.products = this.products.filter((val) => !this.selectedProducts?.includes(val));
-    //             this.selectedProducts = null;
-    //             this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Products Deleted', life: 3000 });
-    //         }
-    //     });
-    // }
+    deleteSelectedProducts() {
+        console.log("Delete clicked ");
+        // this.confirmationService.confirm({
+        //     message: 'Are you sure you want to delete the selected products?',
+        //     header: 'Confirm',
+        //     icon: 'pi pi-exclamation-triangle',
+        //     accept: () => {
+        //         this.products = this.products.filter((val) => !this.selectedProducts?.includes(val));
+        //         this.selectedProducts = null;
+        //         this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Products Deleted', life: 3000 });
+        //     }
+        // });
+    }
 
     editProduct(product: Product) {
         this.product = { ...product };
