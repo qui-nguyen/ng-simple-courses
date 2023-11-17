@@ -4,14 +4,14 @@ import { Table } from 'primeng/table';
 import { Category, Product } from '../type';
 import { ProductService } from '../services/product.service';
 import { CategoryService } from '../services/category.service';
-import { CategoryBadgePipe } from '../pipe/category-badge.pipe';
 
 @Component({
     selector: 'app-product',
-    templateUrl: 'product.component.html',
-    styleUrls: ['product.component.scss']
+    templateUrl: './product.component.html',
+    styleUrls: ['./product.component.scss']
 })
 export class ProductComponent implements OnInit {
+
     productDialog: boolean = false;
 
     products!: Product[];
@@ -23,6 +23,9 @@ export class ProductComponent implements OnInit {
     submitted: boolean = false;
 
     statuses!: any[];
+
+    firstDay: Date = new Date();
+    lastDay: Date = new Date();
 
     constructor(
         private productService: ProductService,
@@ -48,6 +51,17 @@ export class ProductComponent implements OnInit {
             { label: 'LOWSTOCK', value: 'lowstock' },
             { label: 'OUTOFSTOCK', value: 'outofstock' }
         ];
+
+        const today = new Date();
+
+        this.firstDay = new Date(
+            today.setDate(today.getDate() - today.getDay() + 1),
+        );
+
+        this.lastDay = new Date(
+            today.setDate(today.getDate() - today.getDay() + 6),
+        );
+
     }
 
     // openNew() {

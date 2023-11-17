@@ -10,22 +10,22 @@ export class CategoryBadgePipe implements PipeTransform {
 
     switch (categoryId) {
       case 1:
-        color = 'blue';
+        color = 'green-700';
         break;
       case 2:
-        color = 'green-100';
+        color = 'red-500';
         break;
       case 3:
-        color = 'yellow';
+        color = 'orange-600';
         break;
       case 4:
-        color = 'red';
+        color = 'cyan-500';
         break;
       case 5:
-        color = '[#DBAD76]';
+        color = 'yellow-600';
         break;
       default:
-        color = 'grey-500';
+        color = 'gray-700';
     }
 
     return "bg-" + color;
