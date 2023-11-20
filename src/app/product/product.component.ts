@@ -15,6 +15,7 @@ export class ProductComponent implements OnInit {
     productDialog: boolean = false;
 
     products!: Product[];
+    categories!: Category[];
 
     product!: Product;
 
@@ -35,17 +36,18 @@ export class ProductComponent implements OnInit {
     ) { }
 
     ngOnInit() {
-        // this.productService.getProducts().then((data) => (this.products = data));
-        let tmp = this.productService.products.map((p: Product) => {
-            return {
-                ...p,
-                categoryName: this.categoryService.categories
-                    .find((c: Category) => c.id === p.category)?.name || 'Autre',
-                statusName: p.status ? 'Reste' : ''
-            }
-        })
+        this.categoryService.getCategories().subscribe((categories: Category[]) => this.categories = categories);
 
-        this.products = tmp;
+        this.productService.getProducts().subscribe((products: Product[]) => {
+            this.products = products.map((p: Product) => {
+                return {
+                    ...p,
+                    categoryName: this.categories.find((c: Category) => c.id === p.category)?.name || 'Autre',
+                    statusName: p.status ? 'Reste' : ''
+                }
+            })
+        });
+
         this.statuses = [
             { label: 'INSTOCK', value: 'instock' },
             { label: 'LOWSTOCK', value: 'lowstock' },

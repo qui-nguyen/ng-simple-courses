@@ -18,6 +18,9 @@ import { RecipeComponent } from './recipe/recipe.component';
 import { ShoppingListComponent } from './shopping-list/shopping-list.component';
 
 import { CategoryBadgePipe } from './pipe/category-badge.pipe';
+import { HttpClientModule } from '@angular/common/http';
+import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
+import { InMemoryDataService } from './in-memory-data.service';
 
 @NgModule({
   declarations: [
@@ -32,6 +35,8 @@ import { CategoryBadgePipe } from './pipe/category-badge.pipe';
   imports: [
     BrowserModule,
     AppRoutingModule,
+    HttpClientModule,
+    HttpClientInMemoryWebApiModule.forRoot(InMemoryDataService, {dataEncapsulation: false}),
     MenubarModule,
     TableModule,
     ChipModule,
