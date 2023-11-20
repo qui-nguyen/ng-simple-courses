@@ -11,7 +11,7 @@ export class CategoryService {
 
   getCategories(): Observable<Category[]> {
     return this.http.get<Category[]>('api/categories').pipe(
-      tap((res) => console.log(res)),
+      // tap((res) => console.log(res)),
       catchError((err) => {
         console.log(err);
         return of([]);

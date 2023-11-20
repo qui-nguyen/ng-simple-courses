@@ -1,6 +1,8 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
 
 import { MenubarModule } from 'primeng/menubar';
 import { TableModule } from 'primeng/table';
@@ -8,6 +10,8 @@ import { ChipModule } from 'primeng/chip';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { ToolbarModule } from 'primeng/toolbar';
 import { ButtonModule } from 'primeng/button';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ToastModule } from 'primeng/toast';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -36,14 +40,17 @@ import { InMemoryDataService } from './in-memory-data.service';
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    HttpClientInMemoryWebApiModule.forRoot(InMemoryDataService, {dataEncapsulation: false}),
+    BrowserAnimationsModule,
+    HttpClientInMemoryWebApiModule.forRoot(InMemoryDataService, { dataEncapsulation: false }),
     MenubarModule,
     TableModule,
     ChipModule,
     InputSwitchModule,
     FormsModule,
     ToolbarModule,
-    ButtonModule
+    ButtonModule,
+    ConfirmDialogModule,
+    ToastModule
   ],
   providers: [],
   bootstrap: [AppComponent]

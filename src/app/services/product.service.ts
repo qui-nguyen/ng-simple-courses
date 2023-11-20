@@ -2,7 +2,7 @@ import { Injectable, OnInit } from '@angular/core';
 import { PRODUCTS } from '../data/mock-product-list';
 import { Product } from '../type';
 import { HttpClient } from '@angular/common/http';
-import { Observable, catchError, of, tap } from 'rxjs';
+import { Observable, catchError, of, tap, throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -23,11 +23,15 @@ export class ProductService {
     )
   }
 
-  deleteProductById(id: number): Observable<Product | undefined> {
+  deleteProductById(id: number): Observable<Product | any> {
     return this.http.delete<Product>(`api/products/${id}`).pipe(
-      tap((res) => this.log(res)),
-      catchError((err) => this.catchError(err, undefined))
-    )
+      tap((res) => this.log(res)), // res = null if delete ok
+      catchError((error) => {
+        console.error('Error deleting product:', error);
+        // Emit an object with product ID and error
+        return of({ id, error });
+      })
+    );
   }
 
   editProduct(id: number) {
@@ -35,7 +39,7 @@ export class ProductService {
   }
 
   private log(response: any) {
-    console.log(response);
+    // console.log(response);
   }
 
   private catchError(error: Error, errorValue: any) {
