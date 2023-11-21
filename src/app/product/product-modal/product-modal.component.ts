@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { ProductService } from '../services/product.service';
+import { ProductService } from '../../services/product.service';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
-import { Category, Product } from '../type';
+import { Category, Product } from '../../type';
 
 @Component({
   selector: 'app-product-modal',
