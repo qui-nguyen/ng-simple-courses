@@ -1,7 +1,7 @@
 <p-dialog
   [(visible)]="productDialog"
-  [style]="{ width: '450px' }"
-  header="Product Details"
+  [style]="{ width: '800px' }"
+  header="{{ editMode ? 'Modifier du produit' : 'Créer un nouveau produit' }}"
   [modal]="true"
   styleClass="p-fluid"
   [maximizable]="true"
@@ -14,8 +14,8 @@
       class="flex flex-column gap-6 mt-5"
     >
       <span class="p-float-label">
-        <input pInputText id="name" formControlName="name" />
-        <label htmlFor="name">Nom</label>
+        <input pInputText id="name" formControlName="name"/>
+        <label htmlFor="name" required>Nom *</label>
       </span>
       <span class="p-float-label">
         <p-dropdown
@@ -25,7 +25,7 @@
           inputId="float-label"
           formControlName="category"
         ></p-dropdown>
-        <label for="float-label">Catégorie</label>
+        <label for="float-label">Catégorie *</label>
       </span>
       <span class="p-float-label">
         <p-inputNumber
@@ -33,7 +33,7 @@
           [minFractionDigits]="1"
           formControlName="quantity"
         />
-        <label htmlFor="quantity">Quantité</label>
+        <label htmlFor="quantity">Quantité *</label>
       </span>
       <span class="p-float-label">
         <p-inputSwitch formControlName="status" class="ml-8"></p-inputSwitch>

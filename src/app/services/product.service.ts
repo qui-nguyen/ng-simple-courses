@@ -27,9 +27,19 @@ export class ProductService {
     const httpOptions = {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' })
     };
-    console.log(product);
 
     return this.http.put('api/products', product, httpOptions).pipe(
+      tap((result) => this.log(result)),
+      catchError((error => this.catchError(error, undefined)))
+    )
+  }
+
+  createProduct(newProduct: Product): Observable<Product | undefined> {
+    const httpOptions = {
+      headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+    };
+
+    return this.http.post('api/products', newProduct, httpOptions).pipe(
       tap((result) => this.log(result)),
       catchError((error => this.catchError(error, undefined)))
     )

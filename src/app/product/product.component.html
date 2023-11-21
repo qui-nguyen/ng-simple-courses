@@ -19,6 +19,7 @@
           label="Ajouter"
           class="p-button-outlined p-button-primary mr-6"
           icon="pi pi-plus"
+          (click)="createProduct()"
         ></button>
         <button
           pButton
@@ -140,8 +141,8 @@
   [product]="product"
   [productDialog]="productDialog"
   [editMode]="editMode"
-  [categories] = "categories"
-  [productSaved] ="productSaved"
+  [categories]="categories"
+  [productSaved]="productSaved"
   (productDialogEvent)="isProductDialogOpen($event)"
   (productSavedEvent)="isProductSaved($event)"
 ></app-product-modal>

@@ -1,12 +1,11 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ProductService } from '../services/product.service';
-import { FormBuilder, Validators, ReactiveFormsModule, FormGroup } from '@angular/forms';
+import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { Category, Product } from '../type';
 
 @Component({
   selector: 'app-product-modal',
-  templateUrl: './product-modal.component.html',
-  styleUrls: ['./product-modal.component.scss']
+  templateUrl: './product-modal.component.html'
 })
 export class ProductModalComponent implements OnInit {
   @Input() product!: Product;
@@ -48,24 +47,41 @@ export class ProductModalComponent implements OnInit {
   }
 
   saveProduct() {
-    if (this._formGroup && this.categories) {
-
-      this.productService.updateProduct(
-        {
-          ...this._formGroup.value,
-          category: this.categories.find(
-            (el: Category) => el.name === this._formGroup!.value.category)!.id,
-          id: this.product.id,
-          createdDate: new Date()
-        }
-      ).subscribe(
-        (res) => {
-          if (res !== undefined) {
-            this.productDialogEvent.emit(false);
-            this.productSavedEvent.emit(true);
+    if (this._formGroup && this.categories && this._formGroup.valid) {
+      if (this.editMode) {
+        this.productService.updateProduct(
+          {
+            ...this._formGroup.value,
+            category: this.categories.find(
+              (el: Category) => el.name === this._formGroup!.value.category)!.id,
+            id: this.product.id,
+            createdDate: new Date()
           }
-        }
-      );
+        ).subscribe(
+          (res) => {
+            if (res !== undefined) {
+              this.productDialogEvent.emit(false);
+              this.productSavedEvent.emit(true);
+            }
+          }
+        );
+      } else {
+        this.productService.createProduct(
+          {
+            ...this._formGroup.value,
+            category: this.categories.find(
+              (el: Category) => el.name === this._formGroup!.value.category)!.id,
+            createdDate: new Date()
+          }
+        ).subscribe(
+          (res) => {
+            if (res !== undefined) {
+              this.productDialogEvent.emit(false);
+              this.productSavedEvent.emit(true);
+            }
+          }
+        );
+      }
     }
   }
 }

@@ -20,7 +20,7 @@ export class Product {
     constructor(
         category: number = 1,
         quantity: number = 0,
-        name: string = "Test",
+        name: string = "",
         status: boolean = true,
         createdDate: Date = new Date()
     ) {

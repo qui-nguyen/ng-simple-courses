@@ -14,17 +14,15 @@ import { forkJoin } from 'rxjs';
     providers: [ConfirmationService, MessageService]
 })
 export class ProductComponent implements OnInit {
-
-    productDialog: boolean = false;
-
-    products!: Product[];
-    categories!: Category[];
+    products: Product[];
+    categories: Category[];
 
     product: Product | null = null;
+    productDialog: boolean = false;
+    editMode: boolean = false;
+    productSaved: boolean = false;
 
     selectedProducts!: Product[] | null;
-
-    submitted: boolean = false;
 
     statuses!: any[];
 
@@ -34,8 +32,6 @@ export class ProductComponent implements OnInit {
     isError: boolean = false;
     messages: string = '';
 
-    editMode: boolean = false;
-    productSaved: boolean = false;
 
     constructor(
         private productService: ProductService,
@@ -66,11 +62,6 @@ export class ProductComponent implements OnInit {
         );
     }
 
-    // openNew() {
-    //     this.product = {};
-    //     this.submitted = false;
-    //     this.productDialog = true;
-    // }
     getAllProducts() {
         this.productService.getProducts().subscribe((products: Product[]) => {
             this.products = products.map((p: Product) => {
@@ -162,18 +153,16 @@ export class ProductComponent implements OnInit {
     }
 
     editProduct(product: Product) {
-        // const newPoduct = {
-        //     ...product,
-        //     name: 'Test update'
-        // }
-        // this.productService.updateProduct(newPoduct).subscribe();
-
-        // this.getAllProducts();
-
-        // this.product = { ...product };
         this.productDialog = true;
         this.editMode = true;
         this.product = product;
+    }
+
+
+    createProduct() {
+        this.productDialog = true;
+        this.editMode = false;
+        this.product = new Product;
     }
 
     // deleteProduct(product: Product) {
@@ -232,7 +221,9 @@ export class ProductComponent implements OnInit {
     isProductSaved(saved: boolean) {
         if (saved) {
             if (this.editMode) {
-                this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Product Updated', life: 3000 });
+                this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Produit modifié', life: 3000 });
+            } else {
+                this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Nouveau produit créé', life: 3000 });
             }
             this.getAllProducts();
             this.productSaved = false;
