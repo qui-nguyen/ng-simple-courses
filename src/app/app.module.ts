@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 
@@ -12,6 +12,11 @@ import { ToolbarModule } from 'primeng/toolbar';
 import { ButtonModule } from 'primeng/button';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ToastModule } from 'primeng/toast';
+import { DialogModule } from 'primeng/dialog';
+import { InputTextModule } from 'primeng/inputtext';
+import { DropdownModule } from 'primeng/dropdown';
+import { InputNumberModule } from 'primeng/inputnumber';
+
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -25,6 +30,7 @@ import { CategoryBadgePipe } from './pipe/category-badge.pipe';
 import { HttpClientModule } from '@angular/common/http';
 import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
 import { InMemoryDataService } from './in-memory-data.service';
+import { ProductModalComponent } from './product-modal/product-modal.component';
 
 @NgModule({
   declarations: [
@@ -35,6 +41,7 @@ import { InMemoryDataService } from './in-memory-data.service';
     RecipeComponent,
     ShoppingListComponent,
     CategoryBadgePipe,
+    ProductModalComponent,
   ],
   imports: [
     BrowserModule,
@@ -47,10 +54,15 @@ import { InMemoryDataService } from './in-memory-data.service';
     ChipModule,
     InputSwitchModule,
     FormsModule,
+    ReactiveFormsModule,
     ToolbarModule,
     ButtonModule,
     ConfirmDialogModule,
-    ToastModule
+    ToastModule,
+    DialogModule,
+    InputTextModule,
+    DropdownModule,
+    InputNumberModule
   ],
   providers: [],
   bootstrap: [AppComponent]

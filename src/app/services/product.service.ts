@@ -1,7 +1,7 @@
 import { Injectable, OnInit } from '@angular/core';
 import { PRODUCTS } from '../data/mock-product-list';
 import { Product } from '../type';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, catchError, of, tap, throwError } from 'rxjs';
 
 @Injectable({
@@ -20,6 +20,18 @@ export class ProductService {
     return this.http.get<Product>(`api/products/${id}`).pipe(
       tap((res) => this.log(res)),
       catchError((err) => this.catchError(err, undefined))
+    )
+  }
+
+  updateProduct(product: Product): Observable<Product | any> {
+    const httpOptions = {
+      headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+    };
+    console.log(product);
+
+    return this.http.put('api/products', product, httpOptions).pipe(
+      tap((result) => this.log(result)),
+      catchError((error => this.catchError(error, undefined)))
     )
   }
 

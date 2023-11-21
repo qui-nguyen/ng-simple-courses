@@ -21,4 +21,8 @@ export const CATEGORIES: Category[] = [
         id: 5,
         name: "Pain"
     },
+    {
+        id: 6,
+        name: "Autre"
+    },
 ];

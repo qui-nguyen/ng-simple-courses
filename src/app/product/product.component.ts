@@ -20,7 +20,7 @@ export class ProductComponent implements OnInit {
     products!: Product[];
     categories!: Category[];
 
-    product!: Product;
+    product: Product | null = null;
 
     selectedProducts!: Product[] | null;
 
@@ -34,6 +34,9 @@ export class ProductComponent implements OnInit {
     isError: boolean = false;
     messages: string = '';
 
+    editMode: boolean = false;
+    productSaved: boolean = false;
+
     constructor(
         private productService: ProductService,
         private categoryService: CategoryService,
@@ -44,15 +47,7 @@ export class ProductComponent implements OnInit {
     ngOnInit() {
         this.categoryService.getCategories().subscribe((categories: Category[]) => this.categories = categories);
 
-        this.productService.getProducts().subscribe((products: Product[]) => {
-            this.products = products.map((p: Product) => {
-                return {
-                    ...p,
-                    categoryName: this.categories.find((c: Category) => c.id === p.category)?.name || 'Autre',
-                    statusName: p.status ? 'Reste' : ''
-                }
-            })
-        });
+        this.getAllProducts();
 
         this.statuses = [
             { label: 'INSTOCK', value: 'instock' },
@@ -76,6 +71,17 @@ export class ProductComponent implements OnInit {
     //     this.submitted = false;
     //     this.productDialog = true;
     // }
+    getAllProducts() {
+        this.productService.getProducts().subscribe((products: Product[]) => {
+            this.products = products.map((p: Product) => {
+                return {
+                    ...p,
+                    categoryName: this.categories.find((c: Category) => c.id === p.category)?.name || 'Autre',
+                    statusName: p.status ? 'Reste' : ''
+                }
+            })
+        });
+    }
 
     selectedProduct(product: Product) {
         // console.log(product);
@@ -156,8 +162,18 @@ export class ProductComponent implements OnInit {
     }
 
     editProduct(product: Product) {
-        this.product = { ...product };
+        // const newPoduct = {
+        //     ...product,
+        //     name: 'Test update'
+        // }
+        // this.productService.updateProduct(newPoduct).subscribe();
+
+        // this.getAllProducts();
+
+        // this.product = { ...product };
         this.productDialog = true;
+        this.editMode = true;
+        this.product = product;
     }
 
     // deleteProduct(product: Product) {
@@ -173,30 +189,6 @@ export class ProductComponent implements OnInit {
     //     });
     // }
 
-    hideDialog() {
-        this.productDialog = false;
-        this.submitted = false;
-    }
-
-    // saveProduct() {
-    //     this.submitted = true;
-
-    //     if (this.product.name?.trim()) {
-    //         if (this.product.id) {
-    //             this.products[this.findIndexById(this.product.id)] = this.product;
-    //             this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Product Updated', life: 3000 });
-    //         } else {
-    //             this.product.id = this.createId();
-    //             this.product.image = 'product-placeholder.svg';
-    //             this.products.push(this.product);
-    //             this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Product Created', life: 3000 });
-    //         }
-
-    //         this.products = [...this.products];
-    //         this.productDialog = false;
-    //         this.product = {};
-    //     }
-    // }
 
     findIndexById(id: string): number {
         let index = -1;
@@ -210,13 +202,13 @@ export class ProductComponent implements OnInit {
         return index;
     }
 
-    createId(): string {
+    createId(): number {
         let id = '';
         var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
         for (var i = 0; i < 5; i++) {
             id += chars.charAt(Math.floor(Math.random() * chars.length));
         }
-        return id;
+        return +id;
     }
 
     // getSeverity(status: string) {
@@ -229,4 +221,21 @@ export class ProductComponent implements OnInit {
     //             return 'danger';
     //     }
     // }
+
+    isProductDialogOpen(isOpen: boolean) {
+        if (!isOpen) {
+            this.product = null;
+        }
+        this.productDialog = isOpen;
+    }
+
+    isProductSaved(saved: boolean) {
+        if (saved) {
+            if (this.editMode) {
+                this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Product Updated', life: 3000 });
+            }
+            this.getAllProducts();
+            this.productSaved = false;
+        }
+    }
 }
