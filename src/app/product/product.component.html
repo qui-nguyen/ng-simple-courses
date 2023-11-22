@@ -57,6 +57,8 @@
           <input
             pInputText
             type="text"
+            #searchInput
+            (input)="dt.filterGlobal(searchInput.value, 'contains')"
             placeholder="Search..."
             class="h-2rem pl-6 border-none"
           />
