@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { Category, Product } from '../type';
 import { ProductService } from '../services/product.service';
 import { CategoryService } from '../services/category.service';
-import { ConfirmationService, MessageService, ConfirmEventType } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { forkJoin } from 'rxjs';
 
 
@@ -14,17 +14,15 @@ import { forkJoin } from 'rxjs';
     providers: [ConfirmationService, MessageService]
 })
 export class ProductComponent implements OnInit {
-    products: Product[];
-    categories: Category[];
+    products: Product[]; // all products
+    categories: Category[]; // all categories
 
     product: Product | null = null;
-    productDialog: boolean = false;
-    editMode: boolean = false;
-    productSaved: boolean = false;
+    productDialog: boolean = false; // open or close product-modal
+    editMode: boolean = false; // edit or create product
+    productSaved: boolean = false; // is product saved successfully
 
-    selectedProducts!: Product[] | null;
-
-    statuses!: any[];
+    selectedProducts: Product[] | null = null; // list products selected
 
     firstDay: Date = new Date();
     lastDay: Date = new Date();
@@ -40,28 +38,25 @@ export class ProductComponent implements OnInit {
         private confirmationService: ConfirmationService
     ) { }
 
-    ngOnInit() {
-        this.categoryService.getCategories().subscribe((categories: Category[]) => this.categories = categories);
 
+    ngOnInit() {
+        /*** Get all categories and products ***/
+        this.categoryService.getCategories().subscribe(
+            (categories: Category[]) => this.categories = categories
+        );
         this.getAllProducts();
 
-        this.statuses = [
-            { label: 'INSTOCK', value: 'instock' },
-            { label: 'LOWSTOCK', value: 'lowstock' },
-            { label: 'OUTOFSTOCK', value: 'outofstock' }
-        ];
-
+        /*** Get current week ***/
         const today = new Date();
-
         this.firstDay = new Date(
             today.setDate(today.getDate() - today.getDay() + 1),
         );
-
         this.lastDay = new Date(
             today.setDate(today.getDate() - today.getDay() + 6),
         );
     }
 
+    /*** Get all products ***/
     getAllProducts() {
         this.productService.getProducts().subscribe((products: Product[]) => {
             this.products = products.map((p: Product) => {
@@ -74,29 +69,29 @@ export class ProductComponent implements OnInit {
         });
     }
 
+    /*** Product selected ***/
     selectedProduct(product: Product) {
         // console.log(product);
     }
 
+    /*** Delete products (after confirm) ***/
     deleteSelectedProducts() {
-        console.log("Delete clicked ");
 
         if (this.selectedProducts) {
             const deleteRequests = this.selectedProducts.map(product => {
                 return this.productService.deleteProductById(+(product.id));
             });
 
-            // When you want to delete a list of products and stop the deletion process if an error occurs,
-            // you can use the forkJoin operator from RxJS
-            // The forkJoin operator allows you to execute multiple Observables in parallel and emit a single value 
-            // when all of them complete.
+            /*** When you want to delete a list of products and stop the deletion process if an error occurs,
+           * you can use the forkJoin operator from RxJS
+           * The forkJoin operator allows you to execute multiple Observables in parallel and emit a single value 
+           * when all of them complete.
+           * ***/
 
             forkJoin(deleteRequests).subscribe(
                 {
                     next:
                         (results) => {
-                            // console.log('Deletion results:', results);
-
                             // Check for errors in the results
                             let listIdNotDeleted = results.filter(el => el?.error);
                             const hasError = listIdNotDeleted.length > 0;
@@ -116,15 +111,7 @@ export class ProductComponent implements OnInit {
                             }
 
                             // Reset products list
-                            this.productService.getProducts().subscribe((products: Product[]) => {
-                                this.products = products.map((p: Product) => {
-                                    return {
-                                        ...p,
-                                        categoryName: this.categories.find((c: Category) => c.id === p.category)?.name || 'Autre',
-                                        statusName: p.status ? 'Reste' : ''
-                                    };
-                                });
-                            });
+                            this.getAllProducts();
 
                             // Set the message and isError
                             this.messageService.add({
@@ -139,7 +126,6 @@ export class ProductComponent implements OnInit {
         }
     }
 
-
     confirmDelete() {
         this.confirmationService.confirm({
             message: 'Êtes-vous sûr de vouloir supprimer les produits sélectionnés ?',
@@ -152,65 +138,24 @@ export class ProductComponent implements OnInit {
         });
     }
 
+    /*** Edit product click => open modal; set edit mode; fill product to modal ***/
     editProduct(product: Product) {
         this.productDialog = true;
         this.editMode = true;
         this.product = product;
     }
 
-
+    /*** Edit product click => open modal; set edit mode to false; fill new product (init) to modal ***/
     createProduct() {
         this.productDialog = true;
         this.editMode = false;
         this.product = new Product;
     }
 
-    // deleteProduct(product: Product) {
-    //     this.confirmationService.confirm({
-    //         message: 'Are you sure you want to delete ' + product.name + '?',
-    //         header: 'Confirm',
-    //         icon: 'pi pi-exclamation-triangle',
-    //         accept: () => {
-    //             this.products = this.products.filter((val) => val.id !== product.id);
-    //             this.product = {};
-    //             this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Product Deleted', life: 3000 });
-    //         }
-    //     });
-    // }
-
-
-    findIndexById(id: string): number {
-        let index = -1;
-        for (let i = 0; i < this.products.length; i++) {
-            if (this.products[i].id === +id) {
-                index = i;
-                break;
-            }
-        }
-
-        return index;
-    }
-
-    createId(): number {
-        let id = '';
-        var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-        for (var i = 0; i < 5; i++) {
-            id += chars.charAt(Math.floor(Math.random() * chars.length));
-        }
-        return +id;
-    }
-
-    // getSeverity(status: string) {
-    //     switch (status) {
-    //         case 'INSTOCK':
-    //             return 'success';
-    //         case 'LOWSTOCK':
-    //             return 'warning';
-    //         case 'OUTOFSTOCK':
-    //             return 'danger';
-    //     }
-    // }
-
+    /*** Event capted from modal (child) 
+     * => transfert state of modal (open or close) 
+     * => update state of modal in parent 
+     * => retranfert this state to child ***/
     isProductDialogOpen(isOpen: boolean) {
         if (!isOpen) {
             this.product = null;
@@ -218,6 +163,10 @@ export class ProductComponent implements OnInit {
         this.productDialog = isOpen;
     }
 
+    /*** Event capted from modal (child) 
+    * => product saved succes or not 
+    * => update state in parent 
+    * => retranfert this state to child ***/
     isProductSaved(saved: boolean) {
         if (saved) {
             if (this.editMode) {
