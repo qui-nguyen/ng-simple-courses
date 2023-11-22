@@ -13,6 +13,7 @@ import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputNumberModule } from 'primeng/inputnumber';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
@@ -46,6 +47,7 @@ const productRoutes: Routes = [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
+    ProgressSpinnerModule,
     RouterModule.forChild(productRoutes)
   ],
 })

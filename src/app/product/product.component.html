@@ -1,4 +1,4 @@
-<div class="card">
+<div *ngIf="products" class="card">
   <p-toast />
 
   <p-toolbar
@@ -34,7 +34,6 @@
       </div>
     </ng-template>
   </p-toolbar>
-
   <p-table
     #dt
     [value]="products"
@@ -148,5 +147,12 @@
   (productDialogEvent)="isProductDialogOpen($event)"
   (productSavedEvent)="isProductSaved($event)"
 />
+
+
+<div
+  class="card w-full flex justify-content-center align-items-center translate-y-100"
+>
+  <p-progressSpinner *ngIf="!products.length || !products" />
+</div>
 
 <p-confirmDialog [style]="{ width: '450px' }" />
