@@ -1,8 +1,11 @@
 import { Injectable } from '@angular/core';
-import { PRODUCTS } from '../data/mock-product-list';
 import { Product } from '../type';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, catchError, of, tap } from 'rxjs';
+import { environment } from 'src/environments/environment';
+
+
+const API = `${environment.apiURL}products`;
 
 @Injectable({
   providedIn: 'root'
@@ -11,13 +14,13 @@ export class ProductService {
   constructor(private http: HttpClient) { }
 
   getProducts(): Observable<Product[]> {
-    return this.http.get<Product[]>('api/products').pipe(
+    return this.http.get<Product[]>(`${API}/all`).pipe(
       tap((res) => this.log(res)),
       catchError((err) => this.catchError(err, [])))
   }
 
-  getProductById(id: number): Observable<Product | undefined> {
-    return this.http.get<Product>(`api/products/${id}`).pipe(
+  getProductById(id: string): Observable<Product | undefined> {
+    return this.http.get<Product>(`${API}/${id}`).pipe(
       tap((res) => this.log(res)),
       catchError((err) => this.catchError(err, undefined))
     )
@@ -28,7 +31,7 @@ export class ProductService {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' })
     };
 
-    return this.http.put('api/products', product, httpOptions).pipe(
+    return this.http.put(`${API}`, product, httpOptions).pipe(
       tap((result) => this.log(result)),
       catchError((error => this.catchError(error, undefined)))
     )
@@ -39,14 +42,14 @@ export class ProductService {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' })
     };
 
-    return this.http.post('api/products', newProduct, httpOptions).pipe(
+    return this.http.post(`${API}`, newProduct, httpOptions).pipe(
       tap((result) => this.log(result)),
       catchError((error => this.catchError(error, undefined)))
     )
   }
 
-  deleteProductById(id: number): Observable<Product | any> {
-    return this.http.delete<Product>(`api/products/${id}`).pipe(
+  deleteProductById(id: string): Observable<Product | any> {
+    return this.http.delete<Product>(`${API}/${id}`).pipe(
       tap((res) => this.log(res)), // res = null if delete ok
       catchError((error) => {
         console.error('Error deleting product:', error);
@@ -56,12 +59,10 @@ export class ProductService {
     );
   }
 
-  editProduct(id: number) {
-    console.log(PRODUCTS.find((p: Product) => p.id === +id));
-  }
-
   private log(response: any) {
-    // console.log(response);
+    if (response === 200) {
+      console.log(response);
+    }
   }
 
   private catchError(error: Error, errorValue: any) {
