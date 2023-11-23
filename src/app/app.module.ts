@@ -31,7 +31,7 @@ import { ProductModule } from './product/product.module';
     AppRoutingModule,
     HttpClientModule,
     BrowserAnimationsModule,
-    HttpClientInMemoryWebApiModule.forRoot(InMemoryDataService, { dataEncapsulation: false }),
+    // HttpClientInMemoryWebApiModule.forRoot(InMemoryDataService, { dataEncapsulation: false }),
     MenubarModule,
     FormsModule,
     ReactiveFormsModule,

@@ -1,4 +1,4 @@
-<div *ngIf="products" class="card">
+<div class="card">
   <p-toast />
 
   <p-toolbar
@@ -35,6 +35,7 @@
     </ng-template>
   </p-toolbar>
   <p-table
+    *ngIf="products"
     #dt
     [value]="products"
     [rows]="6"
@@ -43,7 +44,7 @@
     [tableStyle]="{ 'min-width': '75rem' }"
     [(selection)]="selectedProducts"
     [rowHover]="true"
-    dataKey="id"
+    dataKey="_id"
     currentPageReportTemplate="Affichage de {first} à {last} produits (sur {totalRecords} produits)"
     [showCurrentPageReport]="true"
     class="flex flex-column w-full mt-5"
@@ -114,7 +115,7 @@
         <td>
           <div
             class="flex justify-content-center border-round {{
-              product.category | categoryBadge
+              product.categoryName | categoryBadge
             }}"
           >
             <div class="p-2 text-white text-xs">
@@ -148,11 +149,10 @@
   (productSavedEvent)="isProductSaved($event)"
 />
 
-
 <div
   class="card w-full flex justify-content-center align-items-center translate-y-100"
 >
-  <p-progressSpinner *ngIf="!products.length || !products" />
+  <p-progressSpinner *ngIf="!products" />
 </div>
 
 <p-confirmDialog [style]="{ width: '450px' }" />

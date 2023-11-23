@@ -36,7 +36,7 @@ export class ProductModalComponent implements OnInit {
     this._formGroup = this.formBuilder.group({
       name: [this.product.name, Validators.required],
       category: [this.categories.find(
-        (el: Category) => el.id === this.product.category)?.name || "Autre", Validators.required],
+        (el: Category) => el._id === this.product.category)?.name, Validators.required],
       quantity: [this.product.quantity, Validators.required],
       status: [this.product.status, Validators.required],
     })
@@ -49,12 +49,13 @@ export class ProductModalComponent implements OnInit {
   saveProduct() {
     if (this._formGroup && this.categories && this._formGroup.valid) {
       if (this.editMode) {
+        console.log(this._formGroup.value);
         this.productService.updateProduct(
           {
             ...this._formGroup.value,
             category: this.categories.find(
-              (el: Category) => el.name === this._formGroup!.value.category)!.id,
-            id: this.product.id,
+              (el: Category) => el.name === this._formGroup!.value.category)!._id,
+            _id: this.product._id,
             createdDate: new Date()
           }
         ).subscribe(
@@ -70,7 +71,7 @@ export class ProductModalComponent implements OnInit {
           {
             ...this._formGroup.value,
             category: this.categories.find(
-              (el: Category) => el.name === this._formGroup!.value.category)!.id,
+              (el: Category) => el.name === this._formGroup!.value.category)!._id,
             createdDate: new Date()
           }
         ).subscribe(

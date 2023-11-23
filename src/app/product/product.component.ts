@@ -42,9 +42,16 @@ export class ProductComponent implements OnInit {
     ngOnInit() {
         /*** Get all categories and products ***/
         this.categoryService.getCategories().subscribe(
-            (categories: Category[]) => this.categories = categories
+            {
+                next: (result) => {
+                    this.categories = result;
+                },
+                error: (err) => { console.log(err); },
+                complete: () => { this.getAllProducts(); }
+            }
+            // (categories: Category[]) => this.categories = categories
         );
-        this.getAllProducts();
+
 
         /*** Get current week ***/
         const today = new Date();
@@ -62,7 +69,7 @@ export class ProductComponent implements OnInit {
             this.products = products.map((p: Product) => {
                 return {
                     ...p,
-                    categoryName: this.categories.find((c: Category) => c.id === p.category)?.name || 'Autre',
+                    categoryName: this.categories.find((c: Category) => c._id === p.category)?.name,
                     statusName: p.status ? 'Reste' : ''
                 }
             })
@@ -79,7 +86,7 @@ export class ProductComponent implements OnInit {
 
         if (this.selectedProducts) {
             const deleteRequests = this.selectedProducts.map(product => {
-                return this.productService.deleteProductById(+(product.id));
+                return this.productService.deleteProductById(product._id);
             });
 
             /*** When you want to delete a list of products and stop the deletion process if an error occurs,
@@ -104,7 +111,7 @@ export class ProductComponent implements OnInit {
                                 this.isError = true;
                                 const listProdNotDeleted = this.products
                                     .filter(prod =>
-                                        listIdNotDeleted.some(el => el.id === prod.id)
+                                        listIdNotDeleted.some(el => el.id === prod._id)
                                     ).map(prod =>
                                         prod.name);
                                 this.messages = `Une erreur survenue lors de la suppression avec les produits ${JSON.stringify(listProdNotDeleted)} !`;

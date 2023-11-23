@@ -1,5 +1,5 @@
 export class Category {
-    id: number;
+    _id: string;
     name: string;
     constructor(
         name: string = "",
@@ -9,16 +9,15 @@ export class Category {
 }
 
 export class Product {
-    id: number;
+    _id: string;
     name: string;
     quantity: number;
-    category: number;
+    category: string;
     categoryName?: string;
     status: boolean;
     statusName?: string;
     createdDate: Date;
     constructor(
-        category: number = 1,
         quantity: number = 0,
         name: string = "",
         status: boolean = true,
@@ -26,7 +25,6 @@ export class Product {
     ) {
         this.name = name;
         this.quantity = quantity;
-        this.category = category;
         this.status = status;
         this.createdDate = createdDate;
     }

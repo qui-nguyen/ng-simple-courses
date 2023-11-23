@@ -5,23 +5,23 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class CategoryBadgePipe implements PipeTransform {
 
-  transform(categoryId: number): string {
+  transform(categoryName: string): string {
     let color: string;
 
-    switch (categoryId) {
-      case 1:
+    switch (categoryName) {
+      case 'Légumes':
         color = 'green-700';
         break;
-      case 2:
+      case 'Fruits':
         color = 'red-500';
         break;
-      case 3:
+      case 'Pain':
         color = 'orange-600';
         break;
-      case 4:
+      case 'Produits Secs':
         color = 'cyan-500';
         break;
-      case 5:
+      case 'Conserve':
         color = 'yellow-600';
         break;
       default:

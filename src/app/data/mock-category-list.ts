@@ -2,27 +2,27 @@ import { Category } from "../type";
 
 export const CATEGORIES: Category[] = [
     {
-        id: 1,
+        _id: "1",
         name: "Légumes"
     },
     {
-        id: 2,
+        _id: "2",
         name: "Fruits"
     },
     {
-        id: 3,
+        _id: "3",
         name: "Produits Secs"
     },
     {
-        id: 4,
+        _id: "4",
         name: "Conserve"
     },
     {
-        id: 5,
+        _id: "5",
         name: "Pain"
     },
     {
-        id: 6,
+        _id: "6",
         name: "Autre"
     },
 ];
