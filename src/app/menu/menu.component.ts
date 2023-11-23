@@ -62,12 +62,7 @@ export class MenuComponent implements OnInit {
 
     switchDarkMode(darkModeState: boolean): void {
         this.isDarkMode = !darkModeState;
-        console.log('clock');
         const theme = this.isDarkMode ? 'soho-dark' : 'soho-light';
         this.themeService.switchTheme(theme);
-    }
-
-    test() {
-        console.log('click')
     }
 }
