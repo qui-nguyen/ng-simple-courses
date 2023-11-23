@@ -49,7 +49,6 @@ export class ProductComponent implements OnInit {
                 error: (err) => { console.log(err); },
                 complete: () => { this.getAllProducts(); }
             }
-            // (categories: Category[]) => this.categories = categories
         );
 
 
@@ -65,15 +64,9 @@ export class ProductComponent implements OnInit {
 
     /*** Get all products ***/
     getAllProducts() {
-        this.productService.getProducts().subscribe((products: Product[]) => {
-            this.products = products.map((p: Product) => {
-                return {
-                    ...p,
-                    categoryName: this.categories.find((c: Category) => c._id === p.category)?.name,
-                    statusName: p.status ? 'Reste' : ''
-                }
-            })
-        });
+        this.productService
+            .getProducts()
+            .subscribe((products: Product[]) => this.products = products);
     }
 
     /*** Product selected ***/

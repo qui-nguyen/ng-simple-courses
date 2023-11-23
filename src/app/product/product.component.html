@@ -2,7 +2,7 @@
   <p-toast />
 
   <p-toolbar
-    styleClass="mb-4 gap-2 surface-card border-bottom-1 border-x-none border-top-none border-noround"
+    styleClass="mb-4 gap-2 bg-white border-bottom-1 border-x-none border-top-none border-noround"
   >
     <ng-template pTemplate="left">
       <h2 class="font-medium">
@@ -42,9 +42,8 @@
     [paginator]="true"
     [globalFilterFields]="[
       'name',
-      'categoryName',
+      'category.name',
       'quantity',
-      'statusName',
       'createdDate'
     ]"
     [tableStyle]="{ 'min-width': '75rem' }"
@@ -91,9 +90,9 @@
         <th pSortableColumn="status" style="width: 15%">
           Status <p-sortIcon field="status" class="inline-block"></p-sortIcon>
         </th>
-        <th pSortableColumn="category" style="width: 15%">
+        <th pSortableColumn="category.name" style="width: 15%">
           Catégorie
-          <p-sortIcon field="category" class="inline-block"></p-sortIcon>
+          <p-sortIcon field="category.name" class="inline-block"></p-sortIcon>
         </th>
         <th style="width: 15%"></th>
       </tr>
@@ -115,18 +114,18 @@
             class="flex justify-content-center border-round bg-primary max-w-5rem"
           >
             <div class="py-2 px-1 text-white text-xs">
-              {{ product.statusName }}
+              {{ product.status && 'Reste' }}
             </div>
           </div>
         </td>
         <td>
           <div
             class="flex justify-content-center border-round {{
-              product.categoryName | categoryBadge
+              product.category.name | categoryBadge
             }}"
           >
             <div class="p-2 text-white text-xs">
-              {{ product.categoryName }}
+              {{ product.category.name }}
             </div>
           </div>
         </td>

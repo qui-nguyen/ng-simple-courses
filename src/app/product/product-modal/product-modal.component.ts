@@ -35,8 +35,7 @@ export class ProductModalComponent implements OnInit {
 
     this._formGroup = this.formBuilder.group({
       name: [this.product.name, Validators.required],
-      category: [this.categories.find(
-        (el: Category) => el._id === this.product.category)?.name, Validators.required],
+      category: [this.product.category.name, Validators.required],
       quantity: [this.product.quantity, Validators.required],
       status: [this.product.status, Validators.required],
     })

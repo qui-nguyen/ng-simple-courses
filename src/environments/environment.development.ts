@@ -1,4 +1,4 @@
 export const environment = {
   production: false,
-  apiURL: 'https://simple-course-api.vercel.app/'
+  apiURL: 'http://localhost:3000/'
 };
