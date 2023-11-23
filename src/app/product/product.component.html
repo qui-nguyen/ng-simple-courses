@@ -2,7 +2,7 @@
   <p-toast />
 
   <p-toolbar
-    styleClass="mb-4 gap-2 surface-card border-bottom-1 border-x-none border-top-none border-noround dark:bg-primary"
+    styleClass="mb-4 gap-2 surface-card border-bottom-1 border-x-none border-top-none border-noround"
   >
     <ng-template pTemplate="left">
       <h2 class="font-medium">
@@ -40,7 +40,13 @@
     [value]="products"
     [rows]="6"
     [paginator]="true"
-    [globalFilterFields]="['name', 'category', 'quantity', 'status']"
+    [globalFilterFields]="[
+      'name',
+      'categoryName',
+      'quantity',
+      'statusName',
+      'createdDate'
+    ]"
     [tableStyle]="{ 'min-width': '75rem' }"
     [(selection)]="selectedProducts"
     [rowHover]="true"
@@ -59,7 +65,7 @@
             type="text"
             #searchInput
             (input)="dt.filterGlobal(searchInput.value, 'contains')"
-            placeholder="Search..."
+            placeholder="Recherche..."
             class="h-2rem pl-6 border-none"
           />
         </span>
@@ -78,8 +84,9 @@
           Quantité
           <p-sortIcon field="quantity" class="inline-block"></p-sortIcon>
         </th>
-        <th pSortableColumn="date" style="width: 15%">
-          Date <p-sortIcon field="date" class="inline-block"></p-sortIcon>
+        <th pSortableColumn="createdDate" style="width: 15%">
+          Date
+          <p-sortIcon field="createdDate" class="inline-block"></p-sortIcon>
         </th>
         <th pSortableColumn="status" style="width: 15%">
           Status <p-sortIcon field="status" class="inline-block"></p-sortIcon>
@@ -155,4 +162,10 @@
   <p-progressSpinner *ngIf="!products" />
 </div>
 
-<p-confirmDialog [style]="{ width: '450px' }" />
+<p-confirmDialog
+  [style]="{ width: '450px' }"
+  acceptLabel="Suppimer"
+  acceptButtonStyleClass="border-primary text-primary surface-card"
+  rejectLabel="Annuler"
+  rejectButtonStyleClass="border-red-600 text-red-600 surface-card"
+/>

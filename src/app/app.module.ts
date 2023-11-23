@@ -4,6 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { MenubarModule } from 'primeng/menubar';
+import { InputSwitchModule } from 'primeng/inputswitch';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -35,6 +36,7 @@ import { ProductModule } from './product/product.module';
     MenubarModule,
     FormsModule,
     ReactiveFormsModule,
+    InputSwitchModule
   ],
   providers: [],
   bootstrap: [AppComponent]

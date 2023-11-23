@@ -60,9 +60,14 @@ export class MenuComponent implements OnInit {
         this.router.navigate(['/']);
     }
 
-    switchDarkMode($event: any): void {
-        this.isDarkMode = ($event.target as HTMLInputElement).checked;
+    switchDarkMode(darkModeState: boolean): void {
+        this.isDarkMode = !darkModeState;
+        console.log('clock');
         const theme = this.isDarkMode ? 'soho-dark' : 'soho-light';
         this.themeService.switchTheme(theme);
+    }
+
+    test() {
+        console.log('click')
     }
 }
