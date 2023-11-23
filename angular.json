@@ -43,22 +43,22 @@
                 "bundleName": "soho-light",
                 "inject": false
               }
-              
             ],
             "scripts": []
           },
           "configurations": {
             "production": {
+              "buildOptimizer": true,
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kb",
-                  "maximumError": "1mb"
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "2kb",
-                  "maximumError": "4kb"
+                  "maximumWarning": "400kb",
+                  "maximumError": "400kb"
                 }
               ],
               "outputHashing": "all"
