@@ -52,6 +52,10 @@
     * {
       box-sizing: border-box;
     }
+
+    body {
+      background-color: var(--surface-d);
+    }
   
     .p-component {
       font-family: inherit;
@@ -4279,11 +4283,12 @@
     }
   
     .p-toolbar {
-      background: #333544;
+      background-color: var(--surface-d) !important;
       border: 1px solid #333544;
       padding: 1.25rem;
       border-radius: 6px;
       gap: 0.5rem;
+      color: #FFFFFF;
     }
     .p-toolbar .p-toolbar-separator {
       margin: 0 0.5rem;
