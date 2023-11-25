@@ -1,3 +1,16 @@
+export class ProductBrut {
+    _id: string;
+    alim_grp_code: number;
+    alim_ssgrp_code: number;
+    alim_ssssgrp_code: number;
+    alim_grp_nom_fr: string;
+    alim_ssgrp_nom_fr: string;
+    alim_ssssgrp_nom_fr: string;
+    alim_code: number;
+    alim_nom_fr: string;
+    alim_nom_sci: string;
+}
+
 export class Category {
     _id: string;
     name: string;

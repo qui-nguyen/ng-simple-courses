@@ -9,14 +9,47 @@
 >
   <ng-template pTemplate="content" class="w-full">
     <form
-      *ngIf="_formGroup && categories && product"
+      *ngIf="_formGroup && productsBrut && categories && product"
       [formGroup]="_formGroup"
       class="flex flex-column gap-6 mt-5"
     >
-      <span class="p-float-label">
-        <input pInputText id="name" formControlName="name"/>
+      <!-- <span class="p-float-label">
+        <input pInputText id="name" formControlName="name" />
         <label htmlFor="name" required>Nom *</label>
+      </span> -->
+
+      <span class="p-float-label">
+        <p-dropdown
+          *ngIf="productsBrut.length > 0"
+          [options]="productsBrut"
+          optionLabel=""
+          [filter]="true"
+          filterBy="alim_nom_fr"
+          [showClear]="true"
+          placeholder="Choisir un produit"
+          formControlName="name"
+          (onChange)="getName($event)"
+        >
+          <ng-template pTemplate="selectedItem">
+            <div class="flex align-items-center gap-2" *ngIf="selectedProduct">
+              <div>{{ selectedProduct.alim_nom_fr }}</div>
+            </div>
+          </ng-template>
+          <ng-template let-productBrut pTemplate="item">
+            <div class="flex align-items-center gap-2">
+              <div>
+                {{
+                  productBrut.alim_nom_fr.length > 50
+                    ? productBrut.alim_nom_fr.slice(0, 50) + "..."
+                    : productBrut.alim_nom_fr
+                }}
+              </div>
+            </div>
+          </ng-template>
+        </p-dropdown>
+        <label htmlFor="alim_nom_fr" required>Nom *</label>
       </span>
+
       <span class="p-float-label">
         <p-dropdown
           *ngIf="listCategoriesName.length"

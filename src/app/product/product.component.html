@@ -40,12 +40,7 @@
     [value]="products"
     [rows]="6"
     [paginator]="true"
-    [globalFilterFields]="[
-      'name',
-      'category.name',
-      'quantity',
-      'createdDate'
-    ]"
+    [globalFilterFields]="['name', 'category.name', 'quantity', 'createdDate']"
     [tableStyle]="{ 'min-width': '75rem' }"
     [(selection)]="selectedProducts"
     [rowHover]="true"
@@ -114,7 +109,7 @@
             class="flex justify-content-center border-round bg-primary max-w-5rem"
           >
             <div class="py-2 px-1 text-white text-xs">
-              {{ product.status && 'Reste' }}
+              {{ product.status && "Reste" }}
             </div>
           </div>
         </td>
@@ -146,6 +141,7 @@
 
 <app-product-modal
   *ngIf="product"
+  [productsBrut]="productsBrut"
   [product]="product"
   [productDialog]="productDialog"
   [editMode]="editMode"

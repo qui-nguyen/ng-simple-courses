@@ -1,10 +1,13 @@
 
 import { Component, OnInit } from '@angular/core';
-import { Category, Product } from '../type';
+import { Category, Product, ProductBrut } from '../type';
+
 import { ProductService } from '../services/product.service';
 import { CategoryService } from '../services/category.service';
+
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { forkJoin } from 'rxjs';
+import { ProductBrutService } from '../services/product-brut.service';
 
 
 @Component({
@@ -14,6 +17,7 @@ import { forkJoin } from 'rxjs';
     providers: [ConfirmationService, MessageService]
 })
 export class ProductComponent implements OnInit {
+    productsBrut: ProductBrut[]; // all products brut
     products: Product[]; // all products
     categories: Category[]; // all categories
 
@@ -32,6 +36,7 @@ export class ProductComponent implements OnInit {
 
 
     constructor(
+        private productBrutService: ProductBrutService,
         private productService: ProductService,
         private categoryService: CategoryService,
         private messageService: MessageService,
@@ -40,6 +45,17 @@ export class ProductComponent implements OnInit {
 
 
     ngOnInit() {
+        /*** Get all products bruts ***/
+        this.productBrutService.getProductsBrut().subscribe(
+            {
+                next: (result) => {
+                    this.productsBrut = result;
+                },
+                error: (err) => { console.log(err); },
+                complete: () => { }
+            }
+        )
+
         /*** Get all categories and products ***/
         this.categoryService.getCategories().subscribe(
             {
