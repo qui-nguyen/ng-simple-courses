@@ -62,7 +62,6 @@ export class Product {
 }
 
 export type ProductBody = {
-    _id?: string,
     productBrutId: string,
     categoryId: string,
     quantity: number,

@@ -26,12 +26,12 @@ export class ProductService {
     )
   }
 
-  updateProduct(product: ProductBody): Observable<Product | any> {
+  updateProduct(id: string, product: ProductBody): Observable<Product | any> {
     const httpOptions = {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' })
     };
 
-    return this.http.put(`${API}`, product, httpOptions).pipe(
+    return this.http.put(`${API}/${id}`, product, httpOptions).pipe(
       tap((result) => this.log(result)),
       catchError((error => this.catchError(error, undefined)))
     )

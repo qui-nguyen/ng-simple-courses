@@ -59,24 +59,24 @@ export class ProductModalComponent implements OnInit {
   saveProduct() {
     if (this._formGroup && this.categories && this._formGroup.valid) {
       if (this.editMode) {
-        this.productService.updateProduct(
-          {
-            _id: this.product._id,
-            productBrutId: this._formGroup.value.name._id,
-            categoryId: this.categories.find(
-              (el: Category) => el.name === this._formGroup!.value.category)!._id,
-            quantity: this._formGroup.value.quantity,
-            status: this._formGroup.value.status,
-            createdDate: new Date()
-          }
-        ).subscribe(
-          (res) => {
-            if (res !== undefined) {
-              this.productDialogEvent.emit(false);
-              this.productSavedEvent.emit(true);
+        this.productService
+          .updateProduct(this.product._id,
+            {
+              productBrutId: this._formGroup.value.name._id,
+              categoryId: this.categories.find(
+                (el: Category) => el.name === this._formGroup!.value.category)!._id,
+              quantity: this._formGroup.value.quantity,
+              status: this._formGroup.value.status,
+              createdDate: new Date()
             }
-          }
-        );
+          ).subscribe(
+            (res) => {
+              if (res !== undefined) {
+                this.productDialogEvent.emit(false);
+                this.productSavedEvent.emit(true);
+              }
+            }
+          );
       } else {
         this.productService.createProduct(
           {
