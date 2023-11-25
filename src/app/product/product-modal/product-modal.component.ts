@@ -40,7 +40,7 @@ export class ProductModalComponent implements OnInit {
     this.selectedProduct = this.product.productBrut;
 
     this._formGroup = this.formBuilder.group({
-      name: [this.product.productBrut.alim_nom_fr, Validators.required],
+      name: [this.product.productBrut, Validators.required],
       category: [this.product.category.name, Validators.required],
       quantity: [this.product.quantity, Validators.required],
       status: [this.product.status, Validators.required],
