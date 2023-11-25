@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Product } from '../type';
+import { Product, ProductBody } from '../type';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, catchError, of, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
@@ -26,7 +26,7 @@ export class ProductService {
     )
   }
 
-  updateProduct(product: Product): Observable<Product | any> {
+  updateProduct(product: ProductBody): Observable<Product | any> {
     const httpOptions = {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' })
     };
@@ -37,7 +37,7 @@ export class ProductService {
     )
   }
 
-  createProduct(newProduct: Product): Observable<Product | undefined> {
+  createProduct(newProduct: ProductBody): Observable<Product | undefined> {
     const httpOptions = {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' })
     };

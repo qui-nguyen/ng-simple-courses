@@ -24,7 +24,7 @@ export class Category {
 
 export class Product {
     _id: string;
-    name: string;
+    productBrut: ProductBrut;
     quantity: number;
     category: Category;
     categoryName?: string;
@@ -32,20 +32,40 @@ export class Product {
     statusName?: string;
     createdDate: Date;
     constructor(
-        quantity: number = 0,
-        name: string = "",
+        productBrut = {
+            _id: '',
+            alim_grp_code: 0,
+            alim_ssgrp_code: 0,
+            alim_ssssgrp_code: 0,
+            alim_grp_nom_fr: '',
+            alim_ssgrp_nom_fr: '',
+            alim_ssssgrp_nom_fr: '',
+            alim_code: 0,
+            alim_nom_fr: '',
+            alim_nom_sci: '',
+        },
         category = {
             _id: '',
             name: '',
             code: ''
         },
+        quantity: number = 0,
         status: boolean = true,
         createdDate: Date = new Date()
     ) {
-        this.name = name;
+        this.productBrut = productBrut;
         this.quantity = quantity;
         this.category = category;
         this.status = status;
         this.createdDate = createdDate;
     }
+}
+
+export type ProductBody = {
+    _id?: string,
+    productBrutId: string,
+    categoryId: string,
+    quantity: number,
+    status: boolean,
+    createdDate: Date
 }

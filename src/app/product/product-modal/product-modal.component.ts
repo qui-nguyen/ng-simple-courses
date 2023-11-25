@@ -19,11 +19,10 @@ export class ProductModalComponent implements OnInit {
   @Output() productSavedEvent = new EventEmitter<boolean>();
 
   _formGroup: FormGroup | undefined;
-  newProduct: Product = new Product();
+  newProduct: Product = new Product;
   listCategoriesName: string[] = [];
 
-  listProductsBrutName: string[] = [];
-  selectedProduct: ProductBrut | undefined;
+  selectedProduct: ProductBrut | undefined = undefined;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -33,14 +32,15 @@ export class ProductModalComponent implements OnInit {
   ngOnInit(): void {
 
     this.listCategoriesName = this.categories.map(el => el.name);
-    this.listProductsBrutName = this.productsBrut.map(el => el.alim_nom_fr);
 
     if (!this.editMode) {
-      this.product = this.newProduct
+      this.product = this.newProduct;
     }
 
+    this.selectedProduct = this.product.productBrut;
+
     this._formGroup = this.formBuilder.group({
-      name: [this.product.name, Validators.required],
+      name: [this.product.productBrut.alim_nom_fr, Validators.required],
       category: [this.product.category.name, Validators.required],
       quantity: [this.product.quantity, Validators.required],
       status: [this.product.status, Validators.required],
@@ -49,6 +49,7 @@ export class ProductModalComponent implements OnInit {
 
   getName(event: DropdownChangeEvent) {
     this.selectedProduct = event.value;
+    console.log(event.value);
   }
 
   hideDialog() {
@@ -58,13 +59,14 @@ export class ProductModalComponent implements OnInit {
   saveProduct() {
     if (this._formGroup && this.categories && this._formGroup.valid) {
       if (this.editMode) {
-        console.log(this._formGroup.value);
         this.productService.updateProduct(
           {
-            ...this._formGroup.value,
-            category: this.categories.find(
-              (el: Category) => el.name === this._formGroup!.value.category)!._id,
             _id: this.product._id,
+            productBrutId: this._formGroup.value.name._id,
+            categoryId: this.categories.find(
+              (el: Category) => el.name === this._formGroup!.value.category)!._id,
+            quantity: this._formGroup.value.quantity,
+            status: this._formGroup.value.status,
             createdDate: new Date()
           }
         ).subscribe(
@@ -78,9 +80,11 @@ export class ProductModalComponent implements OnInit {
       } else {
         this.productService.createProduct(
           {
-            ...this._formGroup.value,
-            category: this.categories.find(
+            productBrutId: this._formGroup.value.name._id,
+            categoryId: this.categories.find(
               (el: Category) => el.name === this._formGroup!.value.category)!._id,
+            quantity: this._formGroup.value.quantity,
+            status: this._formGroup.value.status,
             createdDate: new Date()
           }
         ).subscribe(

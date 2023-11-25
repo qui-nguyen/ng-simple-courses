@@ -82,7 +82,8 @@ export class ProductComponent implements OnInit {
     getAllProducts() {
         this.productService
             .getProducts()
-            .subscribe((products: Product[]) => this.products = products);
+            .subscribe((products: Product[]) => {this.products = products;     console.log(products);
+            });
     }
 
     /*** Product selected ***/
@@ -122,7 +123,7 @@ export class ProductComponent implements OnInit {
                                     .filter(prod =>
                                         listIdNotDeleted.some(el => el.id === prod._id)
                                     ).map(prod =>
-                                        prod.name);
+                                        prod.productBrut.alim_nom_fr);
                                 this.messages = `Une erreur survenue lors de la suppression avec les produits ${JSON.stringify(listProdNotDeleted)} !`;
                             }
 
