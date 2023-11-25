@@ -26,7 +26,7 @@ export class Product {
     _id: string;
     productBrut: ProductBrut;
     quantity: number;
-    category: Category;
+    category: Category | null;
     categoryName?: string;
     status: boolean;
     statusName?: string;
@@ -63,7 +63,7 @@ export class Product {
 
 export type ProductBody = {
     productBrutId: string,
-    categoryId: string,
+    categoryId: string | null,
     quantity: number,
     status: boolean,
     createdDate: Date

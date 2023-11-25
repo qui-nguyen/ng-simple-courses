@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ProductService } from '../../services/product.service';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
-import { Category, Product, ProductBrut } from '../../type';
+import { Category, Product, ProductBody, ProductBrut } from '../../type';
 import { DropdownChangeEvent } from 'primeng/dropdown';
 
 @Component({
@@ -41,7 +41,7 @@ export class ProductModalComponent implements OnInit {
 
     this._formGroup = this.formBuilder.group({
       name: [this.product.productBrut, Validators.required],
-      category: [this.product.category.name, Validators.required],
+      category: [this.product.category?.name],
       quantity: [this.product.quantity, Validators.required],
       status: [this.product.status, Validators.required],
     })
@@ -49,7 +49,6 @@ export class ProductModalComponent implements OnInit {
 
   getName(event: DropdownChangeEvent) {
     this.selectedProduct = event.value;
-    console.log(event.value);
   }
 
   hideDialog() {
@@ -58,18 +57,18 @@ export class ProductModalComponent implements OnInit {
 
   saveProduct() {
     if (this._formGroup && this.categories && this._formGroup.valid) {
+      const newProduct: ProductBody = {
+        productBrutId: this._formGroup.value.name._id,
+        categoryId: this.categories.find(
+          (el: Category) => el.name === this._formGroup!.value.category)?._id || null,
+        quantity: this._formGroup.value.quantity,
+        status: this._formGroup.value.status,
+        createdDate: new Date()
+      }
+
       if (this.editMode) {
         this.productService
-          .updateProduct(this.product._id,
-            {
-              productBrutId: this._formGroup.value.name._id,
-              categoryId: this.categories.find(
-                (el: Category) => el.name === this._formGroup!.value.category)!._id,
-              quantity: this._formGroup.value.quantity,
-              status: this._formGroup.value.status,
-              createdDate: new Date()
-            }
-          ).subscribe(
+          .updateProduct(this.product._id, newProduct).subscribe(
             (res) => {
               if (res !== undefined) {
                 this.productDialogEvent.emit(false);
@@ -78,16 +77,7 @@ export class ProductModalComponent implements OnInit {
             }
           );
       } else {
-        this.productService.createProduct(
-          {
-            productBrutId: this._formGroup.value.name._id,
-            categoryId: this.categories.find(
-              (el: Category) => el.name === this._formGroup!.value.category)!._id,
-            quantity: this._formGroup.value.quantity,
-            status: this._formGroup.value.status,
-            createdDate: new Date()
-          }
-        ).subscribe(
+        this.productService.createProduct(newProduct).subscribe(
           (res) => {
             if (res !== undefined) {
               this.productDialogEvent.emit(false);

@@ -82,8 +82,7 @@ export class ProductComponent implements OnInit {
     getAllProducts() {
         this.productService
             .getProducts()
-            .subscribe((products: Product[]) => {this.products = products;     console.log(products);
-            });
+            .subscribe((products: Product[]) => this.products = products);
     }
 
     /*** Product selected ***/

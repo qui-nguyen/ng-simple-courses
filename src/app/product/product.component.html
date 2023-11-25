@@ -85,9 +85,9 @@
         <th pSortableColumn="status" style="width: 15%">
           Status <p-sortIcon field="status" class="inline-block"></p-sortIcon>
         </th>
-        <th pSortableColumn="category.name" style="width: 15%">
+        <th pSortableColumn="category?.name" style="width: 15%">
           Catégorie
-          <p-sortIcon field="category.name" class="inline-block"></p-sortIcon>
+          <p-sortIcon field="category?.name" class="inline-block"></p-sortIcon>
         </th>
         <th style="width: 15%"></th>
       </tr>
@@ -115,9 +115,9 @@
         </td>
         <td>
           <div
-            class="flex justify-content-center border-round {{
-              product.category.name | categoryBadge
-            }}"
+            *ngIf="product.category"
+            class="flex justify-content-center border-round 
+            {{ product.category.name | categoryBadge }}"
           >
             <div class="p-2 text-white text-xs">
               {{ product.category.name }}
