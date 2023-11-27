@@ -101,7 +101,9 @@
           ></p-tableCheckbox>
         </td>
         <td>{{ product.productBrut.alim_nom_fr }}</td>
-        <td>{{ product.quantity }}</td>
+        <td>
+          {{ product.quantity }} <span>{{ product?.unit }}</span>
+        </td>
         <td>{{ product.createdDate | date : "dd/MM/yyyy" }}</td>
         <td>
           <div

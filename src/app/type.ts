@@ -26,6 +26,7 @@ export class Product {
     _id: string;
     productBrut: ProductBrut;
     quantity: number;
+    unit: string | 'kg' | 'l' | 'pièce';
     category: Category | null;
     categoryName?: string;
     status: boolean;
@@ -50,11 +51,13 @@ export class Product {
             code: ''
         },
         quantity: number = 0,
+        unit = 'kg',
         status: boolean = true,
         createdDate: Date = new Date()
     ) {
         this.productBrut = productBrut;
         this.quantity = quantity;
+        this.unit = unit;
         this.category = category;
         this.status = status;
         this.createdDate = createdDate;
@@ -65,6 +68,7 @@ export type ProductBody = {
     productBrutId: string,
     categoryId: string | null,
     quantity: number,
+    unit: string,
     status: boolean,
     createdDate: Date
 }

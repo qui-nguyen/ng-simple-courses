@@ -20,7 +20,9 @@ export class ProductModalComponent implements OnInit {
 
   _formGroup: FormGroup | undefined;
   newProduct: Product = new Product;
+
   listCategoriesName: string[] = [];
+  selectedCategoryName: string | undefined = undefined;
 
   selectedProduct: ProductBrut | undefined = undefined;
 
@@ -38,17 +40,23 @@ export class ProductModalComponent implements OnInit {
     }
 
     this.selectedProduct = this.product.productBrut;
+    this.selectedCategoryName = this.product.category?.name;
 
     this._formGroup = this.formBuilder.group({
       name: [this.product.productBrut, Validators.required],
       category: [this.product.category?.name],
       quantity: [this.product.quantity, Validators.required],
+      unit: [this.product.unit, Validators.required],
       status: [this.product.status, Validators.required],
     })
   }
 
   getName(event: DropdownChangeEvent) {
     this.selectedProduct = event.value;
+  }
+
+  getCatName(event: DropdownChangeEvent) {
+    this.selectedCategoryName = event.value;
   }
 
   hideDialog() {
@@ -62,6 +70,7 @@ export class ProductModalComponent implements OnInit {
         categoryId: this.categories.find(
           (el: Category) => el.name === this._formGroup!.value.category)?._id || null,
         quantity: this._formGroup.value.quantity,
+        unit: this._formGroup.value.unit,
         status: this._formGroup.value.status,
         createdDate: new Date()
       }

@@ -11,13 +11,9 @@
     <form
       *ngIf="_formGroup && productsBrut && categories && product"
       [formGroup]="_formGroup"
-      class="flex flex-column gap-6 mt-5"
+      class="flex flex-column gap-6 mt-5 mb-7"
     >
-      <!-- <span class="p-float-label">
-        <input pInputText id="name" formControlName="name" />
-        <label htmlFor="name" required>Nom *</label>
-      </span> -->
-
+      <!-- NAME -->
       <span class="p-float-label">
         <p-dropdown
           *ngIf="productsBrut.length > 0"
@@ -50,6 +46,7 @@
         <label htmlFor="alim_nom_fr" required>Nom *</label>
       </span>
 
+      <!-- CATEGORY -->
       <span class="p-float-label">
         <p-dropdown
           *ngIf="listCategoriesName.length"
@@ -57,17 +54,63 @@
           placeholder="Choisir une catégorie"
           inputId="float-label"
           formControlName="category"
-        ></p-dropdown>
+          (onChange)="getCatName($event)"
+        >
+          <ng-template pTemplate="selectedItem">
+            <div
+              class="flex align-items-center gap-2"
+              *ngIf="selectedCategoryName"
+            >
+              <div class="flex align-items-center">
+                <span
+                  class="block w-1rem h-1rem mr-2 border-round {{
+                    selectedCategoryName | categoryBadge
+                  }}"
+                ></span>
+                <div>{{ selectedCategoryName }}</div>
+              </div>
+            </div>
+          </ng-template>
+          <ng-template let-cat pTemplate="item">
+            <div class="flex align-items-center gap-2">
+              <div class="flex align-items-center">
+                <span
+                  class="block w-1rem h-1rem mr-2 border-round {{
+                    cat | categoryBadge
+                  }}"
+                ></span>
+                {{ cat }}
+              </div>
+            </div>
+          </ng-template>
+        </p-dropdown>
+
         <label for="float-label">Catégorie</label>
       </span>
-      <span class="p-float-label">
-        <p-inputNumber
-          id="quantity"
-          [minFractionDigits]="1"
-          formControlName="quantity"
-        />
-        <label htmlFor="quantity">Quantité *</label>
-      </span>
+
+      <!-- QUANTITY + UNIT -->
+      <div class="w-full flex justify-content-between">
+        <span class="p-float-label w-5">
+          <p-inputNumber
+            id="quantity"
+            [minFractionDigits]="1"
+            formControlName="quantity"
+          />
+          <label htmlFor="quantity">Quantité *</label>
+        </span>
+        <span class="p-float-label w-5">
+          <!-- <input pInputText id="unit" formControlName="unit" /> -->
+          <p-dropdown
+            [options]="['kg', 'l', 'pièces']"
+            placeholder=""
+            inputId="float-label"
+            formControlName="unit"
+          ></p-dropdown>
+          <label htmlFor="quantity">Unité *</label>
+        </span>
+      </div>
+
+      <!-- STATUS -->
       <span class="p-float-label">
         <p-inputSwitch formControlName="status" class="ml-8"></p-inputSwitch>
         <label htmlFor="status">Reste</label>
@@ -75,6 +118,7 @@
     </form>
   </ng-template>
 
+  <!-- ACTIONS BTNS -->
   <ng-template pTemplate="footer">
     <button
       pButton
