@@ -34,6 +34,7 @@ export class ProductComponent implements OnInit {
     isError: boolean = false;
     messages: string = '';
 
+    isMediumScreenUp: boolean = window.innerWidth > 821;
 
     constructor(
         private productBrutService: ProductBrutService,
@@ -42,7 +43,6 @@ export class ProductComponent implements OnInit {
         private messageService: MessageService,
         private confirmationService: ConfirmationService
     ) { }
-
 
     ngOnInit() {
         /*** Get all products bruts ***/
@@ -76,6 +76,13 @@ export class ProductComponent implements OnInit {
         this.lastDay = new Date(
             today.setDate(today.getDate() - today.getDay() + 6),
         );
+
+
+    }
+
+    /*** Get responsive breakpoint state emit from directive ***/
+    onWindowResize(isMediumScreenUp: boolean): void {
+        this.isMediumScreenUp = isMediumScreenUp;
     }
 
     /*** Get all products ***/

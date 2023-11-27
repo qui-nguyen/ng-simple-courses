@@ -2,7 +2,7 @@
   <p-toast />
 
   <p-toolbar
-    styleClass="mb-4 gap-2 bg-white border-bottom-1 border-x-none border-top-none border-noround"
+    styleClass="mb-4 gap-2 bg-white border-bottom-1 border-x-none border-top-none border-noround flex justify-content-end md:justify-content-between "
   >
     <ng-template pTemplate="left">
       <h2 class="font-medium">
@@ -11,12 +11,16 @@
       </h2>
     </ng-template>
     <ng-template pTemplate="right">
-      <div>
+      <div 
+      appWindowResize 
+      (windowResize)="onWindowResize($event)"
+      class="flex justify-content-center w-full"
+      >
         <button
           pButton
           pRipple
           type="button"
-          label="Ajouter"
+          [label]="isMediumScreenUp ? 'Ajouter' : ''"
           class="p-button-outlined p-button-primary mr-6"
           icon="pi pi-plus"
           (click)="createProduct()"
@@ -25,7 +29,7 @@
           pButton
           pRipple
           type="button"
-          label="Supprimer"
+          [label]="isMediumScreenUp ? 'Supprimer' : ''"
           class="p-button-outlined p-button-danger"
           icon="pi pi-trash"
           (click)="confirmDelete()"
@@ -68,28 +72,28 @@
 
     <ng-template pTemplate="header">
       <tr>
-        <th style="width: 10%">
+        <th style="width: 5%">
           <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
         </th>
-        <th pSortableColumn="name" style="width: 15%">
+        <th pSortableColumn="name" style="width: 17%">
           Name<p-sortIcon field="name" class="inline-block"></p-sortIcon>
         </th>
-        <th pSortableColumn="quantity" style="width: 15%">
+        <th pSortableColumn="quantity" style="width: 17%">
           Quantité
           <p-sortIcon field="quantity" class="inline-block"></p-sortIcon>
         </th>
-        <th pSortableColumn="createdDate" style="width: 15%">
+        <th pSortableColumn="createdDate" style="width: 17%">
           Date
           <p-sortIcon field="createdDate" class="inline-block"></p-sortIcon>
         </th>
-        <th pSortableColumn="status" style="width: 15%">
+        <th pSortableColumn="status" style="width: 17%">
           Status <p-sortIcon field="status" class="inline-block"></p-sortIcon>
         </th>
-        <th pSortableColumn="category?.name" style="width: 15%">
+        <th pSortableColumn="category?.name" style="width: 17%">
           Catégorie
           <p-sortIcon field="category?.name" class="inline-block"></p-sortIcon>
         </th>
-        <th style="width: 15%"></th>
+        <th style="width: 10%"></th>
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-product>

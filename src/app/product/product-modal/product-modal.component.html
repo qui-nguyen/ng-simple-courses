@@ -27,18 +27,17 @@
           (onChange)="getName($event)"
         >
           <ng-template pTemplate="selectedItem">
-            <div class="flex align-items-center gap-2" *ngIf="selectedProduct">
+            <div
+              class="flex align-items-center gap-2 truncate max-w-17rem md:max-w-26rem"
+              *ngIf="selectedProduct"
+            >
               <div>{{ selectedProduct.alim_nom_fr }}</div>
             </div>
           </ng-template>
           <ng-template let-productBrut pTemplate="item">
             <div class="flex align-items-center gap-2">
-              <div>
-                {{
-                  productBrut.alim_nom_fr.length > 50
-                    ? productBrut.alim_nom_fr.slice(0, 50) + "..."
-                    : productBrut.alim_nom_fr
-                }}
+              <div class="truncate max-w-17rem md:max-w-26rem">
+                {{ productBrut.alim_nom_fr }}
               </div>
             </div>
           </ng-template>

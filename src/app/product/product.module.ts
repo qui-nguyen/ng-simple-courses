@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
+
 import { TableModule } from 'primeng/table';
 import { ChipModule } from 'primeng/chip';
 import { InputSwitchModule } from 'primeng/inputswitch';
@@ -20,6 +21,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ProductComponent } from './product.component';
 import { CategoryBadgePipe } from '../pipe/category-badge.pipe';
 import { ProductModalComponent } from './product-modal/product-modal.component';
+import { WindowResizeDirective } from '../directive/window-resize.directive';
 
 const productRoutes: Routes = [
   { path: 'product', component: ProductComponent }
@@ -29,7 +31,8 @@ const productRoutes: Routes = [
   declarations: [
     ProductComponent,
     CategoryBadgePipe,
-    ProductModalComponent
+    ProductModalComponent,
+    WindowResizeDirective
   ],
   imports: [
     CommonModule,
