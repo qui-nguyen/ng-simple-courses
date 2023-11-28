@@ -170,8 +170,8 @@
 
 <p-confirmDialog
   [style]="{ width: '450px' }"
-  acceptLabel="Suppimer"
+  [acceptLabel]="isMediumScreenUp ? 'Confirmer' : 'Oui'"
   acceptButtonStyleClass="border-primary text-primary surface-card"
-  rejectLabel="Annuler"
+  [rejectLabel]="isMediumScreenUp ? 'Annuler' : 'Non'"
   rejectButtonStyleClass="border-red-600 text-red-600 surface-card"
 />

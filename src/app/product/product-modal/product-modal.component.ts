@@ -21,6 +21,8 @@ export class ProductModalComponent implements OnInit, AfterViewChecked {
   @Output() productDialogEvent = new EventEmitter<boolean>();
   @Output() productSavedEvent = new EventEmitter<boolean>();
 
+  isMediumScreenUp: boolean = window.innerWidth > 821;
+
   _formGroup: FormGroup | undefined;
   newProduct: Product = new Product;
 
@@ -64,29 +66,41 @@ export class ProductModalComponent implements OnInit, AfterViewChecked {
       quantity: [this.product.quantity, Validators.required],
       unit: [this.product.unit, Validators.required],
       status: [this.product.status, Validators.required],
-    })
+    });
+
+    this.isMediumScreenUp = window.innerWidth > 821;
   }
 
   ngAfterViewChecked(): void {
     this.cdr.detectChanges();
   }
 
+  /*** Get responsive breakpoint state emit from directive ***/
+  onWindowResize(isMediumScreenUp: boolean): void {
+    this.isMediumScreenUp = isMediumScreenUp;
+  }
+
+  /*** Search product brut by name (autocomplete input) ***/
   searchName(event: AutoCompleteCompleteEvent) {
     this.searchTerms.next(event.query);
   }
 
+  /*** Select name of product brut from dropdown filter (prev ui) ***/
   getName(event: DropdownChangeEvent) {
     this.selectedProduct = event.value;
   }
 
+  /*** Select name of category from dropdown ***/
   getCatName(event: DropdownChangeEvent) {
     this.selectedCategoryName = event.value;
   }
 
+  /*** Emit signal to parent (on Annuler (Close) click) ***/
   hideDialog() {
     this.productDialogEvent.emit(false);
   }
 
+  /*** Save prod and Emit signal to parent (close if ok /still open if error) ***/
   saveProduct() {
     if (this._formGroup && this.categories && this._formGroup.valid) {
       const newProduct: ProductBody = {

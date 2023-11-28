@@ -51,7 +51,6 @@
           (completeMethod)="searchName($event)"
           formControlName="name"
           field="alim_nom_fr"
-          [dropdown]="true"
         />
         <label htmlFor="alim_nom_fr" required>Nom *</label>
       </span>
@@ -133,17 +132,19 @@
     <button
       pButton
       pRipple
-      label="Annuler"
+      [label]="isMediumScreenUp ? 'Annuler' : ''"
       icon="pi pi-times"
       class="p-button-outlined p-button-danger"
+      style="min-width: 3rem"
       (click)="hideDialog()"
     ></button>
     <button
       pButton
       pRipple
-      label="Sauvegarder"
+      [label]="isMediumScreenUp ? 'Sauvegarder' : ''"
       icon="pi pi-check"
       class="p-button-outlined p-button-primary mr-6"
+      style="min-width: 3rem"
       (click)="saveProduct()"
     ></button>
   </ng-template>
