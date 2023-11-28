@@ -19,45 +19,52 @@ export class ProductBrutService {
       catchError((err) => this.catchError(err, [])))
   }
 
-//   getProductById(id: string): Observable<Product | undefined> {
-//     return this.http.get<Product>(`${API}/${id}`).pipe(
-//       tap((res) => this.log(res)),
-//       catchError((err) => this.catchError(err, undefined))
-//     )
-//   }
+  getProductsByName(searchTerm: string): Observable<ProductBrut[]> {
+    return this.http.get<ProductBrut[]>(`${API}?name=${searchTerm}`).pipe(
+      tap((res) => this.log(res)),
+      catchError((err) => this.catchError(err, [])))
+  }
 
-//   updateProduct(product: Product): Observable<Product | any> {
-//     const httpOptions = {
-//       headers: new HttpHeaders({ 'Content-Type': 'application/json' })
-//     };
+  
+  //   getProductById(id: string): Observable<Product | undefined> {
+  //     return this.http.get<Product>(`${API}/${id}`).pipe(
+  //       tap((res) => this.log(res)),
+  //       catchError((err) => this.catchError(err, undefined))
+  //     )
+  //   }
 
-//     return this.http.put(`${API}`, product, httpOptions).pipe(
-//       tap((result) => this.log(result)),
-//       catchError((error => this.catchError(error, undefined)))
-//     )
-//   }
+  //   updateProduct(product: Product): Observable<Product | any> {
+  //     const httpOptions = {
+  //       headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+  //     };
 
-//   createProduct(newProduct: Product): Observable<Product | undefined> {
-//     const httpOptions = {
-//       headers: new HttpHeaders({ 'Content-Type': 'application/json' })
-//     };
+  //     return this.http.put(`${API}`, product, httpOptions).pipe(
+  //       tap((result) => this.log(result)),
+  //       catchError((error => this.catchError(error, undefined)))
+  //     )
+  //   }
 
-//     return this.http.post(`${API}`, newProduct, httpOptions).pipe(
-//       tap((result) => this.log(result)),
-//       catchError((error => this.catchError(error, undefined)))
-//     )
-//   }
+  //   createProduct(newProduct: Product): Observable<Product | undefined> {
+  //     const httpOptions = {
+  //       headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+  //     };
 
-//   deleteProductById(id: string): Observable<Product | any> {
-//     return this.http.delete<Product>(`${API}/${id}`).pipe(
-//       tap((res) => this.log(res)), // res = null if delete ok
-//       catchError((error) => {
-//         console.error('Error deleting product:', error);
-//         // Emit an object with product ID and error
-//         return of({ id, error });
-//       })
-//     );
-//   }
+  //     return this.http.post(`${API}`, newProduct, httpOptions).pipe(
+  //       tap((result) => this.log(result)),
+  //       catchError((error => this.catchError(error, undefined)))
+  //     )
+  //   }
+
+  //   deleteProductById(id: string): Observable<Product | any> {
+  //     return this.http.delete<Product>(`${API}/${id}`).pipe(
+  //       tap((res) => this.log(res)), // res = null if delete ok
+  //       catchError((error) => {
+  //         console.error('Error deleting product:', error);
+  //         // Emit an object with product ID and error
+  //         return of({ id, error });
+  //       })
+  //     );
+  //   }
 
   private log(response: any) {
     if (response === 200) {

@@ -15,6 +15,8 @@ import { InputTextModule } from 'primeng/inputtext';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { AutoCompleteModule } from 'primeng/autocomplete';
+
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
@@ -51,6 +53,7 @@ const productRoutes: Routes = [
     FormsModule,
     ReactiveFormsModule,
     ProgressSpinnerModule,
+    AutoCompleteModule,
     RouterModule.forChild(productRoutes)
   ],
 })

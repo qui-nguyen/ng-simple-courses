@@ -1,14 +1,17 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { AfterViewChecked, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ProductService } from '../../services/product.service';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { Category, Product, ProductBody, ProductBrut } from '../../type';
 import { DropdownChangeEvent } from 'primeng/dropdown';
+import { AutoCompleteCompleteEvent } from 'primeng/autocomplete';
+import { ProductBrutService } from 'src/app/services/product-brut.service';
+import { Observable, Subject, debounceTime, distinctUntilChanged, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-product-modal',
   templateUrl: './product-modal.component.html'
 })
-export class ProductModalComponent implements OnInit {
+export class ProductModalComponent implements OnInit, AfterViewChecked {
   @Input() productsBrut!: ProductBrut[];
   @Input() product!: Product;
   @Input() productDialog!: boolean;
@@ -26,9 +29,16 @@ export class ProductModalComponent implements OnInit {
 
   selectedProduct: ProductBrut | undefined = undefined;
 
+  searchProductsBrutList: ProductBrut[] = [];
+  searchTerms = new Subject<string>(); // rôle: stocker des recherches successibles de l'utilsateur 
+  // => but: créer un flux dans le temps des recherches sous form string[]
+  // (new Subject : permettre piloter Observable)
+
   constructor(
     private formBuilder: FormBuilder,
-    private productService: ProductService
+    private productService: ProductService,
+    private productBrutService: ProductBrutService,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
@@ -42,6 +52,12 @@ export class ProductModalComponent implements OnInit {
     this.selectedProduct = this.product.productBrut;
     this.selectedCategoryName = this.product.category?.name;
 
+    this.searchTerms.pipe(
+      debounceTime(300), // => prendre que les terms avec le temps de typage est supérieur à 500ms après
+      distinctUntilChanged(), // => prendre les valeurs uniques
+      switchMap(term => this.productBrutService.getProductsByName(term)), // garder que la dernière et supprimer les autres observables (même en cours) => économiser les ressources 
+    ).subscribe(res => this.searchProductsBrutList = res);
+
     this._formGroup = this.formBuilder.group({
       name: [this.product.productBrut, Validators.required],
       category: [this.product.category?.name],
@@ -49,6 +65,14 @@ export class ProductModalComponent implements OnInit {
       unit: [this.product.unit, Validators.required],
       status: [this.product.status, Validators.required],
     })
+  }
+
+  ngAfterViewChecked(): void {
+    this.cdr.detectChanges();
+  }
+
+  searchName(event: AutoCompleteCompleteEvent) {
+    this.searchTerms.next(event.query);
   }
 
   getName(event: DropdownChangeEvent) {

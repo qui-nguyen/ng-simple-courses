@@ -9,12 +9,12 @@
 >
   <ng-template pTemplate="content" class="w-full">
     <form
-      *ngIf="_formGroup && productsBrut && categories && product"
+      *ngIf="_formGroup && categories && product"
       [formGroup]="_formGroup"
       class="flex flex-column gap-6 mt-5 mb-7"
     >
       <!-- NAME -->
-      <span class="p-float-label">
+      <!-- <span class="p-float-label">
         <p-dropdown
           *ngIf="productsBrut.length > 0"
           [options]="productsBrut"
@@ -42,6 +42,17 @@
             </div>
           </ng-template>
         </p-dropdown>
+        <label htmlFor="alim_nom_fr" required>Nom *</label>
+      </span> -->
+
+      <span class="p-float-label">
+        <p-autoComplete
+          [suggestions]="searchProductsBrutList"
+          (completeMethod)="searchName($event)"
+          formControlName="name"
+          field="alim_nom_fr"
+          [dropdown]="true"
+        />
         <label htmlFor="alim_nom_fr" required>Nom *</label>
       </span>
 
