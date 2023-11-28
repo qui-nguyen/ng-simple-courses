@@ -117,12 +117,31 @@ export class ProductComponent implements OnInit {
                         (results) => {
                             // Check for errors in the results
                             let listIdNotDeleted = results.filter(el => el?.error);
+                            let listIdDeletedSuccess = results.filter(el => el === null);
+
                             const hasError = listIdNotDeleted.length > 0;
 
                             // Reset selected products
                             this.selectedProducts = null;
-                            this.messages = 'Suppression succès !';
 
+                            // Products deleted success
+                            if (listIdDeletedSuccess.length > 0) {
+                                const listProdDeletedSuccess = this.products
+                                    .filter(prod =>
+                                        listIdNotDeleted.some(el => el.id === prod._id)
+                                    ).map(prod =>
+                                        prod.productBrut.alim_nom_fr);
+                                this.messages = `Suppression des produits ${JSON.stringify(listProdDeletedSuccess)} est réalisée !`;
+
+                                this.messageService.add({
+                                    severity: `${this.isError ? 'error' : 'success'}`,
+                                    summary: this.messages,
+                                    detail: '',
+                                    life: 3000
+                                });
+                            }
+
+                            // Products deleted with error
                             if (hasError) {
                                 this.isError = true;
                                 const listProdNotDeleted = this.products
@@ -131,18 +150,17 @@ export class ProductComponent implements OnInit {
                                     ).map(prod =>
                                         prod.productBrut.alim_nom_fr);
                                 this.messages = `Une erreur survenue lors de la suppression avec les produits ${JSON.stringify(listProdNotDeleted)} !`;
+
+                                this.messageService.add({
+                                    severity: `${this.isError ? 'error' : 'success'}`,
+                                    summary: this.messages,
+                                    detail: '',
+                                    life: 3000
+                                });
                             }
 
                             // Reset products list
                             this.getAllProducts();
-
-                            // Set the message and isError
-                            this.messageService.add({
-                                severity: `${this.isError ? 'error' : 'success'}`,
-                                summary: this.messages,
-                                detail: '',
-                                life: 3000
-                            });
                         }
                 }
             );
@@ -178,7 +196,7 @@ export class ProductComponent implements OnInit {
     /*** Event capted from modal (child) 
      * => transfert state of modal (open or close) 
      * => update state of modal in parent 
-     * => retranfert this state to child ***/
+     * => retransfert this state to child ***/
     isProductDialogOpen(isOpen: boolean) {
         if (!isOpen) {
             this.product = null;
@@ -189,7 +207,7 @@ export class ProductComponent implements OnInit {
     /*** Event capted from modal (child) 
     * => product saved succes or not 
     * => update state in parent 
-    * => retranfert this state to child ***/
+    * => retransfert this state to child ***/
     isProductSaved(saved: boolean) {
         if (saved) {
             if (this.editMode) {
@@ -197,8 +215,14 @@ export class ProductComponent implements OnInit {
             } else {
                 this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Nouveau produit créé', life: 3000 });
             }
-            this.getAllProducts();
-            this.productSaved = false;
+        } else {
+            if (this.editMode) {
+                this.messageService.add({ severity: 'danger', summary: 'Une erreur survenue', detail: 'Produit ne peut pas être modifié', life: 3000 });
+            } else {
+                this.messageService.add({ severity: 'danger', summary: 'Une erreur survenue', detail: 'Erreur lors de la création du nouveau produit', life: 3000 });
+            }
         }
+        this.getAllProducts();
+        this.productSaved = false;
     }
 }
