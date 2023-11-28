@@ -11,10 +11,10 @@
       </h2>
     </ng-template>
     <ng-template pTemplate="right">
-      <div 
-      appWindowResize 
-      (windowResize)="onWindowResize($event)"
-      class="flex justify-content-center w-full"
+      <div
+        appWindowResize
+        (windowResize)="onWindowResize($event)"
+        class="flex justify-content-center w-full"
       >
         <button
           pButton
@@ -106,7 +106,12 @@
         </td>
         <td>{{ product.productBrut.alim_nom_fr }}</td>
         <td>
-          {{ product.quantity }} <span>{{ product?.unit }}</span>
+          {{ product.quantity }}
+          <span>{{
+            product.quantity > 1 && product?.unit === "pièce"
+              ? 'pièces'
+              : product?.unit
+          }}</span>
         </td>
         <td>{{ product.createdDate | date : "dd/MM/yyyy" }}</td>
         <td>
