@@ -17,7 +17,7 @@ import { ProductBrutService } from '../services/product-brut.service';
     providers: [ConfirmationService, MessageService]
 })
 export class ProductComponent implements OnInit {
-    productsBrut: ProductBrut[]; // all products brut
+    // productsBrut: ProductBrut[]; // all products brut
     products: Product[]; // all products
     categories: Category[]; // all categories
 
@@ -46,15 +46,15 @@ export class ProductComponent implements OnInit {
 
     ngOnInit() {
         /*** Get all products bruts ***/
-        this.productBrutService.getProductsBrut().subscribe(
-            {
-                next: (result) => {
-                    this.productsBrut = result;
-                },
-                error: (err) => { console.log(err); },
-                complete: () => { }
-            }
-        )
+        // this.productBrutService.getProductsBrut().subscribe(
+        //     {
+        //         next: (result) => {
+        //             this.productsBrut = result;
+        //         },
+        //         error: (err) => { console.log(err); },
+        //         complete: () => { }
+        //     }
+        // )
 
         /*** Get all categories and products ***/
         this.categoryService.getCategories().subscribe(

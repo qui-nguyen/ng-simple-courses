@@ -17,7 +17,7 @@ import { ProductBrutService } from 'src/app/services/product-brut.service';
   providers: [MessageService]
 })
 export class ProductModalComponent implements OnInit, AfterViewChecked {
-  @Input() productsBrut!: ProductBrut[];
+  // @Input() productsBrut!: ProductBrut[];
   @Input() product!: Product;
   @Input() productDialog!: boolean;
   @Input() editMode!: boolean;
@@ -34,7 +34,7 @@ export class ProductModalComponent implements OnInit, AfterViewChecked {
   listCategoriesName: string[] = [];
   selectedCategoryName: string | undefined = undefined;
 
-  selectedProduct: ProductBrut | undefined = undefined;
+  // selectedProduct: ProductBrut | undefined = undefined;
 
   searchProductsBrutList: ProductBrut[] = [];
   searchTerms = new Subject<string>(); // rôle: stocker des recherches successibles de l'utilsateur 
@@ -57,7 +57,7 @@ export class ProductModalComponent implements OnInit, AfterViewChecked {
       this.product = this.newProduct;
     }
 
-    this.selectedProduct = this.product.productBrut;
+    // this.selectedProduct = this.product.productBrut;
     this.selectedCategoryName = this.product.category?.name;
 
     this.searchTerms.pipe(
@@ -94,9 +94,9 @@ export class ProductModalComponent implements OnInit, AfterViewChecked {
   }
 
   /*** Select name of product brut from dropdown filter (prev ui) ***/
-  getName(event: DropdownChangeEvent) {
-    this.selectedProduct = event.value;
-  }
+  // getName(event: DropdownChangeEvent) {
+  //   this.selectedProduct = event.value;
+  // }
 
   /*** Select name of category from dropdown ***/
   getCatName(event: DropdownChangeEvent) {
