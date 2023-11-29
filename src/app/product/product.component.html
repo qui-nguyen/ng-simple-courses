@@ -54,7 +54,9 @@
     class="flex flex-column w-full mt-5"
   >
     <ng-template pTemplate="caption">
-      <div class="flex flex-column gap-4 sm:flex-row md:align-items-center md:justify-content-between sm:gap-0">
+      <div
+        class="flex flex-column gap-4 sm:flex-row md:align-items-center md:justify-content-between sm:gap-0"
+      >
         <h4 class="font-medium m-0">Liste des produits en stock</h4>
         <span class="p-input-icon-left h-5">
           <i class="pi pi-search"></i>
@@ -109,7 +111,7 @@
           {{ product.quantity }}
           <span>{{
             product.quantity > 1 && product?.unit === "pièce"
-              ? 'pièces'
+              ? "pièces"
               : product?.unit
           }}</span>
         </td>

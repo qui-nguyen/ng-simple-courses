@@ -1,1 +1,141 @@
-<p>recipe works!</p>
+<div class="card">
+  <p-toast />
+
+  <p-toolbar
+    styleClass="mb-4 gap-2 bg-white border-bottom-1 border-x-none border-top-none border-noround flex justify-content-end md:justify-content-between "
+  >
+    <ng-template pTemplate="left"> </ng-template>
+    <ng-template pTemplate="right">
+      <div class="flex justify-content-center w-full">
+        <button
+          pButton
+          pRipple
+          type="button"
+          [label]="'Ajouter'"
+          class="p-button-outlined p-button-primary mr-6"
+          icon="pi pi-plus"
+          (click)="createRecipe()"
+        ></button>
+        <button
+          pButton
+          pRipple
+          type="button"
+          [label]="'Supprimer'"
+          class="p-button-outlined p-button-danger"
+          icon="pi pi-trash"
+          (click)="confirmDelete()"
+          [disabled]="!selectedRecipes || !selectedRecipes.length"
+        ></button>
+      </div>
+    </ng-template>
+  </p-toolbar>
+
+  <p-table
+    *ngIf="recipes"
+    #dt
+    [value]="recipes"
+    [rows]="6"
+    [paginator]="true"
+    [globalFilterFields]="['name']"
+    [tableStyle]="{ 'min-width': '75rem' }"
+    [(selection)]="selectedRecipe"
+    [rowHover]="true"
+    dataKey="_id"
+    currentPageReportTemplate="Affichage de {first} à {last} recette (sur {totalRecords} recettes)"
+    [showCurrentPageReport]="true"
+    class="flex flex-column w-full mt-5"
+  >
+    <ng-template pTemplate="caption">
+      <div
+        class="flex flex-column gap-4 sm:flex-row md:align-items-center md:justify-content-between sm:gap-0"
+      >
+        <h4 class="font-medium m-0">Liste des recettes</h4>
+        <span class="p-input-icon-left h-5">
+          <i class="pi pi-search"></i>
+          <input
+            pInputText
+            type="text"
+            #searchInput
+            (input)="dt.filterGlobal(searchInput.value, 'contains')"
+            placeholder="Recherche..."
+            class="h-2rem pl-6 border-none"
+          />
+        </span>
+      </div>
+    </ng-template>
+
+    <ng-template pTemplate="header">
+      <tr>
+        <th style="width: 5%">
+          <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+        </th>
+        <th pSortableColumn="name" style="width: 20%">
+          Nom<p-sortIcon field="name" class="inline-block"></p-sortIcon>
+        </th>
+        <th pSortableColumn="quantity" style="width: 20%">
+          Ingrédients
+          <p-sortIcon field="quantity" class="inline-block"></p-sortIcon>
+        </th>
+        <th pSortableColumn="createdDate" style="width: 20%">
+          Instruction
+          <p-sortIcon field="createdDate" class="inline-block"></p-sortIcon>
+        </th>
+        <th pSortableColumn="status" style="width: 20%">
+          Image <p-sortIcon field="status" class="inline-block"></p-sortIcon>
+        </th>
+        <th style="width: 15%"></th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-recipe>
+      <tr>
+        <td>
+          <p-tableCheckbox
+            [value]="recipe"
+            (click)="selectedRecipe(recipe)"
+          ></p-tableCheckbox>
+        </td>
+        <td>{{ recipe.name }}</td>
+        <td>
+          <p *ngFor="let ingredient of getDisplayedIngredients(recipe)">
+            {{ ingredient }}
+          </p>
+          <div *ngIf="recipe.ingredients.length > 2">
+            <p>...</p>
+          </div>
+        </td>
+        <td>{{ recipe.instructions }}</td>
+
+        <td>
+          <div class="flex justify-content-start border-round">
+            <div class="p-2 text-white text-xs">
+              <!-- {{ recipe.imageUrl }} -->
+              <img
+                src="assets/images/bulbasaur.png"
+                class="cursor-pointer"
+                style="object-fit: contain; max-width: 100%; max-height: 50px"
+                alt="bulbasaur image"
+              />
+            </div>
+          </div>
+        </td>
+        <td>
+          <div class="flex justify-content-center gap-4">
+            <i
+              class="pi pi-pencil cursor-pointer text-gray-600 hover:text-primary transition-delay-100 transition-colors"
+              (click)="editRecipe(recipe)"
+            ></i>
+            <i
+              class="pi pi-external-link cursor-pointer text-gray-600 hover:text-primary transition-delay-100 transition-colors"
+              (click)="detail(recipe)"
+            ></i>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+
+<div
+  class="card w-full flex justify-content-center align-items-center translate-y-100"
+></div>
