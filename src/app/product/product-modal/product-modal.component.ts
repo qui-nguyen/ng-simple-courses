@@ -1,15 +1,20 @@
 import { AfterViewChecked, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { ProductService } from '../../services/product.service';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
+
+import { Observable, Subject, debounceTime, distinctUntilChanged, switchMap } from 'rxjs';
+
+import { ProductService } from '../../services/product.service';
+import { MessageService } from 'primeng/api';
+
 import { Category, Product, ProductBody, ProductBrut } from '../../type';
 import { DropdownChangeEvent } from 'primeng/dropdown';
 import { AutoCompleteCompleteEvent } from 'primeng/autocomplete';
 import { ProductBrutService } from 'src/app/services/product-brut.service';
-import { Observable, Subject, debounceTime, distinctUntilChanged, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-product-modal',
-  templateUrl: './product-modal.component.html'
+  templateUrl: './product-modal.component.html',
+  providers: [MessageService]
 })
 export class ProductModalComponent implements OnInit, AfterViewChecked {
   @Input() productsBrut!: ProductBrut[];
@@ -40,7 +45,8 @@ export class ProductModalComponent implements OnInit, AfterViewChecked {
     private formBuilder: FormBuilder,
     private productService: ProductService,
     private productBrutService: ProductBrutService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private messageService: MessageService
   ) { }
 
   ngOnInit(): void {
@@ -69,6 +75,8 @@ export class ProductModalComponent implements OnInit, AfterViewChecked {
     });
 
     this.isMediumScreenUp = window.innerWidth > 821;
+
+    console.log(this._formGroup.value.name.valid)
   }
 
   ngAfterViewChecked(): void {
@@ -103,19 +111,31 @@ export class ProductModalComponent implements OnInit, AfterViewChecked {
   /*** Save prod and Emit signal to parent (close if ok /still open if error) ***/
   saveProduct() {
     if (this._formGroup && this.categories && this._formGroup.valid) {
-      const newProduct: ProductBody = {
-        productBrutId: this._formGroup.value.name._id,
-        categoryId: this.categories.find(
-          (el: Category) => el.name === this._formGroup!.value.category)?._id || null,
-        quantity: this._formGroup.value.quantity,
-        unit: this._formGroup.value.unit,
-        status: this._formGroup.value.status,
-        createdDate: new Date()
-      }
 
-      if (this.editMode) {
-        this.productService
-          .updateProduct(this.product._id, newProduct).subscribe(
+      if (this._formGroup.value.name.id && this._formGroup.value.quantity) { // Product selected from dropdown
+
+        const newProduct: ProductBody = {
+          productBrutId: this._formGroup.value.name._id,
+          categoryId: this.categories.find(
+            (el: Category) => el.name === this._formGroup!.value.category)?._id || null,
+          quantity: this._formGroup.value.quantity,
+          unit: this._formGroup.value.unit,
+          status: this._formGroup.value.status,
+          createdDate: new Date()
+        }
+
+        if (this.editMode) {
+          this.productService
+            .updateProduct(this.product._id, newProduct).subscribe(
+              (res) => {
+                if (res !== undefined) {
+                  this.productDialogEvent.emit(false);
+                  this.productSavedEvent.emit(true);
+                }
+              }
+            );
+        } else {
+          this.productService.createProduct(newProduct).subscribe(
             (res) => {
               if (res !== undefined) {
                 this.productDialogEvent.emit(false);
@@ -123,15 +143,27 @@ export class ProductModalComponent implements OnInit, AfterViewChecked {
               }
             }
           );
+        }
       } else {
-        this.productService.createProduct(newProduct).subscribe(
-          (res) => {
-            if (res !== undefined) {
-              this.productDialogEvent.emit(false);
-              this.productSavedEvent.emit(true);
-            }
-          }
-        );
+        // Product taped manually
+        if (!this._formGroup.value.name.id) {
+          this.messageService.add({
+            severity: `error`,
+            summary: 'Nom non valide',
+            detail: 'Veuillez en sélectionner un dans la liste',
+            life: 5000
+          });
+        }
+
+        // Quantity = 0
+        if (!this._formGroup.value.quantity) {
+          this.messageService.add({
+            severity: `error`,
+            summary: 'Quantité non valide',
+            detail: 'Quantité doit être supérieur à 0',
+            life: 5000
+          });
+        }
       }
     }
   }

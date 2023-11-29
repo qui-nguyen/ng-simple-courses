@@ -1,5 +1,6 @@
 export class ProductBrut {
-    _id: string;
+    _id: string | null;
+    alim_nom_fr: string;
     alim_grp_code: number;
     alim_ssgrp_code: number;
     alim_ssssgrp_code: number;
@@ -7,7 +8,6 @@ export class ProductBrut {
     alim_ssgrp_nom_fr: string;
     alim_ssssgrp_nom_fr: string;
     alim_code: number;
-    alim_nom_fr: string;
     alim_nom_sci: string;
 }
 
@@ -34,7 +34,7 @@ export class Product {
     createdDate: Date;
     constructor(
         productBrut = {
-            _id: '',
+            _id: null,
             alim_grp_code: 0,
             alim_ssgrp_code: 0,
             alim_ssssgrp_code: 0,
