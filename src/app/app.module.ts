@@ -17,18 +17,20 @@ import { HttpClientModule } from '@angular/common/http';
 import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
 import { InMemoryDataService } from './in-memory-data.service';
 import { ProductModule } from './product/product.module';
+import { RecipeModule } from './recipe/recipe.module';
 
 @NgModule({
   declarations: [
     AppComponent,
     MenuComponent,
     HomeComponent,
-    RecipeComponent,
+    // RecipeComponent,
     ShoppingListComponent,
   ],
   imports: [
     BrowserModule,
     ProductModule,
+    RecipeModule,
     AppRoutingModule,
     HttpClientModule,
     BrowserAnimationsModule,

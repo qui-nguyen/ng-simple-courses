@@ -7,15 +7,12 @@ import { ShoppingListComponent } from './shopping-list/shopping-list.component';
 const routes: Routes = [
   // { path: 'product', component: ProductComponent },
   { path: 'shopping-list', component: ShoppingListComponent },
-  { path: 'recipe', component: RecipeComponent },
+  // { path: 'recipe', component: RecipeComponent },
   { path: '**', component: HomeComponent },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule],
-  declarations: [
-    // 
-  ]
+  exports: [RouterModule]
 })
 export class AppRoutingModule { }
