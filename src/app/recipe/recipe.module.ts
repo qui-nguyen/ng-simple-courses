@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { CommonModule } from '@angular/common';
+
 import { RecipeComponent } from './recipe.component';
 
 
@@ -29,7 +30,7 @@ const recipeRoutes: Routes = [
 
 @NgModule({
   declarations: [
-    // WindowResizeDirective
+    RecipeComponent
   ],
   imports: [
     CommonModule,
