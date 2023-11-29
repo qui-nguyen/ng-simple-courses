@@ -1,3 +1,4 @@
+/*** ProductBrut ***/
 export class ProductBrut {
     _id: string | null;
     alim_nom_fr: string;
@@ -11,6 +12,8 @@ export class ProductBrut {
     alim_nom_sci: string;
 }
 
+
+/*** Category ***/
 export class Category {
     _id: string;
     name: string;
@@ -22,6 +25,8 @@ export class Category {
     }
 }
 
+
+/*** Product ***/
 export class Product {
     _id: string;
     productBrut: ProductBrut;
@@ -71,4 +76,56 @@ export type ProductBody = {
     unit: string,
     status: boolean,
     createdDate: Date
+}
+
+
+/*** Recipe ***/
+export type Ingredient = {
+    _id: string,
+    productBrut: {
+        _id: string;
+        alim_nom_fr: string;
+    },
+    quantity: number,
+    unit: string | 'kg' | 'l' | 'pièce'
+}
+
+export class Recipe {
+    _id: string;
+    name: string;
+    code: string;
+    ingredients: Ingredient[];
+    imageUrl?: string;
+    instructions: string;
+    createdDate: Date;
+    constructor(
+        _id: '',
+        name: '',
+        code: '',
+        ingredients = [],
+        instructions: '',
+        createdDate: Date = new Date()
+    ) {
+        this.name = name;
+        this.code = code;
+        this.ingredients = ingredients;
+        this.instructions = instructions;
+        this.createdDate = createdDate;
+    }
+}
+
+export type RecipeBody = {
+    name: string;
+    code: string;
+    ingredients: [
+        {
+            _id?: string,
+            productBrutId: string;
+            quantity: number;
+            unit: 'kg' | 'l' | 'pièce'
+        }
+    ];
+    imageUrl?: string;
+    instructions: string;
+    createdDate: Date;
 }
