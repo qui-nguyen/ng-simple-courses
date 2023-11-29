@@ -98,21 +98,21 @@ export class Recipe {
     imageUrl?: string;
     instructions: string;
     createdDate: Date;
+  
     constructor(
-        _id: '',
-        name: '',
-        code: '',
-        ingredients = [],
-        instructions: '',
-        createdDate: Date = new Date()
+      name: string = '',
+      code: string = '',
+      ingredients: Ingredient[] = [],
+      instructions: string = '',
+      createdDate: Date = new Date()
     ) {
-        this.name = name;
-        this.code = code;
-        this.ingredients = ingredients;
-        this.instructions = instructions;
-        this.createdDate = createdDate;
+      this.name = name;
+      this.code = code;
+      this.ingredients = ingredients;
+      this.instructions = instructions;
+      this.createdDate = createdDate;
     }
-}
+  }
 
 export type RecipeBody = {
     name: string;
