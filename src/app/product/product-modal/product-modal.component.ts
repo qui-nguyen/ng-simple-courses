@@ -112,7 +112,7 @@ export class ProductModalComponent implements OnInit, AfterViewChecked {
   saveProduct() {
     if (this._formGroup && this.categories && this._formGroup.valid) {
 
-      if (this._formGroup.value.name.id && this._formGroup.value.quantity) { // Product selected from dropdown
+      if (this._formGroup.value.name._id && this._formGroup.value.quantity) { // Product selected from dropdown
 
         const newProduct: ProductBody = {
           productBrutId: this._formGroup.value.name._id,
@@ -146,7 +146,7 @@ export class ProductModalComponent implements OnInit, AfterViewChecked {
         }
       } else {
         // Product taped manually
-        if (!this._formGroup.value.name.id) {
+        if (!this._formGroup.value.name._id) {
           this.messageService.add({
             severity: `error`,
             summary: 'Nom non valide',
