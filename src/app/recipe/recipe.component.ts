@@ -200,11 +200,11 @@ export class RecipeComponent implements OnInit {
               if (listDeletedSuccess.length > 0) {
                 const listRecipesDeletedSuccess = listDeletedSuccess.map((el: Recipe) => el.name);
 
+                // Update recipes list after delete
                 const newList = this.recipes.filter(
                   (recipe: Recipe) => listDeletedSuccess.every(
                     (filterItem: Recipe) => filterItem._id !== recipe._id)
                 );
-
                 this.recipes = newList;
 
                 this.messageService.add({
