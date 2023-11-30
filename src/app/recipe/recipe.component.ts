@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Recipe, RecipeBody } from '../type';
 import { RecipeService } from '../services/recipe.service';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-recipe',
@@ -13,7 +14,7 @@ import { RecipeService } from '../services/recipe.service';
 export class RecipeComponent implements OnInit {
 
   recipes: Recipe[];
-  selectedRecipes: Recipe[] = [];
+  selectedRecipes: Recipe[] | null = null;
 
   editMode: boolean = false;
 
@@ -162,7 +163,6 @@ export class RecipeComponent implements OnInit {
 
   }
 
-
   /*** Create recipe ***/
   createRecipe() {
     this.recipe = new Recipe();
@@ -170,5 +170,82 @@ export class RecipeComponent implements OnInit {
     this.editMode = false;
   }
 
-  confirmDelete() { }
+  /*** Delete recipes (after confirm) ***/
+  deleteSelectedRecipes() {
+
+    if (this.selectedRecipes) {
+      const deleteRequests = this.selectedRecipes.map(recipe => {
+        return this.recipeService.deleteRecipeById(recipe._id);
+      });
+
+      forkJoin(deleteRequests).subscribe(
+        {
+          next:
+            (results) => {
+              // Check for errors in the results
+              let listIdNotDeleted = results.filter(el => el?.error);
+
+              // Find the index of all elements with a value of null (recipe deleted)
+              const indexesDeletedSuccess = results.reduce((indexes, element, index) => {
+                if (element === null) {
+                  indexes.push(index);
+                }
+                return indexes;
+              }, []);
+
+              const listDeletedSuccess = indexesDeletedSuccess.map((el: number) => this.selectedRecipes![el]);
+              const hasError = listIdNotDeleted.length > 0;
+
+              // Products deleted success
+              if (listDeletedSuccess.length > 0) {
+                const listRecipesDeletedSuccess = listDeletedSuccess.map((el: Recipe) => el.name);
+
+                const newList = this.recipes.filter(
+                  (recipe: Recipe) => listDeletedSuccess.every(
+                    (filterItem: Recipe) => filterItem._id !== recipe._id)
+                );
+
+                this.recipes = newList;
+
+                this.messageService.add({
+                  severity: `success`,
+                  summary: 'Félicitation !',
+                  detail: `Suppression des produits ${JSON.stringify(listRecipesDeletedSuccess)} est réalisée !`,
+                  life: 3000
+                });
+              }
+
+              // Products deleted with error
+              if (hasError) {
+                const listProdNotDeleted = this.recipes
+                  .filter(recipe =>
+                    listIdNotDeleted.some(el => el.id === recipe._id)
+                  ).map(recipe => recipe.name);
+
+                this.messageService.add({
+                  severity: 'error',
+                  summary: 'Erreur',
+                  detail: `Une erreur survenue lors de la suppression avec les produits ${JSON.stringify(listProdNotDeleted)} !`,
+                  life: 3000
+                });
+              }
+
+              // Reset selected recipes
+              this.selectedRecipes = null;
+            }
+        }
+      );
+    }
+  }
+
+  confirmDelete() {
+    this.confirmationService.confirm({
+      message: 'Êtes-vous sûr de vouloir supprimer les produits sélectionnés ?',
+      header: 'Confirmation',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+        this.deleteSelectedRecipes();
+      }
+    });
+  }
 }
