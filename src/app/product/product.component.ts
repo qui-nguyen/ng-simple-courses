@@ -117,20 +117,26 @@ export class ProductComponent implements OnInit {
                         (results) => {
                             // Check for errors in the results
                             let listIdNotDeleted = results.filter(el => el?.error);
-                            let listIdDeletedSuccess = results.filter(el => el === null);
+                            // let listIdDeletedSuccess = results.filter(el => el === null);
+
+                            // Find the index of all elements with a value of null (recipe deleted)
+                            const indexesDeletedSuccess = results.reduce((indexes, element, index) => {
+                                if (element === null) {
+                                    indexes.push(index);
+                                }
+                                return indexes;
+                            }, []);
+
+                            const listDeletedSuccess = indexesDeletedSuccess.map((el: number) => this.selectedProducts![el]);
 
                             const hasError = listIdNotDeleted.length > 0;
 
-                            // Reset selected products
-                            this.selectedProducts = null;
 
                             // Products deleted success
-                            if (listIdDeletedSuccess.length > 0) {
-                                const listProdDeletedSuccess = this.products
-                                    .filter(prod =>
-                                        listIdNotDeleted.some(el => el.id === prod._id)
-                                    ).map(prod =>
-                                        prod.productBrut.alim_nom_fr);
+                            if (listDeletedSuccess.length > 0) {
+                                const listProdDeletedSuccess = listDeletedSuccess.map(
+                                    (prod: Product) => prod.productBrut.alim_nom_fr);
+                                    
                                 this.messages = `Suppression des produits ${JSON.stringify(listProdDeletedSuccess)} est réalisée !`;
 
                                 this.messageService.add({
@@ -161,6 +167,9 @@ export class ProductComponent implements OnInit {
 
                             // Reset products list
                             this.getAllProducts();
+
+                            // Reset selected products
+                            this.selectedProducts = null;
                         }
                 }
             );
