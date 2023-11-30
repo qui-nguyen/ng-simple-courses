@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Recipe, RecipeBody } from '../type';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Observable, catchError, of, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
@@ -26,10 +26,37 @@ export class RecipeService {
     )
   }
 
+  updateRecipe(id: string, recipe: RecipeBody): Observable<Recipe | any> {
+    const httpOptions = {
+      headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+    };
+
+    return this.http.put(`${API}/${id}`, recipe, httpOptions).pipe(
+      tap((result) => this.log(result)),
+      catchError((error => this.catchError(error, undefined)))
+    )
+  }
+
+  createRecipe(recipe: RecipeBody): Observable<Recipe | undefined> {
+    const httpOptions = {
+      headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+    };
+
+    return this.http.post(`${API}`, recipe, httpOptions).pipe(
+      tap((result) => this.log(result)),
+      catchError((error => this.catchError(error, undefined)))
+    )
+  }
+
+  checkRecipeName(recipeName: string): Observable<any> {
+    return this.http.get(`${API}/recipe-name-check?name=${recipeName}`).pipe(
+      tap((result) => this.log(result)),
+      catchError((error => this.catchError(error, undefined)))
+    )
+  }
+
   private log(response: any) {
-    if (response === 200) {
-      console.log(response);
-    }
+    // console.log(response);
   }
 
   private catchError(error: Error, errorValue: any) {

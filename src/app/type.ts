@@ -93,7 +93,7 @@ export type Ingredient = {
 export class Recipe {
     _id: string;
     name: string;
-    code: string;
+    code: number;
     ingredients: Ingredient[];
     imageUrl?: string;
     instructions: string;
@@ -101,7 +101,7 @@ export class Recipe {
   
     constructor(
       name: string = '',
-      code: string = '',
+      code: number = 0,
       ingredients: Ingredient[] = [],
       instructions: string = '',
       createdDate: Date = new Date()
@@ -116,10 +116,10 @@ export class Recipe {
 
 export type RecipeBody = {
     name: string;
-    code: string;
+    code: number;
     ingredients: [
         {
-            _id?: string,
+            // _id: string,
             productBrutId: string;
             quantity: number;
             unit: 'kg' | 'l' | 'pièce'

@@ -38,7 +38,7 @@
     [paginator]="true"
     [globalFilterFields]="['name']"
     [tableStyle]="{ 'min-width': '75rem' }"
-    [(selection)]="selectedRecipe"
+    [(selection)]="selectedRecipes"
     [rowHover]="true"
     dataKey="_id"
     currentPageReportTemplate="Affichage de {first} à {last} recette (sur {totalRecords} recettes)"
@@ -111,10 +111,18 @@
             <div class="p-2 text-white text-xs">
               <!-- {{ recipe.imageUrl }} -->
               <img
-                src="assets/images/bulbasaur.png"
-                class="cursor-pointer"
-                style="object-fit: contain; max-width: 100%; max-height: 50px"
-                alt="bulbasaur image"
+                [src]="
+                  recipe.imageUrl
+                    ? recipe.imageUrl
+                    : 'assets/images/bulbasaur.png'
+                "
+                style="
+                  object-fit: contain;
+                  max-width: 100%;
+                  max-height: 50px;
+                  cursor: pointer;
+                "
+                alt="recipe image"
               />
             </div>
           </div>
@@ -135,6 +143,16 @@
     </ng-template>
   </p-table>
 </div>
+
+<app-recipe-modal
+  *ngIf="recipe"
+  [recipe]="recipe"
+  [recipeDialog]="recipeDialog"
+  [editMode]="editMode"
+  [recipeSaved]="recipeSaved"
+  (recipeDialogEvent)="isRecipeDialogClick($event)"
+  (newRecipeDataEvent)="getNewRecipeData($event)"
+></app-recipe-modal>
 
 <div
   class="card w-full flex justify-content-center align-items-center translate-y-100"

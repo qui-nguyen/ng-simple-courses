@@ -18,9 +18,11 @@ import { DropdownModule } from 'primeng/dropdown';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { AutoCompleteModule } from 'primeng/autocomplete';
+import { InputTextareaModule } from 'primeng/inputtextarea';
 
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { RecipeModalComponent } from './recipe-modal/recipe-modal.component';
 
 // import { WindowResizeDirective } from '../directive/window-resize.directive';
 
@@ -30,7 +32,8 @@ const recipeRoutes: Routes = [
 
 @NgModule({
   declarations: [
-    RecipeComponent
+    RecipeComponent,
+    RecipeModalComponent
   ],
   imports: [
     CommonModule,
@@ -50,6 +53,7 @@ const recipeRoutes: Routes = [
     ReactiveFormsModule,
     ProgressSpinnerModule,
     AutoCompleteModule,
+    InputTextareaModule,
     RouterModule.forChild(recipeRoutes)
   ],
 })
