@@ -1,19 +1,22 @@
-<!-- <div *ngIf="shopList">
-    <div *ngFor="let prodStock of shopList.productsBrutInStock">
-        <div>
-            {{prodStock.productBrutId}} <br>
-            {{prodStock.quantity}} <br>
-            {{prodStock.unit}}
-        </div>
-    </div>
-</div> -->
-
 <div class="card">
+  <div class="w-full flex justify-content-end">
+    <button
+      pButton
+      pRipple
+      type="button"
+      [label]="'Recettes sélectionnées'"
+      class="p-button-outlined p-button-primary mr-6 mt-3"
+      (click)="goToRecipes()"
+    ></button>
+  </div>
+
   <p-tabView *ngIf="data">
     <!-- LISTE COURSES -->
     <p-tabPanel header="List des courses" *ngIf="data.shopList">
       <!-- PAS DANS STOCK -->
-      <h3 *ngIf="data.shopList.notExistInStock" class="uppercase">Pas dans stock</h3>
+      <h3 *ngIf="data.shopList.notExistInStock" class="uppercase">
+        Pas dans stock
+      </h3>
       <div
         *ngFor="let item of data.shopList.notExistInStock"
         class="w-full flex flex-column"
@@ -27,7 +30,9 @@
       </div>
 
       <!-- A RAJOUTER -->
-      <h3 *ngIf="data.shopList.notExistInStock.length" class="uppercase">A rajouter</h3>
+      <h3 *ngIf="data.shopList.notExistInStock.length" class="uppercase">
+        A rajouter
+      </h3>
       <div
         *ngFor="let item of data.shopList.existInStockAndNeedAdd"
         class="w-full flex flex-column"
@@ -42,33 +47,30 @@
     </p-tabPanel>
     <!-- RECETTES CHOISIS -->
     <p-tabPanel header="Recettes choisis" *ngIf="data.total">
-        <h3 class="uppercase">TOTAL</h3>
-        <div
-          *ngFor="let item of data.total"
-          class="w-full flex flex-column"
-        >
-          <div class="w-full flex justify-content-between align-items-center">
-            <h4 class="w-7 m-0">{{ item.alim_nom_fr }}</h4>
-            <p class="w-1 m-0">{{ item.quantity }}</p>
-            <p class="w-1 m-0">{{ item.unit }}</p>
-          </div>
-          <p-divider class="w-full m-0" type="dashed"></p-divider>
+      <h3 class="uppercase">TOTAL</h3>
+      <div *ngFor="let item of data.total" class="w-full flex flex-column">
+        <div class="w-full flex justify-content-between align-items-center">
+          <h4 class="w-7 m-0">{{ item.alim_nom_fr }}</h4>
+          <p class="w-1 m-0">{{ item.quantity }}</p>
+          <p class="w-1 m-0">{{ item.unit }}</p>
         </div>
+        <p-divider class="w-full m-0" type="dashed"></p-divider>
+      </div>
     </p-tabPanel>
     <!-- EN STOCK -->
     <p-tabPanel header="Produits en stock" *ngIf="data.productsInStock">
-        <h3 class="uppercase">Produits en stock</h3>
-        <div
-          *ngFor="let item of data.productsInStock"
-          class="w-full flex flex-column"
-        >
-          <div class="w-full flex justify-content-between align-items-center">
-            <h4 class="w-7 m-0">{{ item.alim_nom_fr }}</h4>
-            <p class="w-1 m-0">{{ item.quantity }}</p>
-            <p class="w-1 m-0">{{ item.unit }}</p>
-          </div>
-          <p-divider class="w-full m-0" type="dashed"></p-divider>
+      <h3 class="uppercase">Produits en stock</h3>
+      <div
+        *ngFor="let item of data.productsInStock"
+        class="w-full flex flex-column"
+      >
+        <div class="w-full flex justify-content-between align-items-center">
+          <h4 class="w-7 m-0">{{ item.alim_nom_fr }}</h4>
+          <p class="w-1 m-0">{{ item.quantity }}</p>
+          <p class="w-1 m-0">{{ item.unit }}</p>
         </div>
+        <p-divider class="w-full m-0" type="dashed"></p-divider>
+      </div>
     </p-tabPanel>
   </p-tabView>
 </div>
