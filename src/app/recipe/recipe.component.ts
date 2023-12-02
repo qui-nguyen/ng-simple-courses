@@ -4,6 +4,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { Recipe, RecipeBody } from '../type';
 import { RecipeService } from '../services/recipe.service';
 import { forkJoin } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-recipe',
@@ -26,7 +27,8 @@ export class RecipeComponent implements OnInit {
   constructor(
     private recipeService: RecipeService,
     private messageService: MessageService,
-    private confirmationService: ConfirmationService
+    private confirmationService: ConfirmationService,
+    private route: Router
   ) { }
 
   ngOnInit(): void {
@@ -56,12 +58,6 @@ export class RecipeComponent implements OnInit {
     this.recipe = null;
   }
 
-  /* Receive save recipe signal and trigger save process => api call */
-  // isRecipeSavedClick(isSaveClicked: boolean) {
-  //   // Need a post call
-  //   this.recipeSaved = true;
-  //   this.recipeDialog = false;
-  // }
   private showAndResetMessage(severity: string, summary: string, detail: string) {
     this.messageService.add({
       severity: severity,
@@ -157,10 +153,9 @@ export class RecipeComponent implements OnInit {
     }
   }
 
-
   /*** View detail click ***/
   detail(recipe: Recipe) {
-
+    this.route.navigateByUrl(`/recipes/${recipe._id}`);
   }
 
   /*** Create recipe ***/

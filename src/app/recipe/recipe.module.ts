@@ -23,17 +23,20 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RecipeModalComponent } from './recipe-modal/recipe-modal.component';
+import { RecipeDetailComponent } from './recipe-detail/recipe-detail.component';
 
 // import { WindowResizeDirective } from '../directive/window-resize.directive';
 
 const recipeRoutes: Routes = [
-  { path: 'recipes', component: RecipeComponent }
+  { path: 'recipes', component: RecipeComponent, pathMatch: 'full' },
+  { path: 'recipes/:id', component: RecipeDetailComponent, pathMatch: 'full' },
 ];
 
 @NgModule({
   declarations: [
     RecipeComponent,
-    RecipeModalComponent
+    RecipeModalComponent,
+    RecipeDetailComponent,
   ],
   imports: [
     CommonModule,
