@@ -22,15 +22,15 @@ export class ShoppingListService {
       headers: headers
     }).pipe(
       tap((res) => {
-        console.table('productsBrutInStock : ')
-        console.table(res?.productsBrutInStock)
-        console.table('Total : ')
-        console.table(res?.total)
-        console.table('notExistInStock : ')
-        console.table(res?.shopList.notExistInStock)
-        console.table(res?.shopList.notExistInStock)
+        // console.table('productsBrutInStock : ')
+        // console.table(res?.productsBrutInStock)
+        // console.table('Total : ')
+        // console.table(res?.total)
+        // console.table('notExistInStock : ')
+        // console.table(res?.shopList.notExistInStock)
+        // console.table(res?.shopList.notExistInStock)
 
-        console.table(res?.shopList.existInStockAndNeedAdd)
+        // console.table(res?.shopList.existInStockAndNeedAdd)
 
       }
       ),
