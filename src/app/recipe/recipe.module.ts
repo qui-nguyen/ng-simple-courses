@@ -19,6 +19,8 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { InputTextareaModule } from 'primeng/inputtextarea';
+import { TabViewModule } from 'primeng/tabview';
+import { DividerModule } from 'primeng/divider';
 
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -59,6 +61,8 @@ const recipeRoutes: Routes = [
     ProgressSpinnerModule,
     AutoCompleteModule,
     InputTextareaModule,
+    TabViewModule,
+    DividerModule,
     RouterModule.forChild(recipeRoutes)
   ],
 })

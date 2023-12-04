@@ -1,6 +1,6 @@
 <p-dialog
   [visible]="recipesListDialog"
-  [style]="{ width: '800px' }"
+  [style]="{ width: '800px', minHeight: '800px' }"
   header="{{ 'Créer une nouvelle list de recettes' }}"
   [modal]="true"
   styleClass="p-fluid"
@@ -9,47 +9,169 @@
 >
   <p-toast></p-toast>
   <ng-template pTemplate="content" class="w-full">
-    <div *ngFor="let recipe of newSelectedRecipes">
-      <div class="w-full flex justify-content-between">
-        <label class="w-8 mb-2 block font-bold" for="horizontal">{{
-          recipe.name
-        }}</label>
-        <p-inputNumber
-          [(ngModel)]="recipe.quantity"
-          [showButtons]="true"
-          buttonLayout="horizontal"
-          inputId="{{ recipe._id }}"
-          spinnerMode="horizontal"
-          [step]="1"
-          decrementButtonClass="p-button-primary w-2rem"
-          incrementButtonClass="p-button-primary w-2rem"
-          incrementButtonIcon="pi pi-plus"
-          decrementButtonIcon="pi pi-minus"
-          class="w-2"
-        ></p-inputNumber>
+    <!-- Recipes List -->
+    <div *ngIf="!shopListDialog">
+      <div *ngFor="let recipe of newSelectedRecipes">
+        <div class="w-full flex justify-content-between mb-2">
+          <label class="w-8 block font-bold" for="horizontal">{{
+            recipe.name
+          }}</label>
+          <p-inputNumber
+            [(ngModel)]="recipe.quantity"
+            [showButtons]="true"
+            buttonLayout="horizontal"
+            inputId="{{ recipe._id }}"
+            spinnerMode="horizontal"
+            [step]="1"
+            decrementButtonClass="p-button-primary w-2rem"
+            incrementButtonClass="p-button-primary w-2rem"
+            incrementButtonIcon="pi pi-plus"
+            decrementButtonIcon="pi pi-minus"
+            class="w-2"
+          ></p-inputNumber>
+        </div>
+      </div>
+    </div>
+
+    <!-- Shop List -->
+    <div *ngIf="shopListDialog">
+      <div class="card">
+        <p-tabView *ngIf="shopListData">
+          <!-- LISTE COURSES -->
+          <p-tabPanel header="List des courses" *ngIf="shopListData.shopList">
+            <!-- PAS DANS STOCK -->
+            <h3 *ngIf="shopListData.shopList.notExistInStock" class="uppercase">
+              Pas dans stock
+            </h3>
+            <div
+              *ngFor="let item of shopListData.shopList.notExistInStock"
+              class="w-full flex flex-column"
+            >
+              <div
+                class="w-full flex justify-content-between align-items-center"
+              >
+                <h4 class="w-7 m-0">{{ item.alim_nom_fr }}</h4>
+                <p class="w-1 m-0">{{ item.quantity }}</p>
+                <p class="w-1 m-0">{{ item.unit }}</p>
+              </div>
+              <p-divider class="w-full m-0" type="dashed"></p-divider>
+            </div>
+
+            <!-- A RAJOUTER -->
+            <h3
+              *ngIf="shopListData.shopList.notExistInStock.length > 0"
+              class="uppercase"
+            >
+              A rajouter
+            </h3>
+            <div
+              *ngFor="let item of shopListData.shopList.existInStockAndNeedAdd"
+              class="w-full flex flex-column"
+            >
+              <div
+                class="w-full flex justify-content-between align-items-center"
+              >
+                <h4 class="w-7 m-0">{{ item.alim_nom_fr }}</h4>
+                <p class="w-1 m-0">{{ item.quantity }}</p>
+                <p class="w-1 m-0">{{ item.unit }}</p>
+              </div>
+              <p-divider class="w-full m-0" type="dashed"></p-divider>
+            </div>
+          </p-tabPanel>
+          <!-- RECETTES CHOISIS -->
+          <p-tabPanel header="Recettes choisis" *ngIf="shopListData.total">
+            <h3 class="uppercase">TOTAL</h3>
+            <div
+              *ngFor="let item of shopListData.total"
+              class="w-full flex flex-column"
+            >
+              <div
+                class="w-full flex justify-content-between align-items-center"
+              >
+                <h4 class="w-7 m-0">{{ item.alim_nom_fr }}</h4>
+                <p class="w-1 m-0">{{ item.quantity }}</p>
+                <p class="w-1 m-0">{{ item.unit }}</p>
+              </div>
+              <p-divider class="w-full m-0" type="dashed"></p-divider>
+            </div>
+          </p-tabPanel>
+          <!-- EN STOCK -->
+          <p-tabPanel
+            header="Produits en stock"
+            *ngIf="shopListData.productsInStock"
+          >
+            <h3 class="uppercase">Produits en stock</h3>
+            <div
+              *ngFor="let item of shopListData.productsInStock"
+              class="w-full flex flex-column"
+            >
+              <div
+                class="w-full flex justify-content-between align-items-center"
+              >
+                <h4 class="w-7 m-0">{{ item.alim_nom_fr }}</h4>
+                <p class="w-1 m-0">{{ item.quantity }}</p>
+                <p class="w-1 m-0">{{ item.unit }}</p>
+              </div>
+              <p-divider class="w-full m-0" type="dashed"></p-divider>
+            </div>
+          </p-tabPanel>
+        </p-tabView>
       </div>
     </div>
   </ng-template>
 
   <!-- ACTIONS BTNS -->
   <ng-template pTemplate="footer">
-    <button
-      pButton
-      pRipple
-      [label]="'Annuler'"
-      icon="pi pi-times"
-      class="p-button-outlined p-button-danger"
-      style="min-width: 3rem"
-      (click)="hideDialog()"
-    ></button>
-    <button
-      pButton
-      pRipple
-      [label]="'Sauvegarder'"
-      icon="pi pi-check"
-      class="p-button-outlined p-button-primary mr-6"
-      style="min-width: 3rem"
-      (click)="saveRecipesList()"
-    ></button>
+    <div *ngIf="!shopListDialog">
+      <button
+        pButton
+        pRipple
+        [label]="'Annuler'"
+        icon="pi pi-times"
+        class="p-button-outlined p-button-danger"
+        style="min-width: 3rem"
+        (click)="hideDialog()"
+      ></button>
+      <button
+        pButton
+        pRipple
+        [label]="'Sauvegarder'"
+        icon="pi pi-check"
+        class="p-button-outlined p-button-primary mr-6"
+        style="min-width: 3rem"
+        (click)="saveRecipesList()"
+      ></button>
+      <button
+        pButton
+        pRipple
+        [label]="'Voir liste des courses'"
+        icon="pi pi-eye"
+        class="p-button-outlined p-button-primary mr-6"
+        style="min-width: 3rem"
+        (click)="showShopList()"
+      ></button>
+    </div>
+
+    <!-- ACTIONS BTNS -->
+    <div *ngIf="shopListDialog">
+      <button
+        pButton
+        pRipple
+        [label]="'Retour'"
+        icon="pi pi-angle-left"
+        class="p-button-outlined p-button-primary"
+        style="min-width: 3rem"
+        (click)="returnRecipesList()"
+      ></button>
+      <button
+        pButton
+        pRipple
+        [label]="'Sauvegarder'"
+        icon="pi pi-check"
+        class="p-button-outlined p-button-primary mr-6"
+        style="min-width: 3rem"
+        (click)="saveAll()"
+      ></button>
+    </div>
   </ng-template>
 </p-dialog>

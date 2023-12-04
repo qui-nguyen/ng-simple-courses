@@ -38,7 +38,6 @@ export class RecipeComponent implements OnInit {
 
   ngOnInit(): void {
     this.recipeService.getRecipes().subscribe((res: Recipe[]) => this.recipes = res);
-
   }
 
   getDisplayedIngredients(recipe: Recipe): string[] {
@@ -47,7 +46,10 @@ export class RecipeComponent implements OnInit {
       : recipe.ingredients.map((ingredient) => ingredient.productBrut.alim_nom_fr);
   }
 
-  selectedRecipe(recipe: Recipe) { }
+  selectedRecipe(recipe: Recipe) { 
+    // console.log(recipe);
+    console.log(this.selectedRecipes);
+  }
 
   /*** Edit recipe ***/
   /* Edit click => open modal */
@@ -264,8 +266,12 @@ export class RecipeComponent implements OnInit {
   }
 
   /*** Create recipes selected list***/
-
   handleCreateRecipesList() {
     this.recipesListDialog = true;
+  }
+
+  recipesListEvent(event: any) {
+    this.recipesListDialog = false;
+    this.selectedRecipes = null;
   }
 }

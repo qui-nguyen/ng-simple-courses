@@ -8,13 +8,13 @@ import { Router } from '@angular/router';
 })
 export class ShoppingListComponent implements OnInit {
 
-  data: any;
+  data: any = [];
   constructor(
     private shopListService: ShoppingListService,
     private router: Router) { }
 
   ngOnInit(): void {
-    this.shopListService.getShopList().subscribe(res => this.data = res)
+    // this.shopListService.getShopList().subscribe(res => this.data = res)
   }
 
   goToRecipes() {

@@ -168,6 +168,7 @@
   *ngIf="selectedRecipes"
   [selectedRecipes]="selectedRecipes"
   [recipesListDialog]="recipesListDialog"
+  (recipesListEvent)="recipesListEvent($event)"
 />
 
 <div
