@@ -2,14 +2,14 @@
 export class ProductBrut {
     _id: string | null;
     alim_nom_fr: string;
-    alim_grp_code: number;
-    alim_ssgrp_code: number;
-    alim_ssssgrp_code: number;
-    alim_grp_nom_fr: string;
-    alim_ssgrp_nom_fr: string;
-    alim_ssssgrp_nom_fr: string;
-    alim_code: number;
-    alim_nom_sci: string;
+    alim_grp_code?: number;
+    alim_ssgrp_code?: number;
+    alim_ssssgrp_code?: number;
+    alim_grp_nom_fr?: string;
+    alim_ssgrp_nom_fr?: string;
+    alim_ssssgrp_nom_fr?: string;
+    alim_code?: number;
+    alim_nom_sci?: string;
 }
 
 
@@ -98,21 +98,21 @@ export class Recipe {
     imageUrl?: string;
     instructions: string;
     createdDate: Date;
-  
+
     constructor(
-      name: string = '',
-      code: number = 0,
-      ingredients: Ingredient[] = [],
-      instructions: string = '',
-      createdDate: Date = new Date()
+        name: string = '',
+        code: number = 0,
+        ingredients: Ingredient[] = [],
+        instructions: string = '',
+        createdDate: Date = new Date()
     ) {
-      this.name = name;
-      this.code = code;
-      this.ingredients = ingredients;
-      this.instructions = instructions;
-      this.createdDate = createdDate;
+        this.name = name;
+        this.code = code;
+        this.ingredients = ingredients;
+        this.instructions = instructions;
+        this.createdDate = createdDate;
     }
-  }
+}
 
 export type RecipeBody = {
     name: string;
@@ -129,3 +129,29 @@ export type RecipeBody = {
     instructions: string;
     createdDate: Date;
 }
+
+export type RecipeExtendedQty = Recipe & {
+    quantity: number;
+};
+
+
+/*** Recipe ***/
+export interface Ingredients {
+    _id: string;
+    quantity: number;
+    unit: string;
+    productBrutId: string;
+    alim_nom_fr: string;
+}
+
+export interface ShopList {
+    notExistInStock: Ingredients[] | [];
+    existInStockAndNeedAdd: Ingredients[] | [];
+}
+
+export interface ShopListData {
+    productsInStock: Ingredients[];
+    total: Ingredients[];
+    shopList: ShopList;
+}
+

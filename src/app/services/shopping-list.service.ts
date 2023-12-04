@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable, catchError, map, of, tap } from 'rxjs';
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
+import { RecipeExtendedQty } from '../type';
 
 const API = `${environment.apiURL}shoplists`;
 
@@ -11,17 +12,15 @@ const API = `${environment.apiURL}shoplists`;
 export class ShoppingListService {
   constructor(private http: HttpClient) { }
 
-  getShopList(): Observable<any> {
+  getShopList(recipes: RecipeExtendedQty[]): Observable<any> {
 
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      // 'Authorization': 'Bearer...'
-    });
+    const httpOptions = {
+      headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+    };
 
-    return this.http.get<any>(`${API}`, {
-      headers: headers
-    }).pipe(
+    return this.http.post(`${API}`, recipes, httpOptions).pipe(
       tap((res) => {
+        console.log(res);
         // console.table('productsBrutInStock : ')
         // console.table(res?.productsBrutInStock)
         // console.table('Total : ')
