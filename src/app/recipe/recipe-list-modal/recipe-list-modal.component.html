@@ -1,0 +1,55 @@
+<p-dialog
+  [visible]="recipesListDialog"
+  [style]="{ width: '800px' }"
+  header="{{ 'Créer une nouvelle list de recettes' }}"
+  [modal]="true"
+  styleClass="p-fluid"
+  [maximizable]="true"
+  [closable]="false"
+>
+  <p-toast></p-toast>
+  <ng-template pTemplate="content" class="w-full">
+    <div *ngFor="let recipe of newSelectedRecipes">
+      <div class="w-full flex justify-content-between">
+        <label class="w-8 mb-2 block font-bold" for="horizontal">{{
+          recipe.name
+        }}</label>
+        <p-inputNumber
+          [(ngModel)]="recipe.quantity"
+          [showButtons]="true"
+          buttonLayout="horizontal"
+          inputId="{{ recipe._id }}"
+          spinnerMode="horizontal"
+          [step]="1"
+          decrementButtonClass="p-button-primary w-2rem"
+          incrementButtonClass="p-button-primary w-2rem"
+          incrementButtonIcon="pi pi-plus"
+          decrementButtonIcon="pi pi-minus"
+          class="w-2"
+        ></p-inputNumber>
+      </div>
+    </div>
+  </ng-template>
+
+  <!-- ACTIONS BTNS -->
+  <ng-template pTemplate="footer">
+    <button
+      pButton
+      pRipple
+      [label]="'Annuler'"
+      icon="pi pi-times"
+      class="p-button-outlined p-button-danger"
+      style="min-width: 3rem"
+      (click)="hideDialog()"
+    ></button>
+    <button
+      pButton
+      pRipple
+      [label]="'Sauvegarder'"
+      icon="pi pi-check"
+      class="p-button-outlined p-button-primary mr-6"
+      style="min-width: 3rem"
+      (click)="saveRecipesList()"
+    ></button>
+  </ng-template>
+</p-dialog>

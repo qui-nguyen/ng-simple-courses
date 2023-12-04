@@ -24,6 +24,7 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RecipeModalComponent } from './recipe-modal/recipe-modal.component';
 import { RecipeDetailComponent } from './recipe-detail/recipe-detail.component';
+import { RecipeListModalComponent } from './recipe-list-modal/recipe-list-modal.component';
 
 // import { WindowResizeDirective } from '../directive/window-resize.directive';
 
@@ -37,6 +38,7 @@ const recipeRoutes: Routes = [
     RecipeComponent,
     RecipeModalComponent,
     RecipeDetailComponent,
+    RecipeListModalComponent,
   ],
   imports: [
     CommonModule,

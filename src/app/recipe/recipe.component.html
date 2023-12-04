@@ -11,6 +11,16 @@
           pButton
           pRipple
           type="button"
+          [label]="'Créer une liste'"
+          class="p-button-outlined p-button-primary mr-6"
+          icon="pi pi-plus"
+          (click)="handleCreateRecipesList()"
+          [disabled]="!selectedRecipes || !selectedRecipes.length"
+        ></button>
+        <button
+          pButton
+          pRipple
+          type="button"
           [label]="'Ajouter'"
           class="p-button-outlined p-button-primary mr-6"
           icon="pi pi-plus"
@@ -152,7 +162,13 @@
   [recipeSaved]="recipeSaved"
   (recipeDialogEvent)="isRecipeDialogClick($event)"
   (newRecipeDataEvent)="getNewRecipeData($event)"
-></app-recipe-modal>
+/>
+
+<app-recipe-list-modal
+  *ngIf="selectedRecipes"
+  [selectedRecipes]="selectedRecipes"
+  [recipesListDialog]="recipesListDialog"
+/>
 
 <div
   class="card w-full flex justify-content-center align-items-center translate-y-100"

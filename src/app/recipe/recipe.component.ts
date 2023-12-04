@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Recipe, RecipeBody } from '../type';
@@ -17,6 +17,7 @@ export class RecipeComponent implements OnInit {
   recipes: Recipe[];
   selectedRecipes: Recipe[] | null = null;
 
+  // Edit or create new recipe
   editMode: boolean = false;
 
   recipe: Recipe | null = null;
@@ -24,11 +25,15 @@ export class RecipeComponent implements OnInit {
   recipeSaved: boolean = false;
   newRecipeData: any;
 
+  // Create new LIST recipes
+  recipesListDialog: boolean = false;
+
   constructor(
     private recipeService: RecipeService,
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
-    private route: Router
+    private route: Router,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
@@ -72,6 +77,19 @@ export class RecipeComponent implements OnInit {
     let summary = 'Félicitation !';
     let detail = 'Nouvelle recette ajoutée';
 
+    const updateRecipeSelected = (updatedRecipe: Recipe, selectedRecipes: Recipe[] | null): Recipe[] | null => {
+      if (selectedRecipes === null) {
+        return null;
+      } else {
+        const index = selectedRecipes.findIndex(recipe => recipe._id === updatedRecipe._id);
+        if (index !== -1) { // recipe updated found in recipes selected list
+          const updatedSelectedRecipes = selectedRecipes.map((recipe, i) => i === index ? { ...recipe, ...updatedRecipe } : recipe);
+          return updatedSelectedRecipes;
+        }
+        return selectedRecipes;
+      }
+    }
+
     const handleRecipeUpdate = (result: Recipe | undefined) => {
       if (result) {
         const indexFounded = this.recipes.findIndex((el: Recipe) => el._id === result._id);
@@ -79,6 +97,7 @@ export class RecipeComponent implements OnInit {
         this.recipeSaved = true;
         this.recipe = null;
         this.recipeDialog = false;
+        this.selectedRecipes = updateRecipeSelected(result, this.selectedRecipes);
 
         severity = 'success';
         summary = 'Félicitation !';
@@ -242,5 +261,11 @@ export class RecipeComponent implements OnInit {
         this.deleteSelectedRecipes();
       }
     });
+  }
+
+  /*** Create recipes selected list***/
+
+  handleCreateRecipesList() {
+    this.recipesListDialog = true;
   }
 }
