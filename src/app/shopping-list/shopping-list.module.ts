@@ -10,9 +10,6 @@ import { RecipeListComponent } from './recipe-list/recipe-list.component';
 import { TabViewModule } from 'primeng/tabview';
 import { DividerModule } from 'primeng/divider';
 import { ButtonModule } from 'primeng/button';
-import { PickListModule } from 'primeng/picklist';
-import { ChipModule } from 'primeng/chip';
-import { BadgeModule } from 'primeng/badge';
 
 
 
@@ -30,10 +27,7 @@ const shoppingListRoutes: Routes = [
     CommonModule,
     TabViewModule,
     DividerModule,
-    PickListModule,
     ButtonModule,
-    ChipModule,
-    BadgeModule,
     RouterModule.forChild(shoppingListRoutes)
   ]
 })
