@@ -12,6 +12,14 @@ const API = `${environment.apiURL}recipeLists`;
 export class RecipeListService {
   constructor(private http: HttpClient) { }
 
+  checkRecipeListName(recipeListName: string): Observable<any> {
+    console.log(recipeListName);
+    return this.http.get(`${API}/recipe-list-name-check?name=${recipeListName}`).pipe(
+      tap((result) => this.log(result)),
+      catchError((error => this.catchError(error, undefined)))
+    )
+  }
+
   createRecipeList(recipes: RecipeListBody): Observable<any> {
 
     const httpOptions = {

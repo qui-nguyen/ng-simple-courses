@@ -22,7 +22,7 @@ export class RecipeListModalComponent {
   @Output() recipeListEvent = new EventEmitter<any>();
 
   recipeList: any;
-  recipeListName: string;
+  recipeListName: string | null;
 
   newSelectedRecipes: RecipeExtendedQty[];
   shopListDialog: boolean = false;
@@ -46,6 +46,7 @@ export class RecipeListModalComponent {
 
   /**** Recipes List ****/
   handleOpenConfimDialog() {
+    this.recipeListName = null;
     this.confirmationService.confirm({
       message: '',
       header: 'Confirmation'
@@ -58,35 +59,52 @@ export class RecipeListModalComponent {
 
   handleSaveRecipeList() {
     let isError = false;
+    let summary = 'Liste des recettes est sauvegardée !';
     if (this.recipeListName) {
-      this.recipeListService.createRecipeList({
-        name: this.recipeListName,
-        recipeListId: this.newSelectedRecipes.map(el => ({ recipeId: el._id, quantity: el.quantity })),
-        shopListId: null,
-        createdDate: new Date
-      }).subscribe(
-        {
-          next: (res) => {
-            if (res) {
-              this.recipeList = res;
-              this.confirmationService.close();
-            } else {
-              isError = true;
-            }
-          },
-          complete: () => {
-            this.messageService.add({
-              severity: `${isError ? 'error' : 'success'}`,
-              summary: `${isError ? 'Erreur survenue' : 'Liste des recettes est sauvegardée !'}`,
-              detail: '',
-              life: 3000
-            });
-            // setTimeout(() => {
-            //   !isError && this.hideDialog();
-            // }, 4000);
-          },
-        }
-      );
+      this.recipeListService.checkRecipeListName(this.recipeListName).subscribe({
+        next: (isExist) => {
+          // Check if name exist
+          if (isExist === false) {
+            this.recipeListService.createRecipeList({
+              name: this.recipeListName!,
+              recipeListId: this.newSelectedRecipes.map(el => ({ recipeId: el._id, quantity: el.quantity })),
+              shopListId: null,
+              createdDate: new Date
+            }).subscribe(
+              {
+                next: (res) => {
+                  if (res) {
+                    this.recipeList = res;
+                    this.confirmationService.close();
+                  } else {
+                    isError = true;
+                    summary = "Erreur survenue !"
+                  }
+                },
+              }
+            );
+
+          } else if (isExist === true) {
+            isError = true;
+            summary = "Nom existe !"
+          } else { // undefind or error when check name
+            isError = true;
+            summary = "Erreur !"
+          }
+        },
+        complete: () => {
+          this.messageService.add({
+            severity: `${isError ? 'error' : 'success'}`,
+            summary: summary,
+            detail: '',
+            life: 3000
+          });
+         
+          // setTimeout(() => {
+          //   !isError && this.hideDialog();
+          // }, 4000);
+        },
+      })
     }
   }
 
