@@ -1,14 +1,9 @@
-// Import necessary Angular and third-party modules, services, and types
-import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges, ChangeDetectorRef } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
+
 import { RecipeListService } from 'src/app/services/recipe-list.service';
 import { ShoppingListService } from 'src/app/services/shopping-list.service';
-import { Recipe, RecipeList, ShopListData, ShoppingList } from 'src/app/type';
-
-// Define a type that extends Recipe with an additional 'quantity' property
-type RecipeExtendedQty = Recipe & {
-  quantity: number;
-};
+import { Recipe, RecipeExtendedQty, RecipeList, ShopListData, ShoppingList } from 'src/app/type';
 
 @Component({
   selector: 'app-recipe-list-modal',
@@ -39,6 +34,7 @@ export class RecipeListModalComponent implements OnInit {
     private recipeListService: RecipeListService,
     private confirmationService: ConfirmationService,
     private messageService: MessageService,
+    private cdr: ChangeDetectorRef,
   ) { }
 
   /*** Lifecycle hook => watch for changes in input properties (selectedRecipes) ***/
@@ -56,6 +52,13 @@ export class RecipeListModalComponent implements OnInit {
     this.recipeList = undefined;
     this.newShopList = undefined;
     this.isSaveShopListClick = false;
+  }
+
+  /*** Lifecycle hook => called after the component's view and child views have been checked => modal ***/
+  ngAfterViewChecked(): void {
+    // => check for changes in the component and its child components.
+    // => ensure that the view reflects the most up-to-date state of the component.
+    this.cdr.detectChanges();
   }
 
   /*** Handle opening the confirmation dialog => save process ***/
