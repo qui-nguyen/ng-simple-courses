@@ -94,7 +94,7 @@ export class RecipeListModalComponent implements OnInit {
             // Recipe list name does not exist, create a new recipe list
             this.recipeListService.createRecipeList({
               name: this.recipeListName!,
-              recipeListId: this.newSelectedRecipes.map(el => ({ recipeId: el._id, quantity: el.quantity })),
+              recipeIds: this.newSelectedRecipes.map(el => ({ recipeId: el._id, quantity: el.quantity })),
               shopListId: null,
               createdDate: new Date
             }).subscribe(

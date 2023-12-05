@@ -140,7 +140,7 @@ export class RecipeList {
     _id: string;
     name: string;
     code: number;
-    recipeListId: {
+    recipeIds: {
         recipeId: string;
         quantity: number;
     }[];
@@ -150,7 +150,7 @@ export class RecipeList {
     constructor(
         name: string = '',
         code: number = 0,
-        recipeListId: {
+        recipeIds: {
             recipeId: string;
             quantity: number;
         }[] = [],
@@ -159,7 +159,7 @@ export class RecipeList {
     ) {
         this.name = name;
         this.code = code;
-        this.recipeListId = recipeListId;
+        this.recipeIds = recipeIds;
         this.shopListId = shopListId;
         this.createdDate = createdDate;
     }
@@ -167,7 +167,7 @@ export class RecipeList {
 
 export interface RecipeListBody {
     name: string;
-    recipeListId:
+    recipeIds:
     {
         recipeId: string;
         quantity: number;
@@ -176,12 +176,24 @@ export interface RecipeListBody {
     createdDate: Date
 }
 
+export interface RecipListType {
+    _id: string;
+    name: string;
+    code: number;
+    recipeIds: {
+        recipeId: string;
+        quantity: number;
+    }[];
+    shopListId: string | null;
+    createdDate: Date;
+}
+
 /*** Shopping List ***/
 export class ShoppingList {
     _id: string;
     name: string;
     code: number;
-    recipeListId: string | null;
+    recipeListId: any | RecipListType | string | null;
     shopList: ShopList;
     createdDate: Date;
 

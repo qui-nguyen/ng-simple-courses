@@ -1,24 +1,45 @@
 <div class="card">
   <div class="w-full flex justify-content-end">
-    <button
+    <!-- <button
       pButton
       pRipple
       type="button"
       [label]="'Recettes sélectionnées'"
       class="p-button-outlined p-button-primary mr-6 mt-3"
       (click)="goToRecipes()"
-    ></button>
+    ></button> -->
   </div>
 
-  <p-tabView *ngIf="data">
+  <div *ngFor="let item of data" class="mt-6">
+    <div class="w-full flex justify-content-between">
+      <p class="w-8 cursor-pointer my-0" (click)="handleSelectShopList(item)">
+        {{ item.name }}
+      </p>
+      <p class="w-3 my-0">{{ item.createdDate | date : "dd/MM/yyyy" }}</p>
+    </div>
+
+    <p-divider align="center">
+      <span class="p-tag bg-blue-100">🎯🎯🎯</span>
+    </p-divider>
+  </div>
+  <button
+    *ngIf="shopListSelected"
+    pButton
+    pRipple
+    type="button"
+    [label]="'Fermer'"
+    class="p-button-outlined p-button-primary mr-6 mt-3"
+    (click)="handleClose()"
+  ></button>
+  <p-tabView *ngIf="shopListSelected">
     <!-- LISTE COURSES -->
-    <p-tabPanel header="List des courses" *ngIf="data.shopList">
+    <p-tabPanel header="List des courses" *ngIf="shopListSelected.shopList">
       <!-- PAS DANS STOCK -->
-      <h3 *ngIf="data.shopList.notExistInStock" class="uppercase">
+      <h3 *ngIf="shopListSelected.shopList.notExistInStock" class="uppercase">
         Pas dans stock
       </h3>
       <div
-        *ngFor="let item of data.shopList.notExistInStock"
+        *ngFor="let item of shopListSelected.shopList.notExistInStock"
         class="w-full flex flex-column"
       >
         <div class="w-full flex justify-content-between align-items-center">
@@ -30,11 +51,14 @@
       </div>
 
       <!-- A RAJOUTER -->
-      <h3 *ngIf="data.shopList.notExistInStock.length" class="uppercase">
+      <h3
+        *ngIf="shopListSelected.shopList.notExistInStock.length"
+        class="uppercase"
+      >
         A rajouter
       </h3>
       <div
-        *ngFor="let item of data.shopList.existInStockAndNeedAdd"
+        *ngFor="let item of shopListSelected.shopList.existInStockAndNeedAdd"
         class="w-full flex flex-column"
       >
         <div class="w-full flex justify-content-between align-items-center">
@@ -45,27 +69,28 @@
         <p-divider class="w-full m-0" type="dashed"></p-divider>
       </div>
     </p-tabPanel>
+
     <!-- RECETTES CHOISIS -->
-    <p-tabPanel header="Recettes choisis" *ngIf="data.total">
-      <h3 class="uppercase">TOTAL</h3>
-      <div *ngFor="let item of data.total" class="w-full flex flex-column">
+    <p-tabPanel header="Recettes choisis" *ngIf="shopListSelected.recipeListId">
+      <h3 class="uppercase">Recettes choisis</h3>
+      <div *ngFor="let item of shopListSelected.recipes" class="w-full flex flex-column">
         <div class="w-full flex justify-content-between align-items-center">
-          <h4 class="w-7 m-0">{{ item.alim_nom_fr }}</h4>
+          <h4 class="w-7 m-0">{{ item.name }}</h4>
           <p class="w-1 m-0">{{ item.quantity }}</p>
-          <p class="w-1 m-0">{{ item.unit }}</p>
         </div>
         <p-divider class="w-full m-0" type="dashed"></p-divider>
       </div>
     </p-tabPanel>
     <!-- EN STOCK -->
-    <p-tabPanel header="Produits en stock" *ngIf="data.productsInStock">
+
+    <p-tabPanel header="Produits en stock" *ngIf="productsInStock">
       <h3 class="uppercase">Produits en stock</h3>
       <div
-        *ngFor="let item of data.productsInStock"
+        *ngFor="let item of productsInStock"
         class="w-full flex flex-column"
       >
         <div class="w-full flex justify-content-between align-items-center">
-          <h4 class="w-7 m-0">{{ item.alim_nom_fr }}</h4>
+          <h4 class="w-7 m-0">{{ item.productBrut.alim_nom_fr }}</h4>
           <p class="w-1 m-0">{{ item.quantity }}</p>
           <p class="w-1 m-0">{{ item.unit }}</p>
         </div>

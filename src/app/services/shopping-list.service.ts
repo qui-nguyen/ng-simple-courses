@@ -12,6 +12,12 @@ const API = `${environment.apiURL}shoplists`;
 export class ShoppingListService {
   constructor(private http: HttpClient) { }
 
+  getAllShopLists(): Observable<ShoppingList[]> {
+    return this.http.get<ShoppingList[]>(`${API}/all`).pipe(
+      tap((res) => this.log(res)),
+      catchError((err) => this.catchError(err, [])))
+  }
+
   getShopList(recipes: RecipeExtendedQty[]): Observable<any> {
 
     const httpOptions = {
