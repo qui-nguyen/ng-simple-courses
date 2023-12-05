@@ -3,7 +3,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 
 import { RecipeListService } from 'src/app/services/recipe-list.service';
 import { ShoppingListService } from 'src/app/services/shopping-list.service';
-import { Recipe, RecipeExtendedQty, RecipeList, ShopListData, ShoppingList } from 'src/app/type';
+import { Recipe, RecipeExtendedQty, RecipeList, RecipeListBody, ShopListData, ShoppingList } from 'src/app/type';
 
 @Component({
   selector: 'app-recipe-list-modal',
@@ -74,6 +74,11 @@ export class RecipeListModalComponent implements OnInit {
   /*** Check if the recipe list name is valid ***/
   isRecipeListNameValid(): boolean {
     return !!this.recipeListName; // Check if name is not null
+  }
+
+  /*** Update recipe list (after shop list saved) ***/
+  updateRecipeList(recipeListId: string, recipeList: RecipeList) {
+    this.recipeListService.updateRecipeList(recipeListId, recipeList).subscribe(res => console.log(res));
   }
 
   /*** Handle saving the recipe list (or both recipe list and shop list) ***/
@@ -160,12 +165,18 @@ export class RecipeListModalComponent implements OnInit {
         next: (res) => {
           if (res) {
             this.newShopList = res;
+            console.log(res);
+            console.log(this.recipeList);
           } else {
             isError = true;
             summary = 'Erreur de sauvegarde nouvelle liste des courses !';
           }
         },
         complete: () => {
+          // Update recipe list
+          if (this.newShopList && this.recipeList) {
+            this.updateRecipeList(this.recipeList._id, { ...this.recipeList, shopListId: this.newShopList._id });
+          }
           this.isSaveShopListClick = false;
           // Display a message based on the result of shop list creation
           this.showMessage(isError, summary);

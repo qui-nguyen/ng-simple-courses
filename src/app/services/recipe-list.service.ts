@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable, catchError, of, tap } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
-import { RecipeListBody } from '../type';
+import { RecipeList, RecipeListBody } from '../type';
 
 const API = `${environment.apiURL}recipeLists`;
 
@@ -33,6 +33,17 @@ export class RecipeListService {
       ),
       catchError((err) => this.catchError(err, undefined))
     );
+  }
+
+  updateRecipeList(id: string, recipeList: RecipeList | RecipeListBody): Observable<RecipeList | any> {
+    const httpOptions = {
+      headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+    };
+
+    return this.http.put(`${API}/${id}`, recipeList, httpOptions).pipe(
+      tap((result) => this.log(result)),
+      catchError((error => this.catchError(error, undefined)))
+    )
   }
 
   private log(response: any) {
