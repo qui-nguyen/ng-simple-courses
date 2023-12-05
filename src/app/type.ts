@@ -136,6 +136,36 @@ export type RecipeExtendedQty = Recipe & {
 
 
 /*** Recipe List ***/
+export class RecipeList {
+    _id: string;
+    name: string;
+    code: number;
+    recipeListId: {
+        recipeId: string;
+        quantity: number;
+    }[];
+    shopListId: string | null;
+    createdDate: Date;
+
+    constructor(
+        name: string = '',
+        code: number = 0,
+        recipeListId: {
+            recipeId: string;
+            quantity: number;
+        }[] = [],
+        shopListId: null,
+        createdDate: Date = new Date()
+    ) {
+        this.name = name;
+        this.code = code;
+        this.recipeListId = recipeListId;
+        this.shopListId = shopListId;
+        this.createdDate = createdDate;
+    }
+}
+
+
 export interface Ingredients {
     _id: string;
     quantity: number;
@@ -157,11 +187,11 @@ export interface ShopListData {
 
 export interface RecipeListBody {
     name: string;
-    recipeListId: 
-        {
-            recipeId: string;
-            quantity: number;
-        }[];
+    recipeListId:
+    {
+        recipeId: string;
+        quantity: number;
+    }[];
     shopListId: string | null,
     createdDate: Date
 }

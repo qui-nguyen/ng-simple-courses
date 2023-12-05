@@ -4,7 +4,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 
 import { RecipeListService } from 'src/app/services/recipe-list.service';
 import { ShoppingListService } from 'src/app/services/shopping-list.service';
-import { Recipe, ShopListData } from 'src/app/type';
+import { Recipe, RecipeList, ShopListData } from 'src/app/type';
 
 
 type RecipeExtendedQty = Recipe & {
@@ -21,7 +21,7 @@ export class RecipeListModalComponent {
   @Input() recipeListDialog: boolean = false;
   @Output() recipeListEvent = new EventEmitter<any>();
 
-  recipeList: any;
+  recipeList: RecipeList | undefined;
   recipeListName: string | null;
 
   newSelectedRecipes: RecipeExtendedQty[];
@@ -35,6 +35,7 @@ export class RecipeListModalComponent {
     private messageService: MessageService,
   ) { }
 
+
   /**** Watch the changement of parent => get values in real time ****/
   ngOnChanges(changes: SimpleChanges): void {
     if ('selectedRecipes' in changes) {
@@ -43,6 +44,11 @@ export class RecipeListModalComponent {
       }
     }
   }
+
+  ngOnInit(): void {
+    this.recipeList = undefined;
+  }
+
 
   /**** Recipes List ****/
   handleOpenConfimDialog() {
@@ -99,7 +105,7 @@ export class RecipeListModalComponent {
             detail: '',
             life: 3000
           });
-         
+
           // setTimeout(() => {
           //   !isError && this.hideDialog();
           // }, 4000);
@@ -115,6 +121,7 @@ export class RecipeListModalComponent {
   hideDialog() {
     this.shopListDialog = false;
     this.selectedRecipes = null;
+    this.recipeList = undefined;
     this.recipeListEvent.emit();
   }
 
