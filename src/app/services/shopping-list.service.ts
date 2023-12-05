@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Observable, catchError, map, of, tap } from 'rxjs';
-import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
+import { Observable, catchError, of, tap } from 'rxjs';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
-import { RecipeExtendedQty } from '../type';
+import { RecipeExtendedQty, ShoppingList, ShoppingListBody } from '../type';
 
 const API = `${environment.apiURL}shoplists`;
 
@@ -18,7 +18,7 @@ export class ShoppingListService {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' })
     };
 
-    return this.http.post(`${API}`, recipes, httpOptions).pipe(
+    return this.http.post(`${API}/view`, recipes, httpOptions).pipe(
       tap((res) => {
         console.log(res);
         // console.table('productsBrutInStock : ')
@@ -35,6 +35,17 @@ export class ShoppingListService {
       ),
       catchError((err) => this.catchError(err, []))
     );
+  }
+
+  createShopList(data: ShoppingListBody): Observable<ShoppingList | undefined> {
+    const httpOptions = {
+      headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+    };
+
+    return this.http.post(`${API}`, data, httpOptions).pipe(
+      tap((result) => this.log(result)),
+      catchError((error => this.catchError(error, undefined)))
+    )
   }
 
   private log(response: any) {

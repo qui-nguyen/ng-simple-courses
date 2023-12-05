@@ -4,7 +4,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 
 import { RecipeListService } from 'src/app/services/recipe-list.service';
 import { ShoppingListService } from 'src/app/services/shopping-list.service';
-import { Recipe, RecipeList, ShopListData } from 'src/app/type';
+import { Recipe, RecipeList, ShopListData, ShoppingList } from 'src/app/type';
 
 
 type RecipeExtendedQty = Recipe & {
@@ -28,6 +28,10 @@ export class RecipeListModalComponent {
   shopListDialog: boolean = false;
   shopListData: ShopListData | undefined = undefined;
 
+  newShopList: ShoppingList | undefined;
+  isSaveShopListClick: boolean;
+
+
   constructor(
     private shopListService: ShoppingListService,
     private recipeListService: RecipeListService,
@@ -47,6 +51,8 @@ export class RecipeListModalComponent {
 
   ngOnInit(): void {
     this.recipeList = undefined;
+    this.newShopList = undefined;
+    this.isSaveShopListClick = false;
   }
 
 
@@ -66,6 +72,7 @@ export class RecipeListModalComponent {
   handleSaveRecipeList() {
     let isError = false;
     let summary = 'Liste des recettes est sauvegardée !';
+    console.log('Vo');
     if (this.recipeListName) {
       this.recipeListService.checkRecipeListName(this.recipeListName).subscribe({
         next: (isExist) => {
@@ -87,6 +94,11 @@ export class RecipeListModalComponent {
                     summary = "Erreur survenue !"
                   }
                 },
+                complete: () => {
+                  if (this.isSaveShopListClick) {
+                    this.saveShopList();
+                  }
+                }
               }
             );
 
@@ -105,10 +117,6 @@ export class RecipeListModalComponent {
             detail: '',
             life: 3000
           });
-
-          // setTimeout(() => {
-          //   !isError && this.hideDialog();
-          // }, 4000);
         },
       })
     }
@@ -126,6 +134,41 @@ export class RecipeListModalComponent {
   }
 
   /**** Shop List ****/
+  saveShopList() {
+    if (this.recipeList && this.shopListData) {
+      let isError = false;
+      let summary = 'Nouvelle liste des courses sauvegardée !';
+
+      this.shopListService.createShopList(
+        {
+          name: this.recipeList.name,
+          recipeListId: this.recipeList._id,
+          shopList: this.shopListData.shopList,
+          createdDate: new Date
+        }
+      ).subscribe({
+        next: (res) => {
+          if (res) {
+            this.newShopList = res;
+          } else {
+            isError = true;
+            summary = 'Erreur de sauvegarde nouvelle liste des courses !';
+          }
+        },
+        complete: () => {
+          this.isSaveShopListClick = false;
+          this.messageService.add({
+            severity: `${isError ? 'error' : 'success'}`,
+            summary: summary,
+            detail: '',
+            life: 3000
+          });
+        },
+
+      })
+    }
+  }
+
   showShopList() {
     this.shopListDialog = true;
     this.shopListService.getShopList(this.newSelectedRecipes).subscribe(res => this.shopListData = res);
@@ -136,12 +179,14 @@ export class RecipeListModalComponent {
   }
 
   saveAll() {
-    this.hideDialog();
-    this.recipeListEvent.emit();
+    if (this.recipeList) {
+      this.saveShopList();
+    } else {
+      this.isSaveShopListClick = true;
+      this.handleOpenConfimDialog();
+      this.handleSaveRecipeList();
+    }
+    // this.hideDialog();
+    // this.recipeListEvent.emit();
   }
-
-
-
-
-
 }

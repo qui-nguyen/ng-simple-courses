@@ -165,7 +165,47 @@ export class RecipeList {
     }
 }
 
+export interface RecipeListBody {
+    name: string;
+    recipeListId:
+    {
+        recipeId: string;
+        quantity: number;
+    }[];
+    shopListId: string | null,
+    createdDate: Date
+}
 
+/*** Shopping List ***/
+export class ShoppingList {
+    _id: string;
+    name: string;
+    code: number;
+    recipeListId: string | null;
+    shopList: ShopList;
+    createdDate: Date;
+
+    constructor(
+        name: string = '',
+        code: number = 0,
+        recipeListId: string | null = null,
+        createdDate: Date = new Date()
+    ) {
+        this.name = name;
+        this.code = code;
+        this.recipeListId = recipeListId;
+        this.createdDate = createdDate;
+    }
+}
+
+export interface ShoppingListBody {
+    name: string;
+    recipeListId: string | null;
+    shopList: ShopList;
+    createdDate: Date;
+}
+
+// Flash Shop list view
 export interface Ingredients {
     _id: string;
     quantity: number;
@@ -183,16 +223,5 @@ export interface ShopListData {
     productsInStock: Ingredients[];
     total: Ingredients[];
     shopList: ShopList;
-}
-
-export interface RecipeListBody {
-    name: string;
-    recipeListId:
-    {
-        recipeId: string;
-        quantity: number;
-    }[];
-    shopListId: string | null,
-    createdDate: Date
 }
 
