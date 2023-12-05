@@ -135,7 +135,7 @@ export type RecipeExtendedQty = Recipe & {
 };
 
 
-/*** Recipe ***/
+/*** Recipe List ***/
 export interface Ingredients {
     _id: string;
     quantity: number;
@@ -153,5 +153,16 @@ export interface ShopListData {
     productsInStock: Ingredients[];
     total: Ingredients[];
     shopList: ShopList;
+}
+
+export interface RecipeListBody {
+    name: string;
+    recipeListId: 
+        {
+            recipeId: string;
+            quantity: number;
+        }[];
+    shopListId: string | null,
+    createdDate: Date
 }
 

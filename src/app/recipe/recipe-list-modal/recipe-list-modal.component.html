@@ -1,5 +1,5 @@
 <p-dialog
-  [visible]="recipesListDialog"
+  [visible]="recipeListDialog"
   [style]="{ width: '800px', minHeight: '800px' }"
   header="{{ 'Créer une nouvelle list de recettes' }}"
   [modal]="true"
@@ -139,7 +139,7 @@
         icon="pi pi-check"
         class="p-button-outlined p-button-primary mr-6"
         style="min-width: 3rem"
-        (click)="saveRecipesList()"
+        (click)="handleOpenConfimDialog()"
       ></button>
       <button
         pButton
@@ -161,7 +161,7 @@
         icon="pi pi-angle-left"
         class="p-button-outlined p-button-primary"
         style="min-width: 3rem"
-        (click)="returnRecipesList()"
+        (click)="returnRecipeList()"
       ></button>
       <button
         pButton
@@ -175,3 +175,35 @@
     </div>
   </ng-template>
 </p-dialog>
+
+<p-confirmDialog
+  [style]="{ width: '450px' }"
+  [acceptVisible]="false"
+  [rejectVisible]="false"
+>
+  <ng-template pTemplate="message">
+    <div class="w-full flex flex-column">
+      <h3>Nom de la liste</h3>
+      <input pInputText [(ngModel)]="recipeListName" required />
+      <div class="w-full flex justify-content-end mt-6">
+        <button
+          pButton
+          pRipple
+          icon="pi pi-times"
+          class="p-button-outlined p-button-danger mr-3"
+          style="min-width: 3rem"
+          (click)="handleCloseConfimDialog()"
+        ></button>
+        <button
+          pButton
+          pRipple
+          icon="pi pi-save"
+          class="p-button-outlined p-button-primary"
+          style="min-width: 3rem"
+          [disabled]="!isRecipeListNameValid()"
+          (click)="handleSaveRecipeList()"
+        ></button>
+      </div>
+    </div>
+  </ng-template>
+</p-confirmDialog>

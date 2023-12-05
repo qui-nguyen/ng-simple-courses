@@ -26,7 +26,7 @@ export class RecipeComponent implements OnInit {
   newRecipeData: any;
 
   // Create new LIST recipes
-  recipesListDialog: boolean = false;
+  recipeListDialog: boolean = false;
 
   constructor(
     private recipeService: RecipeService,
@@ -266,12 +266,12 @@ export class RecipeComponent implements OnInit {
   }
 
   /*** Create recipes selected list***/
-  handleCreateRecipesList() {
-    this.recipesListDialog = true;
+  handleCreaterecipeList() {
+    this.recipeListDialog = true;
   }
 
-  recipesListEvent(event: any) {
-    this.recipesListDialog = false;
+  recipeListEvent(event: any) {
+    this.recipeListDialog = false;
     this.selectedRecipes = null;
   }
 }

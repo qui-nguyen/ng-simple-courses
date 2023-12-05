@@ -14,7 +14,7 @@
           [label]="'Créer une liste'"
           class="p-button-outlined p-button-primary mr-6"
           icon="pi pi-plus"
-          (click)="handleCreateRecipesList()"
+          (click)="handleCreaterecipeList()"
           [disabled]="!selectedRecipes || !selectedRecipes.length"
         ></button>
         <button
@@ -167,8 +167,8 @@
 <app-recipe-list-modal
   *ngIf="selectedRecipes"
   [selectedRecipes]="selectedRecipes"
-  [recipesListDialog]="recipesListDialog"
-  (recipesListEvent)="recipesListEvent($event)"
+  [recipeListDialog]="recipeListDialog"
+  (recipeListEvent)="recipeListEvent($event)"
 />
 
 <div
