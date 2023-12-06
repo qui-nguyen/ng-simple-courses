@@ -52,8 +52,19 @@ export class RecipeListService {
     )
   }
 
+  deleteRecipeListById(id: string): Observable<any> {
+    return this.http.delete<string>(`${API}/${id}`).pipe(
+      tap((res) => this.log(res)), // res = null if delete ok
+      catchError((error) => {
+        console.error('Error deleting product:', error);
+        // Emit an object with product ID and error
+        return of({ id, error });
+      })
+    );
+  }
+
   private log(response: any) {
-    console.log(response);
+    // console.log(response);
   }
 
   private catchError(error: Error, errorValue: any) {

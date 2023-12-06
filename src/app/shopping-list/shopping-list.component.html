@@ -1,13 +1,14 @@
 <div class="card">
+  <p-toast></p-toast>
   <div class="w-full flex justify-content-end">
-    <!-- <button
+    <button
       pButton
       pRipple
       type="button"
-      [label]="'Recettes sélectionnées'"
+      [label]="'Créer nouvelle list'"
       class="p-button-outlined p-button-primary mr-6 mt-3"
       (click)="goToRecipes()"
-    ></button> -->
+    ></button>
   </div>
 
   <div *ngFor="let item of recipeLists" class="mt-6">
@@ -16,23 +17,37 @@
         {{ item.name }}
       </p>
       <p class="w-3 my-0">{{ item.createdDate | date : "dd/MM/yyyy" }}</p>
+      <div>
+        <i
+          class="pi pi-times"
+          style="color: rgb(81, 81, 81); cursor: pointer"
+          (click)="confirmDelete(item)"
+        ></i>
+      </div>
     </div>
 
     <p-divider align="center">
       <span class="p-tag bg-blue-100">🎯🎯🎯</span>
     </p-divider>
-    <div *ngIf="recipeListSelected && recipeListSelected._id === item._id" class="relative">
+    <div
+      *ngIf="
+        recipeListSelected &&
+        recipeListSelected._id === item._id &&
+        shopListSelected
+      "
+      class="relative"
+    >
       <div class="flex w-full justify-content-end">
         <button
-        pButton
-        pRipple
-        type="button"
-        [label]="'Fermer'"
-        class="p-button-outlined p-button-primary mr-6 mt-3 relative right-0"
-        (click)="handleClose()"
-      ></button>
+          pButton
+          pRipple
+          type="button"
+          [label]="'Fermer'"
+          class="p-button-outlined p-button-primary mr-6 mt-3 relative right-0"
+          (click)="handleClose()"
+        ></button>
       </div>
-     
+
       <p-tabView>
         <!-- RECETTES CHOISIS -->
         <p-tabPanel header="Recettes choisis" *ngIf="recipeListSelected">
@@ -42,10 +57,12 @@
             class="w-full flex flex-column"
           >
             <div class="w-full flex justify-content-between align-items-center">
-              <h4 
-              class="w-7 m-0 cursor-pointer"
-              (click)="goToRecipeDetailPage(item.recipeId._id)"
-              >{{ item.recipeId.name }}</h4>
+              <h4
+                class="w-7 m-0 cursor-pointer"
+                (click)="goToRecipeDetailPage(item.recipeId._id)"
+              >
+                {{ item.recipeId.name }}
+              </h4>
               <p class="w-1 m-0">{{ item.quantity }}</p>
               <p class="w-1 m-0"></p>
             </div>
@@ -116,3 +133,17 @@
     </div>
   </div>
 </div>
+
+<div
+  class="card w-full flex justify-content-center align-items-center translate-y-100"
+>
+  <p-progressSpinner *ngIf="!recipeLists" />
+</div>
+
+<p-confirmDialog
+  [style]="{ width: '450px' }"
+  [acceptLabel]="'Oui'"
+  acceptButtonStyleClass="border-primary text-primary surface-card"
+  [rejectLabel]="'Non'"
+  rejectButtonStyleClass="border-red-600 text-red-600 surface-card"
+/>

@@ -26,7 +26,7 @@ export class ShoppingListService {
 
     return this.http.post(`${API}/view`, recipes, httpOptions).pipe(
       tap((res) => {
-        console.log(res);
+        // console.log(res);
         // console.table('productsBrutInStock : ')
         // console.table(res?.productsBrutInStock)
         // console.table('Total : ')
@@ -55,7 +55,7 @@ export class ShoppingListService {
   }
 
   private log(response: any) {
-    console.log(response);
+    // console.log(response);
   }
 
   private catchError(error: Error, errorValue: any) {

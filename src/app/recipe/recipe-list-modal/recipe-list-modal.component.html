@@ -126,21 +126,10 @@
       <button
         pButton
         pRipple
-        [label]="'Fermer'"
-        icon="pi pi-times"
-        class="p-button-outlined p-button-danger"
-        style="min-width: 3rem"
-        (click)="hideDialog()"
-      ></button>
-      <button
-        pButton
-        pRipple
-        [label]="'Sauvegarder'"
+        [label]="'Listes sauvegardées'"
         icon="pi pi-check"
         class="p-button-outlined p-button-primary mr-6"
         style="min-width: 3rem"
-        [disabled]="recipeList"
-        (click)="handleOpenConfimDialog()"
       ></button>
       <button
         pButton
@@ -150,6 +139,23 @@
         class="p-button-outlined p-button-primary mr-6"
         style="min-width: 3rem"
         (click)="showShopList()"
+      ></button>
+      <button
+        pButton
+        pRipple
+        icon="pi pi-times"
+        class="p-button-outlined p-button-danger"
+        style="min-width: 3rem"
+        (click)="hideDialog()"
+      ></button>
+      <button
+        pButton
+        pRipple
+        icon="pi pi-save"
+        class="p-button-outlined p-button-primary mr-6"
+        style="min-width: 3rem"
+        [disabled]="recipeList"
+        (click)="handleOpenConfimDialog()"
       ></button>
     </div>
 

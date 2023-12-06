@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { ConfirmationService, MessageService } from 'primeng/api';
+
 import { ShoppingListService } from '../services/shopping-list.service';
 import { Router } from '@angular/router';
 import { Product, Recipe, RecipeList, ShoppingList } from '../type';
@@ -8,7 +10,8 @@ import { RecipeListService } from '../services/recipe-list.service';
 
 @Component({
   selector: 'app-shopping-list',
-  templateUrl: './shopping-list.component.html'
+  templateUrl: './shopping-list.component.html',
+  providers: [MessageService, ConfirmationService]
 })
 export class ShoppingListComponent implements OnInit {
 
@@ -25,7 +28,10 @@ export class ShoppingListComponent implements OnInit {
     private shopListService: ShoppingListService,
     private recipeService: RecipeService,
     private productService: ProductService,
-    private router: Router) { }
+    private router: Router,
+    private messageService: MessageService,
+    private confirmationService: ConfirmationService
+  ) { }
 
   ngOnInit(): void {
     this.shopListService.getAllShopLists().subscribe(res => this.data = res);
@@ -64,11 +70,44 @@ export class ShoppingListComponent implements OnInit {
     this.recipeListSelected = undefined;
   }
 
+  // Delete
+  deleteRecipeList(recipeList: any) {
+    this.recipeListService.deleteRecipeListById(recipeList._id).subscribe(res => {
+      if (!res) {
+        this.recipeLists = this.recipeLists.filter((el: any) => el._id !== recipeList._id);
+        this.showMessage(false, 'Félicitation !', `${recipeList.name} est suprimée`);
+      } else {
+        this.showMessage(true, 'Erreur !', `Une erreur survenue lors de la suppression de ${recipeList.name}`);
+      }
+    })
+  }
+
+  confirmDelete(recipeList: any) {
+    this.confirmationService.confirm({
+      message: 'Êtes-vous sûr de vouloir supprimer cette liste ?',
+      header: 'Confirmation',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+        this.deleteRecipeList(recipeList);
+      }
+    });
+  }
+
   goToRecipes() {
-    this.router.navigateByUrl('/shopping-list/recipes');
+    this.router.navigateByUrl('/recipes');
   }
 
   goToRecipeDetailPage(recipeId: string) {
     this.router.navigateByUrl(`/recipes/${recipeId}`);
+  }
+
+  /*** Display a message using the MessageService  ***/
+  private showMessage(isError: boolean, summary: string, detail: string): void {
+    this.messageService.add({
+      severity: `${isError ? 'error' : 'success'}`,
+      summary: summary,
+      detail: detail,
+      life: 3000
+    });
   }
 }

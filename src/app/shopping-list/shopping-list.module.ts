@@ -12,7 +12,10 @@ import { DividerModule } from 'primeng/divider';
 import { ButtonModule } from 'primeng/button';
 import { DataViewModule } from 'primeng/dataview';
 import { DropdownModule } from 'primeng/dropdown';
-
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ToastModule } from 'primeng/toast';
+import { DialogModule } from 'primeng/dialog';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 
 const shoppingListRoutes: Routes = [
@@ -32,6 +35,10 @@ const shoppingListRoutes: Routes = [
     ButtonModule,
     DataViewModule,
     DropdownModule,
+    ConfirmDialogModule,
+    ToastModule,
+    DialogModule,
+    ProgressSpinnerModule,
     RouterModule.forChild(shoppingListRoutes)
   ]
 })

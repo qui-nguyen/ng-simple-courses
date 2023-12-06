@@ -1,6 +1,5 @@
 <div class="card">
   <p-toast />
-
   <p-toolbar
     styleClass="mb-4 gap-2 bg-white border-bottom-1 border-x-none border-top-none border-noround flex justify-content-end md:justify-content-between "
   >
@@ -173,7 +172,9 @@
 
 <div
   class="card w-full flex justify-content-center align-items-center translate-y-100"
-></div>
+>
+  <p-progressSpinner *ngIf="!recipes" />
+</div>
 
 <p-confirmDialog
   [style]="{ width: '450px' }"
