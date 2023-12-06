@@ -121,6 +121,7 @@ export type RecipeBody = {
         {
             // _id: string,
             productBrutId: string;
+            alim_nom_fr: string;
             quantity: number;
             unit: 'kg' | 'l' | 'pièce'
         }

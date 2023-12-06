@@ -157,6 +157,10 @@ export class RecipeComponent implements OnInit {
                   this.recipeSaved = true;
                   this.recipeDialog = false;
                   this.recipe = null;
+                } else {
+                  severity = 'error';
+                  summary = 'Erreur !';
+                  detail = ``;
                 }
               },
               error: (err) => console.log(err),

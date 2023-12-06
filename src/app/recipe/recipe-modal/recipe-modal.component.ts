@@ -130,6 +130,7 @@ export class RecipeModalComponent implements OnInit {
       const newEl = {
         ...el,
         productBrutId: el.productBrut._id,
+        alim_nom_fr: el.productBrut.alim_nom_fr
       };
       delete newEl.productBrut;
       return newEl;
