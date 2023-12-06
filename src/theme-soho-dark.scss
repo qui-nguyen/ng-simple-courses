@@ -55,6 +55,7 @@
 
     body {
       background-color: var(--surface-d);
+      color: #FFFFFF;
     }
   
     .p-component {
@@ -4064,14 +4065,14 @@
     }
   
     .p-divider .p-divider-content {
-      background-color: #282936;
+      background-color: transparent;
     }
     .p-divider.p-divider-horizontal {
       margin: 1.25rem 0;
       padding: 0 1.25rem;
     }
     .p-divider.p-divider-horizontal:before {
-      border-top: 1px #3e4053;
+      border-top: 1px #FFFFFF;
     }
     .p-divider.p-divider-horizontal .p-divider-content {
       padding: 0 0.5rem;
