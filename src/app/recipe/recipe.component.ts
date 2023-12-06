@@ -276,6 +276,6 @@ export class RecipeComponent implements OnInit {
 
   recipeListEvent(event: any) {
     this.recipeListDialog = false;
-    this.selectedRecipes = null;
+    this.selectedRecipes = [];
   }
 }

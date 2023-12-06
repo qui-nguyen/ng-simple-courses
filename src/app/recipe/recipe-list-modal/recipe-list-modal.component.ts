@@ -143,7 +143,7 @@ export class RecipeListModalComponent implements OnInit {
   /***  Hide the dialog and emit an event to the recipe component ***/
   hideDialog(): void {
     this.shopListDialog = false;
-    this.selectedRecipes = null;
+    this.selectedRecipes = [];
     this.recipeList = undefined;
     this.recipeListEvent.emit();
   }
