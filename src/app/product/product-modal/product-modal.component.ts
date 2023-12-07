@@ -76,7 +76,7 @@ export class ProductModalComponent implements OnInit, AfterViewChecked {
 
     this.isMediumScreenUp = window.innerWidth > 821;
 
-    console.log(this._formGroup.value.name.valid)
+    // console.log(this._formGroup.value.name.valid)
   }
 
   ngAfterViewChecked(): void {

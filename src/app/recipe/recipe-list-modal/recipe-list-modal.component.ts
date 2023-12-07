@@ -78,11 +78,6 @@ export class RecipeListModalComponent implements OnInit {
     return !!this.recipeListName; // Check if name is not null
   }
 
-  /*** Update recipe list (after shop list saved) ***/
-  updateRecipeList(recipeListId: string, recipeList: RecipeList) {
-    this.recipeListService.updateRecipeList(recipeListId, recipeList).subscribe(res => console.log(res));
-  }
-
   /*** Handle saving the recipe list ***/
   handleSaveRecipeList(): void {
     if (this.recipeListName) {

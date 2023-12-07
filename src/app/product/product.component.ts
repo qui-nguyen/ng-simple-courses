@@ -45,16 +45,6 @@ export class ProductComponent implements OnInit {
     ) { }
 
     ngOnInit() {
-        /*** Get all products bruts ***/
-        // this.productBrutService.getProductsBrut().subscribe(
-        //     {
-        //         next: (result) => {
-        //             this.productsBrut = result;
-        //         },
-        //         error: (err) => { console.log(err); },
-        //         complete: () => { }
-        //     }
-        // )
 
         /*** Get all categories and products ***/
         this.categoryService.getCategories().subscribe(
@@ -93,9 +83,7 @@ export class ProductComponent implements OnInit {
     }
 
     /*** Product selected ***/
-    selectedProduct(product: Product) {
-        // console.log(product);
-    }
+    selectedProduct(product: Product) {}
 
     /*** Delete products (after confirm) ***/
     deleteSelectedProducts() {

@@ -67,8 +67,8 @@ export class ProductBrutService {
   //   }
 
   private log(response: any) {
-    if (response === 200) {
-      console.log(response);
+    if (response) {
+      // console.log(response);
     }
   }
 

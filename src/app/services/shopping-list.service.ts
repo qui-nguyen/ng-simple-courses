@@ -25,20 +25,9 @@ export class ShoppingListService {
     };
 
     return this.http.post(`${API}/view`, recipes, httpOptions).pipe(
-      tap((res) => {
-        // console.log(res);
-        // console.table('productsBrutInStock : ')
-        // console.table(res?.productsBrutInStock)
-        // console.table('Total : ')
-        // console.table(res?.total)
-        // console.table('notExistInStock : ')
-        // console.table(res?.shopList.notExistInStock)
-        // console.table(res?.shopList.notExistInStock)
-
-        // console.table(res?.shopList.existInStockAndNeedAdd)
-
-      }
-      ),
+      // tap((res) => {
+      //   console.log(res);
+      // }),
       catchError((err) => this.catchError(err, []))
     );
   }

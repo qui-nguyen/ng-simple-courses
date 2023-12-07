@@ -33,10 +33,10 @@ export class RecipeListService {
     };
 
     return this.http.post(`${API}`, recipes, httpOptions).pipe(
-      tap((res) => {
-        console.log(res);
-      }
-      ),
+      // tap((res) => {
+      //   console.log(res);
+      // }
+      // ),
       catchError((err) => this.catchError(err, undefined))
     );
   }
