@@ -1,6 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges, ChangeDetectorRef } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
 
+import { Observable, Subject, map, of, switchMap, takeUntil, tap } from 'rxjs';
+
 import { RecipeListService } from 'src/app/services/recipe-list.service';
 import { ShoppingListService } from 'src/app/services/shopping-list.service';
 import { Recipe, RecipeExtendedQty, RecipeList, RecipeListBody, ShopListData, ShoppingList } from 'src/app/type';
@@ -81,56 +83,34 @@ export class RecipeListModalComponent implements OnInit {
     this.recipeListService.updateRecipeList(recipeListId, recipeList).subscribe(res => console.log(res));
   }
 
-  /*** Handle saving the recipe list (or both recipe list and shop list) ***/
+  /*** Handle saving the recipe list ***/
   handleSaveRecipeList(): void {
-    let isError = false;
-    let summary = 'Liste des recettes est sauvegardée !';
-
     if (this.recipeListName) {
-      // Check if the recipe list name already exists
-      this.recipeListService.checkRecipeListName(this.recipeListName).subscribe({
-        next: (isExist) => {
-          if (isExist === false) {
-            // Recipe list name does not exist, create a new recipe list
-            this.recipeListService.createRecipeList({
+      this.recipeListService.checkRecipeListName(this.recipeListName).pipe(
+        // tap(isExist => console.log(isExist)),
+        switchMap(isExist => {
+          if (isExist) {
+            // If the recipe list name already exists, return an observable with a null value
+            return of(null);
+          } else {
+            // If the recipe list name does not exist, create a new recipe list
+            return this.recipeListService.createRecipeList({
               name: this.recipeListName!,
               recipeIds: this.newSelectedRecipes.map(el => ({ recipeId: el._id, quantity: el.quantity })),
               shopListId: null,
-              createdDate: new Date
-            }).subscribe(
-              {
-                next: (res) => {
-                  if (res) {
-                    this.recipeList = res;
-                    this.confirmationService.close();
-                  } else {
-                    isError = true;
-                    summary = "Erreur survenue !";
-                  }
-                },
-                complete: () => {
-                  // Create a new shop list based on this recipe list created
-                  if (this.isSaveShopListClick) {
-                    this.saveShopList();
-                  }
-                }
-              }
-            );
-
-          } else if (isExist === true) {
-            // Recipe list name already exists
-            isError = true;
-            summary = "Nom existe !";
-          } else {
-            // Undefined or error when checking the name
-            isError = true;
-            summary = "Erreur !";
+              createdDate: new Date()
+            });
           }
-        },
-        complete: () => {
-          // Display a message based on the result of the recipe list name check
-          this.showMessage(isError, summary);
-        },
+        })
+      ).subscribe((res) => {
+        if (res) {
+          // If res is not null => a new recipe list was created successfully
+          this.recipeList = res;
+          this.confirmationService.close();
+          this.showMessage(false, `${res.name} est sauvegardée`);
+        } else {
+          this.showMessage(true, `${res === null ? 'Nom existe' : 'Erreur survenue !'}`);
+        }
       });
     }
   }
@@ -148,43 +128,6 @@ export class RecipeListModalComponent implements OnInit {
     this.recipeListEvent.emit();
   }
 
-  /***  Save the shop list ***/
-  saveShopList(): void {
-    if (this.recipeList && this.shopListData) {
-      let isError = false;
-      let summary = 'Nouvelle liste des courses sauvegardée !';
-
-      this.shopListService.createShopList(
-        {
-          name: this.recipeList.name,
-          recipeListId: this.recipeList._id,
-          shopList: this.shopListData.shopList,
-          createdDate: new Date
-        }
-      ).subscribe({
-        next: (res) => {
-          if (res) {
-            this.newShopList = res;
-            console.log(res);
-            console.log(this.recipeList);
-          } else {
-            isError = true;
-            summary = 'Erreur de sauvegarde nouvelle liste des courses !';
-          }
-        },
-        complete: () => {
-          // Update recipe list
-          if (this.newShopList && this.recipeList) {
-            this.updateRecipeList(this.recipeList._id, { ...this.recipeList, shopListId: this.newShopList._id });
-          }
-          this.isSaveShopListClick = false;
-          // Display a message based on the result of shop list creation
-          this.showMessage(isError, summary);
-        },
-      });
-    }
-  }
-
   /*** Show the shop list => review shop list (not saved) ***/
   showShopList(): void {
     this.shopListDialog = true;
@@ -194,17 +137,6 @@ export class RecipeListModalComponent implements OnInit {
   /*** Return to the recipe list view from the shop list view ***/
   returnRecipeList(): void {
     this.shopListDialog = false;
-  }
-
-  /*** Save either the recipe list or both the recipe list and shop list ***/
-  saveAll(): void {
-    if (this.recipeList) { // Case recipeList is saved
-      this.saveShopList();
-    } else { // Case recipeList not saved yet
-      this.isSaveShopListClick = true;
-      this.handleOpenConfimDialog();
-      this.handleSaveRecipeList();
-    }
   }
 
   /*** Display a message using the MessageService  ***/
