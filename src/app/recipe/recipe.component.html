@@ -17,6 +17,15 @@
           [disabled]="!selectedRecipes || !selectedRecipes.length"
         ></button>
         <button
+        pButton
+        pRipple
+        [label]="'Listes sauvegardées'"
+        icon="pi pi-check"
+        class="p-button-outlined p-button-primary mr-6"
+        style="min-width: 3rem"
+        (click)="goToShopList()"
+      ></button>
+        <button
           pButton
           pRipple
           type="button"

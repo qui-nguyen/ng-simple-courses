@@ -36,7 +36,7 @@ export class RecipeListModalComponent implements OnInit {
     private recipeListService: RecipeListService,
     private confirmationService: ConfirmationService,
     private messageService: MessageService,
-    private cdr: ChangeDetectorRef,
+    private cdr: ChangeDetectorRef
   ) { }
 
   /*** Lifecycle hook => watch for changes in input properties (selectedRecipes) ***/

@@ -32,7 +32,7 @@ export class RecipeComponent implements OnInit {
     private recipeService: RecipeService,
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
-    private route: Router,
+    private router: Router,
     private cdr: ChangeDetectorRef
   ) { }
 
@@ -162,7 +162,7 @@ export class RecipeComponent implements OnInit {
 
   /*** View detail click ***/
   detail(recipe: Recipe) {
-    this.route.navigateByUrl(`/recipes/${recipe._id}`);
+    this.router.navigateByUrl(`/recipes/${recipe._id}`);
   }
 
   /*** Create recipe ***/
@@ -252,5 +252,9 @@ export class RecipeComponent implements OnInit {
   recipeListEvent(event: any) {
     this.recipeListDialog = false;
     this.selectedRecipes = [];
+  }
+
+  goToShopList() {
+    this.router.navigateByUrl('/shopping-list');
   }
 }

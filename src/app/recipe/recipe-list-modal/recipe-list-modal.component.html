@@ -79,7 +79,7 @@
             </div>
           </p-tabPanel>
           <!-- RECETTES CHOISIS -->
-          <p-tabPanel header="Recettes choisis" *ngIf="shopListData.total">
+          <p-tabPanel header="Ingrédients totaux" *ngIf="shopListData.total">
             <h3 class="uppercase">TOTAL</h3>
             <div
               *ngFor="let item of shopListData.total"
@@ -123,14 +123,6 @@
   <!-- ACTIONS BTNS -->
   <ng-template pTemplate="footer">
     <div *ngIf="!shopListDialog">
-      <button
-        pButton
-        pRipple
-        [label]="'Listes sauvegardées'"
-        icon="pi pi-check"
-        class="p-button-outlined p-button-primary mr-6"
-        style="min-width: 3rem"
-      ></button>
       <button
         pButton
         pRipple
