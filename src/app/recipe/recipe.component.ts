@@ -3,7 +3,7 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Recipe, RecipeBody } from '../type';
 import { RecipeService } from '../services/recipe.service';
-import { forkJoin } from 'rxjs';
+import { forkJoin, of, switchMap } from 'rxjs';
 import { Router } from '@angular/router';
 
 @Component({
@@ -46,9 +46,7 @@ export class RecipeComponent implements OnInit {
       : recipe.ingredients.map((ingredient) => ingredient.productBrut.alim_nom_fr);
   }
 
-  selectedRecipe(recipe: Recipe) { 
-    // console.log(recipe);
-    console.log(this.selectedRecipes);
+  selectedRecipe(recipe: Recipe) {
   }
 
   /*** Edit recipe ***/
@@ -65,7 +63,7 @@ export class RecipeComponent implements OnInit {
     this.recipe = null;
   }
 
-  private showAndResetMessage(severity: string, summary: string, detail: string) {
+  private showMessage(severity: string, summary: string, detail: string) {
     this.messageService.add({
       severity: severity,
       summary: summary,
@@ -75,9 +73,26 @@ export class RecipeComponent implements OnInit {
   }
 
   getNewRecipeData(data: RecipeBody) {
-    let severity = 'success';
-    let summary = 'Félicitation !';
-    let detail = 'Nouvelle recette ajoutée';
+
+    const showMessageByMode = (editMode: boolean, result: Recipe | undefined | null) => {
+      let detailText = `${result
+        ? (editMode
+          ? 'Recette est modifiée'
+          : 'Nouvelle recette ajoutée !')
+        : (result === null
+          ? 'Ce nom appartient à une autre recette !'
+          : (editMode
+            ? 'Une erreur survenue lors de la création !'
+            : 'Une erreur survenue lors de la mise à jour de la recette !')
+        )
+        }`
+
+      this.showMessage(
+        `${result ? 'success' : 'error'}`,
+        `${result ? 'Félicitation' : 'Erreur'}`,
+        detailText
+      );
+    }
 
     const updateRecipeSelected = (updatedRecipe: Recipe, selectedRecipes: Recipe[] | null): Recipe[] | null => {
       if (selectedRecipes === null) {
@@ -92,7 +107,7 @@ export class RecipeComponent implements OnInit {
       }
     }
 
-    const handleRecipeUpdate = (result: Recipe | undefined) => {
+    const handleRecipeUpdate = (result: Recipe | undefined | null) => {
       if (result) {
         const indexFounded = this.recipes.findIndex((el: Recipe) => el._id === result._id);
         this.recipes[indexFounded] = result;
@@ -100,81 +115,48 @@ export class RecipeComponent implements OnInit {
         this.recipe = null;
         this.recipeDialog = false;
         this.selectedRecipes = updateRecipeSelected(result, this.selectedRecipes);
-
-        severity = 'success';
-        summary = 'Félicitation !';
-        detail = `${result.name} est modifiée !`;
-      } else {
-        severity = 'error';
-        summary = 'Erreur !';
-        detail = `Une erreur survenue lors de la maj de la recette`;
       }
-      this.showAndResetMessage(severity, summary, detail);
+      showMessageByMode(true, result);
     };
 
-    const handleError = (err: any) => {
-      console.log(err);
-      severity = 'error';
-      summary = 'Erreur !';
-      detail = `Une erreur survenue lors de la maj de la recette`;
-      this.showAndResetMessage(severity, summary, detail);
-    };
-
-    if (this.recipe && this.editMode) { // UPDATE
+    // UPDATE
+    if (this.recipe && this.editMode) {
       // Check if recipe name has changed before making the call
       if (data.name !== this.recipe.name) {
-        this.recipeService.checkRecipeName(data.name).subscribe({
-          next: (result: boolean) => {
-            if (!result) {
-              this.recipeService.updateRecipe(this.recipe!._id, data).subscribe({
-                next: handleRecipeUpdate,
-                error: handleError,
-              });
-            } else {
-              severity = 'error';
-              summary = 'Erreur !';
-              detail = `${data.name} existe`;
-              this.showAndResetMessage(severity, summary, detail);
+        this.recipeService.checkRecipeName(data.name).pipe(
+          switchMap(isExist => {
+            if (isExist) { return of(null) }
+            else {
+              return this.recipeService.updateRecipe(this.recipe!._id, data);
             }
-          },
-          error: handleError
-        });
-      } else {
-        // If the name hasn't changed, directly update the recipe
-        this.recipeService.updateRecipe(this.recipe!._id, data).subscribe({
-          next: handleRecipeUpdate,
-          error: handleError,
-        });
+          })
+        ).subscribe(
+          res => handleRecipeUpdate(res)
+        )
+      } else {        // If the name hasn't changed, directly update the recipe
+        this.recipeService.updateRecipe(this.recipe!._id, data).subscribe(res => handleRecipeUpdate(res));
       }
-    } else {  // CREATE
-      this.recipeService.checkRecipeName(data.name).subscribe({
-        next: (result: boolean) => {
-          if (!result) {
-            this.recipeService.createRecipe(data).subscribe({
-              next: (result: Recipe | undefined) => {
-                if (result) {
-                  this.recipes.push(result);
-                  this.recipeSaved = true;
-                  this.recipeDialog = false;
-                  this.recipe = null;
-                } else {
-                  severity = 'error';
-                  summary = 'Erreur !';
-                  detail = ``;
-                }
-              },
-              error: (err) => console.log(err),
-              complete: () => this.showAndResetMessage(severity, summary, detail)
-            });
-          } else {
-            severity = 'error';
-            summary = 'Erreur !';
-            detail = `${data.name} existe`;
-            this.showAndResetMessage(severity, summary, detail);
+    }
+
+    // CREATE
+    if (!this.editMode) {
+      this.recipeService.checkRecipeName(data.name).pipe(
+        switchMap(isExist => {
+          if (isExist) { return of(null) }
+          else {
+            return this.recipeService.createRecipe(data);
           }
-        },
-        error: handleError,
-      });
+        })
+      ).subscribe(
+        res => {
+          if (res) {
+            this.recipes.unshift(res);
+            this.recipeSaved = true;
+            this.recipeDialog = false;
+          };
+          showMessageByMode(false, res);
+        }
+      )
     }
   }
 
@@ -226,13 +208,9 @@ export class RecipeComponent implements OnInit {
                     (filterItem: Recipe) => filterItem._id !== recipe._id)
                 );
                 this.recipes = newList;
-
-                this.messageService.add({
-                  severity: `success`,
-                  summary: 'Félicitation !',
-                  detail: `Suppression des produits ${JSON.stringify(listRecipesDeletedSuccess)} est réalisée !`,
-                  life: 3000
-                });
+                this.showMessage('success', 'Félicitation !',
+                  `Suppression des produits ${JSON.stringify(listRecipesDeletedSuccess)} est réalisée !`
+                )
               }
 
               // Products deleted with error
@@ -242,12 +220,9 @@ export class RecipeComponent implements OnInit {
                     listIdNotDeleted.some(el => el.id === recipe._id)
                   ).map(recipe => recipe.name);
 
-                this.messageService.add({
-                  severity: 'error',
-                  summary: 'Erreur',
-                  detail: `Une erreur survenue lors de la suppression avec les produits ${JSON.stringify(listProdNotDeleted)} !`,
-                  life: 3000
-                });
+                this.showMessage('error', 'Erreur',
+                  `Une erreur survenue lors de la suppression avec les produits ${JSON.stringify(listProdNotDeleted)} !`
+                );
               }
 
               // Reset selected recipes
@@ -270,7 +245,7 @@ export class RecipeComponent implements OnInit {
   }
 
   /*** Create recipes selected list***/
-  handleCreaterecipeList() {
+  handleCreateRecipeList() {
     this.recipeListDialog = true;
   }
 
