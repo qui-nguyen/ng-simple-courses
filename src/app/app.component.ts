@@ -15,7 +15,7 @@ export class AppComponent {
     this.primengConfig.ripple = true;
   }
 
-  changeTheme(theme: string) {
-    this.themeService.switchTheme(theme);
+  changeTheme(isDarkMode: boolean) {
+    this.themeService.switchTheme(isDarkMode);
   }
 }

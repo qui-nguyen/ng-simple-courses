@@ -9,9 +9,6 @@ import { InputSwitchModule } from 'primeng/inputswitch';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { MenuComponent } from './menu/menu.component';
-import { HomeComponent } from './home/home.component';
-import { RecipeComponent } from './recipe/recipe.component';
-import { ShoppingListComponent } from './shopping-list/shopping-list.component';
 
 import { HttpClientModule } from '@angular/common/http';
 import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
@@ -19,17 +16,17 @@ import { InMemoryDataService } from './in-memory-data.service';
 import { ProductModule } from './product/product.module';
 import { RecipeModule } from './recipe/recipe.module';
 import { ShoppingListModule } from './shopping-list/shopping-list.module';
+import { HomeModule } from './home/home.module';
+import { ThemeService } from './theme.service';
 
 @NgModule({
   declarations: [
     AppComponent,
-    MenuComponent,
-    HomeComponent,
-    // RecipeComponent,
-    // ShoppingListComponent,
+    MenuComponent
   ],
   imports: [
     BrowserModule,
+    HomeModule,
     ProductModule,
     RecipeModule,
     ShoppingListModule,
@@ -42,7 +39,7 @@ import { ShoppingListModule } from './shopping-list/shopping-list.module';
     ReactiveFormsModule,
     InputSwitchModule
   ],
-  providers: [],
+  providers: [ThemeService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

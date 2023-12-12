@@ -1,1 +1,9 @@
-<p>Home work !</p>
+<div class="card flex justify-content-center">
+  <p-chart
+    *ngIf="data"
+    type="radar"
+    [data]="data"
+    [options]="options"
+    style="position: relative; width: 60%; height: auto;"
+  />
+</div>
