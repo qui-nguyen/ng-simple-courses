@@ -4,7 +4,7 @@ import { MessageService } from 'primeng/api';
 import { AutoCompleteCompleteEvent } from 'primeng/autocomplete';
 import { Subject, debounceTime, distinctUntilChanged, switchMap } from 'rxjs';
 import { ProductBrutService } from 'src/app/services/product-brut.service';
-import { Ingredient, ProductBrut, Recipe, RecipeBody } from 'src/app/type';
+import { IngredientRecipe, IngredientShopList, ProductBrut, Recipe, RecipeBody } from 'src/app/type';
 
 @Component({
   selector: 'app-recipe-modal',
@@ -69,7 +69,7 @@ export class RecipeModalComponent implements OnInit {
     return this._recipeFormGroup?.get('ingredients') as FormArray;
   }
 
-  createIngredientFormGroup(ingredient: Ingredient, i: number): FormGroup {
+  createIngredientFormGroup(ingredient: IngredientRecipe, i: number): FormGroup {
     return this.formBuilder.group({
       [`productBrut`]: [ingredient.productBrut, Validators.required],
       [`quantity`]: [ingredient.quantity, Validators.required],

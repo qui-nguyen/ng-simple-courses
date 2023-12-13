@@ -1,0 +1,100 @@
+<p-dialog
+  [(visible)]="shopListDialog"
+  [style]="{ width: '800px' }"
+  header="{{ editMode ? 'Modifier la liste' : 'Nouvelle liste' }}"
+  [modal]="true"
+  styleClass="p-fluid"
+  [maximizable]="true"
+  [closable]="false"
+>
+  <p-toast></p-toast>
+  <ng-template pTemplate="content" class="w-full">
+    <form
+      *ngIf="_shopListFormGroup && shopList"
+      [formGroup]="_shopListFormGroup"
+      class="flex flex-column gap-6 mt-5 mb-7"
+    >
+      <!-- NAME -->
+      <span class="p-float-label">
+        <input pInputText formControlName="name" [readonly]="haveRecipesList" />
+        <label htmlFor="name">Nom</label>
+      </span>
+
+      <span class="p-float-label">
+        <div formArrayName="ingredients">
+          <p>Ingredient</p>
+          <div
+            *ngFor="let ingredientGroup of ingredients.controls; let i = index"
+          >
+            <div
+              class="flex flex-row justify-content-between align-items-center mb-3"
+              [formGroupName]="i"
+            >
+              <p-autoComplete
+                [suggestions]="searchProductsBrutList"
+                (completeMethod)="searchProductName($event)"
+                formControlName="productBrut"
+                field="alim_nom_fr"
+                placeholder="Nom"
+                class="w-7"
+              />
+              <p-inputNumber
+                [minFractionDigits]="1"
+                formControlName="quantity"
+                class="w-2"
+              />
+              <p-dropdown
+                [options]="['kg', 'l', 'pièce']"
+                placeholder="Unité"
+                formControlName="unit"
+                class="w-2"
+              ></p-dropdown>
+              <i
+                class="pi pi-times"
+                style="color: red; cursor: pointer"
+                (click)="deleteIngredient(i)"
+              ></i>
+            </div>
+          </div>
+          <div class="w-full flex justify-content-center align-items-center">
+            <button
+              pButton
+              pRipple
+              class="p-button-outlined p-button-primary flex justify-content-center transition-delay-100 transition-colors"
+              style="min-width: 3rem; max-width: 15rem"
+              (click)="addNewIngredient()"
+            >
+              <i class="md:hidden pi pi-plus cursor-pointer text-primary">
+                Ingrédient</i
+              >
+              <span class="hidden md:flex">Ajouter un ingrédient</span>
+            </button>
+          </div>
+        </div>
+      </span>
+    </form>
+  </ng-template>
+
+  <!-- ACTIONS BTNS -->
+  <ng-template pTemplate="footer">
+    <button
+      pButton
+      pRipple
+      [label]="'Annuler'"
+      icon="pi pi-times"
+      class="p-button-outlined p-button-danger"
+      style="min-width: 3rem"
+      (click)="hideDialog()"
+    ></button>
+    <button
+      pButton
+      pRipple
+      [label]="'Sauvegarder'"
+      icon="pi pi-check"
+      class="p-button-outlined p-button-primary mr-6"
+      style="min-width: 3rem"
+      (click)="saveShopList()"
+      [disabled]="!_shopListFormGroup?.valid"
+    ></button>
+  </ng-template>
+</p-dialog>

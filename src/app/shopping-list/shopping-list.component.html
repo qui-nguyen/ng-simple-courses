@@ -5,9 +5,17 @@
       pButton
       pRipple
       type="button"
-      [label]="'Créer nouvelle list'"
+      [label]="'Nouvelle list de recettes'"
       class="p-button-outlined p-button-primary mr-6 mt-3"
       (click)="goToRecipes()"
+    ></button>
+    <button
+      pButton
+      pRipple
+      type="button"
+      [label]="'Nouvelle list des courses personnalisée'"
+      class="p-button-outlined p-button-primary mr-6 mt-3"
+      (click)="handleCreateCustomizeShopList()"
     ></button>
   </div>
 
@@ -45,6 +53,18 @@
           [label]="'Fermer'"
           class="p-button-outlined p-button-primary mr-6 mt-3 relative right-0"
           (click)="handleClose()"
+        ></button>
+        <button
+          pButton
+          pRipple
+          type="button"
+          [label]="
+            recipeListSelected.shopListId
+              ? 'Modifier la liste personnalisée'
+              : 'Rajouter nouveaux produits'
+          "
+          class="p-button-outlined p-button-primary mr-6 mt-3 relative right-0"
+          (click)="handleAddCustomizeShopListToRecipeList()"
         ></button>
       </div>
 
@@ -111,6 +131,28 @@
             </div>
             <p-divider class="w-full m-0" type="dashed"></p-divider>
           </div>
+
+          <!-- LISTE PERSONALISE -->
+          <h3 *ngIf="recipeListSelected.shopListId" class="uppercase">
+            Liste personnalisée
+          </h3>
+          <div *ngIf="recipeListSelected.shopListId">
+            <div
+              *ngFor="
+                let item of recipeListSelected.shopListId.shopListCustomize
+              "
+              class="w-full flex flex-column"
+            >
+              <div
+                class="w-full flex justify-content-between align-items-center"
+              >
+                <h4 class="w-7 m-0">{{ item.alim_nom_fr }}</h4>
+                <p class="w-1 m-0">{{ item.quantity }}</p>
+                <p class="w-1 m-0">{{ item.unit }}</p>
+              </div>
+              <p-divider class="w-full m-0" type="dashed"></p-divider>
+            </div>
+          </div>
         </p-tabPanel>
 
         <!-- EN STOCK -->
@@ -146,4 +188,13 @@
   acceptButtonStyleClass="border-primary text-primary surface-card"
   [rejectLabel]="'Non'"
   rejectButtonStyleClass="border-red-600 text-red-600 surface-card"
+/>
+
+<app-shopping-list-modal
+  [shopListDialog]="shopListDialog"
+  [shopList]="shopList"
+  [editMode]="editMode"
+  [haveRecipesList]="recipeListSelected"
+  (shopListEvent)="shopListEvent($event)"
+  (shopListDialogEvent)="isShopListDialogOpen($event)"
 />

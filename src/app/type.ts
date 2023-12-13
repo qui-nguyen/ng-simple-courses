@@ -80,7 +80,7 @@ export type ProductBody = {
 
 
 /*** Recipe ***/
-export type Ingredient = {
+export type IngredientRecipe = {
     _id: string,
     productBrut: {
         _id: string;
@@ -94,7 +94,7 @@ export class Recipe {
     _id: string;
     name: string;
     code: number;
-    ingredients: Ingredient[];
+    ingredients: IngredientRecipe[];
     imageUrl?: string;
     instructions: string;
     createdDate: Date;
@@ -102,7 +102,7 @@ export class Recipe {
     constructor(
         name: string = '',
         code: number = 0,
-        ingredients: Ingredient[] = [],
+        ingredients: IngredientRecipe[] = [],
         instructions: string = '',
         createdDate: Date = new Date()
     ) {
@@ -145,7 +145,7 @@ export class RecipeList {
         recipeId: string;
         quantity: number;
     }[];
-    shopListId: string | null;
+    shopListId: string | ShoppingList | null;
     createdDate: Date;
 
     constructor(
@@ -195,7 +195,8 @@ export class ShoppingList {
     name: string;
     code: number;
     recipeListId: any | RecipListType | string | null;
-    shopList: ShopList;
+    shopList?: ShopList;
+    shopListCustomize?: IngredientShopList[];
     createdDate: Date;
 
     constructor(
@@ -214,12 +215,13 @@ export class ShoppingList {
 export interface ShoppingListBody {
     name: string;
     recipeListId: string | null;
-    shopList: ShopList;
+    shopList?: ShopList;
+    shopListCustomize?: IngredientShopList[];
     createdDate: Date;
 }
 
 // Flash Shop list view
-export interface Ingredients {
+export interface IngredientShopList {
     _id: string;
     quantity: number;
     unit: string;
@@ -228,13 +230,13 @@ export interface Ingredients {
 }
 
 export interface ShopList {
-    notExistInStock: Ingredients[] | [];
-    existInStockAndNeedAdd: Ingredients[] | [];
+    notExistInStock: IngredientShopList[] | [];
+    existInStockAndNeedAdd: IngredientShopList[] | [];
 }
 
 export interface ShopListData {
-    productsInStock: Ingredients[];
-    total: Ingredients[];
+    productsInStock: IngredientShopList[];
+    total: IngredientShopList[];
     shopList: ShopList;
 }
 

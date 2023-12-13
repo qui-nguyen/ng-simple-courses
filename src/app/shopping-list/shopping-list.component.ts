@@ -3,10 +3,11 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 
 import { ShoppingListService } from '../services/shopping-list.service';
 import { Router } from '@angular/router';
-import { Product, Recipe, RecipeList, ShoppingList } from '../type';
+import { IngredientRecipe, Product, Recipe, RecipeList, ShoppingList } from '../type';
 import { RecipeService } from '../services/recipe.service';
 import { ProductService } from '../services/product.service';
 import { RecipeListService } from '../services/recipe-list.service';
+import { of, switchMap, tap } from 'rxjs';
 
 @Component({
   selector: 'app-shopping-list',
@@ -15,13 +16,20 @@ import { RecipeListService } from '../services/recipe-list.service';
 })
 export class ShoppingListComponent implements OnInit {
 
-  data: ShoppingList[] = [];
+  // data: ShoppingList[] = [];
   shopListSelected: any | undefined = undefined;
   recipes: any | null = null;
   productsInStock: Product[];
 
   recipeLists: any;
   recipeListSelected: any;
+
+  shopListDialog: boolean = false;
+  shopLists: ShoppingList[] = [];
+  shopList: ShoppingList | null = null;
+  editMode: boolean = false;
+  shopListData: any = null;
+
 
   constructor(
     private recipeListService: RecipeListService,
@@ -34,9 +42,9 @@ export class ShoppingListComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.shopListService.getAllShopLists().subscribe(res => this.data = res);
+    this.shopListService.getAllShopLists().subscribe(res => this.shopLists = res);
     this.productService.getProducts().subscribe(res => this.productsInStock = res);
-    this.recipeListService.getRecipeLists().subscribe(res => this.recipeLists = res);
+    this.recipeListService.getRecipeLists().subscribe(res => { this.recipeLists = res, console.log(res); });
   }
 
 
@@ -62,10 +70,9 @@ export class ShoppingListComponent implements OnInit {
     this.recipeListSelected = recipeList;
     const RecipeIdExtendedQtyArray = recipeList.recipeIds.map((el: any) => ({ ...el.recipeId, quantity: el.quantity }));
     this.shopListService.getShopList(RecipeIdExtendedQtyArray).subscribe(res => this.shopListSelected = res);
-
   }
 
-  handleClose() {
+  handleClose() { // accordion close
     this.shopListSelected = undefined;
     this.recipeListSelected = undefined;
   }
@@ -99,6 +106,95 @@ export class ShoppingListComponent implements OnInit {
 
   goToRecipeDetailPage(recipeId: string) {
     this.router.navigateByUrl(`/recipes/${recipeId}`);
+  }
+
+  /*** Shop List Modal Signal ***/
+  handleCreateCustomizeShopList() {
+    this.shopListDialog = true;
+    this.editMode = false;
+    this.shopList = new ShoppingList;
+    this.recipeListSelected = null;
+  }
+
+  handleAddCustomizeShopListToRecipeList() {
+    this.shopListDialog = true;
+    this.editMode = false;
+    this.shopList = this.recipeListSelected.shopListCustomize || { ...new ShoppingList, name: this.recipeListSelected.name };
+  }
+
+  shopListEvent(event: any): void {
+    this.shopListData = event;
+    const transformData = {
+      name: event.name,
+      recipeListId: this.recipeListSelected?._id || null,
+      shopList: null,
+      shopListCustomize: event.ingredients.map((el: IngredientRecipe) => (
+        {
+          productBrutId: el.productBrut._id,
+          alim_nom_fr: el.productBrut.alim_nom_fr,
+          quantity: el.quantity,
+          unit: el.unit
+        }
+      )),
+      createdDate: new Date()
+    }
+    this.createCustomizeShopList(this.recipeListSelected?._id ? true : false, transformData);
+  }
+
+  isShopListDialogOpen(event: any) {
+    this.shopListDialog = false;
+    this.editMode = false;
+    this.shopList = null;
+  }
+
+  /*** Shop List Actions ***/
+  createCustomizeShopList(haveRecipeListId: boolean, data: any) {
+    if (haveRecipeListId) {
+      this.shopListService.createShopList(data).pipe(
+        switchMap(res => {
+          if (res) {
+            this.showMessage(false, 'Félicitation', 'Shop liste personnalisé rajouté');
+            return this.recipeListService.updateRecipeList(
+              this.recipeListSelected._id, { ...this.recipeListSelected, shopListId: res._id }
+            )
+          } else {
+            this.showMessage(true, 'Error', "Shop liste personnalisé n'est pas enregistrée");
+            return of(null)
+          };
+        })
+      ).subscribe((res) => {
+        if (res) {
+          const foundRecipeList = this.recipeLists.findIndex((el: RecipeList) => el._id === res._id);
+          if (foundRecipeList !== -1) {
+            this.recipeLists[foundRecipeList].shopListId = res;
+            this.showMessage(false, 'Félicitation', 'added');
+            this.recipeListSelected.shopListId = res;
+            this.shopListDialog = false;
+            console.log(this.shopList);
+          } else {
+            this.showMessage(true, 'Error', 'recipes list not updated');
+          }
+        }
+      })
+    }
+
+    if (!haveRecipeListId) {
+      this.shopListService.createShopList(data).subscribe((res) => {
+        if (res) {
+          this.shopLists.unshift(res);
+          this.showMessage(false, 'Félicitation', 'added');
+          console.log(this.shopLists);
+          this.shopListDialog = false;
+        } else {
+          this.showMessage(true, 'Error', 'recipes list not updated');
+        }
+
+      })
+    }
+  }
+
+  updateCustomizeShopList(haveRecipeListId: boolean, data: any) {
+
   }
 
   /*** Display a message using the MessageService  ***/
