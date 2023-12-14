@@ -32,6 +32,17 @@ export class ShoppingListService {
     );
   }
 
+  updateShopList(id: string, data: any): Observable<ShoppingList | undefined> {
+    const httpOptions = {
+      headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+    };
+
+    return this.http.put(`${API}/${id}`, data, httpOptions).pipe(
+      tap((result) => this.log(result)),
+      catchError((error => this.catchError(error, undefined)))
+    )
+  }
+
   createShopList(data: ShoppingListBody): Observable<ShoppingList | undefined> {
     const httpOptions = {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -41,6 +52,16 @@ export class ShoppingListService {
       tap((result) => this.log(result)),
       catchError((error => this.catchError(error, undefined)))
     )
+  }
+
+  deleteShopListById(id: string): Observable<ShoppingList | any> {
+    return this.http.delete<ShoppingList>(`${API}/${id}`).pipe(
+      tap((res) => this.log(res)), // res = null if delete ok
+      catchError((error) => {
+        console.error('Error deleting shop list:', error);
+        return of({ id, error });
+      })
+    );
   }
 
   private log(response: any) {

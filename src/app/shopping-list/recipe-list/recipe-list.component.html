@@ -1,1 +1,195 @@
-<div>Hello from recipe list page</div>
+<div class="card">
+  <div class="w-full flex justify-content-end">
+    <button
+      pButton
+      pRipple
+      type="button"
+      [label]="'Nouvelle list de recettes'"
+      class="p-button-outlined p-button-primary mr-6 mt-3"
+      (click)="confirmGoToRecipes()"
+    ></button>
+  </div>
+  <h3>Listes de recettes</h3>
+  <div *ngFor="let item of recipeLists">
+    <div class="w-full flex justify-content-between">
+      <p class="w-8 cursor-pointer my-0" (click)="handleSelectRecipeList(item)">
+        {{ item.name }}
+      </p>
+      <p class="w-3 my-0">{{ item.createdDate | date : "dd/MM/yyyy" }}</p>
+      <div>
+        <i
+          class="pi pi-times"
+          style="color: rgb(255, 5, 5); cursor: pointer"
+          (click)="confirmDelete(item)"
+        ></i>
+      </div>
+    </div>
+
+    <div
+      *ngIf="
+        recipeListSelected &&
+        recipeListSelected._id === item._id &&
+        shopListSelected
+      "
+      class="relative"
+    >
+      <div class="flex w-full justify-content-end">
+        <button
+          pButton
+          pRipple
+          type="button"
+          [label]="'Fermer'"
+          class="p-button-outlined p-button-primary mr-6 mt-3 relative right-0"
+          (click)="handleClose()"
+        ></button>
+      </div>
+
+      <p-tabView>
+        <!-- RECETTES CHOISIS -->
+        <p-tabPanel header="Recettes choisis" *ngIf="recipeListSelected">
+          <h3 class="uppercase">Recettes choisis</h3>
+          <div
+            *ngFor="let item of recipeListSelected.recipeIds"
+            class="w-full flex flex-column"
+          >
+            <div class="w-full flex justify-content-between align-items-center">
+              <p
+                class="w-7 m-0 cursor-pointer"
+                (click)="goToRecipeDetailPage(item.recipeId._id)"
+              >
+                {{ item.recipeId.name }}
+            </p>
+              <p class="w-1 m-0">{{ item.quantity }}</p>
+              <p class="w-1 m-0"></p>
+            </div>
+            <p-divider class="w-full m-0" type="dashed"></p-divider>
+          </div>
+        </p-tabPanel>
+
+        <!-- LISTE COURSES -->
+        <p-tabPanel header="List des courses" *ngIf="shopListSelected">
+          <!-- PAS DANS STOCK -->
+          <div class="w-full flex justify-content-end">
+            <button
+              pButton
+              pRipple
+              type="button"
+              [label]="
+                recipeListSelected.shopListId
+                  ? 'Modifier la liste personnalisée'
+                  : 'Rajouter nouveaux produits'
+              "
+              class="p-button-outlined p-button-primary mr-6 mt-3 relative right-0"
+              (click)="handleAddCustomizeShopListToRecipeList()"
+            ></button>
+          </div>
+
+          <h3
+            *ngIf="shopListSelected.shopList.notExistInStock"
+            class="uppercase"
+          >
+            Pas dans stock
+          </h3>
+          <div
+            *ngFor="let item of shopListSelected.shopList.notExistInStock"
+            class="w-full flex flex-column"
+          >
+            <div class="w-full flex justify-content-between align-items-center">
+              <p class="w-7 m-0">{{ item.alim_nom_fr }}</p>
+              <p class="w-1 m-0">{{ item.quantity }}</p>
+              <p class="w-1 m-0">{{ item.unit }}</p>
+            </div>
+            <p-divider class="w-full m-0" type="dashed"></p-divider>
+          </div>
+
+          <!-- A RAJOUTER -->
+          <h3
+            *ngIf="shopListSelected.shopList.existInStockAndNeedAdd.length"
+            class="uppercase"
+          >
+            A rajouter
+          </h3>
+          <div
+            *ngFor="
+              let item of shopListSelected.shopList.existInStockAndNeedAdd
+            "
+            class="w-full flex flex-column"
+          >
+            <div class="w-full flex justify-content-between align-items-center">
+              <p class="w-7 m-0">{{ item.alim_nom_fr }}</p>
+              <p class="w-1 m-0">{{ item.quantity }}</p>
+              <p class="w-1 m-0">{{ item.unit }}</p>
+            </div>
+            <p-divider class="w-full m-0" type="dashed"></p-divider>
+          </div>
+
+          <!-- LISTE PERSONALISE -->
+          <h3 *ngIf="recipeListSelected.shopListId" class="uppercase">
+            Liste personnalisée
+          </h3>
+          <div *ngIf="recipeListSelected.shopListId">
+            <div
+              *ngFor="
+                let item of recipeListSelected.shopListId.shopListCustomize
+              "
+              class="w-full flex flex-column"
+            >
+              <div
+                class="w-full flex justify-content-between align-items-center"
+              >
+                <p class="w-7 m-0">{{ item.alim_nom_fr }}</p>
+                <p class="w-1 m-0">{{ item.quantity }}</p>
+                <p class="w-1 m-0">{{ item.unit }}</p>
+              </div>
+              <p-divider class="w-full m-0" type="dashed"></p-divider>
+            </div>
+          </div>
+        </p-tabPanel>
+
+        <!-- EN STOCK -->
+
+        <p-tabPanel header="Produits en stock" *ngIf="productsInStock">
+          <h3 class="uppercase">Produits en stock</h3>
+          <div
+            *ngFor="let item of productsInStock"
+            class="w-full flex flex-column"
+          >
+            <div class="w-full flex justify-content-between align-items-center">
+              <p class="w-7 m-0">{{ item.productBrut.alim_nom_fr }}</p>
+              <p class="w-1 m-0">{{ item.quantity }}</p>
+              <p class="w-1 m-0">{{ item.unit }}</p>
+            </div>
+            <p-divider class="w-full m-0" type="dashed"></p-divider>
+          </div>
+        </p-tabPanel>
+      </p-tabView>
+    </div>
+
+    <p-divider align="center">
+      <span class="p-tag bg-blue-100">🎯🎯🎯</span>
+    </p-divider>
+  </div>
+</div>
+
+<div
+  class="card w-full flex justify-content-center align-items-center translate-y-100"
+>
+  <p-progressSpinner *ngIf="!recipeLists" />
+</div>
+
+<p-confirmDialog
+  [style]="{ width: '450px' }"
+  [acceptLabel]="'Oui'"
+  acceptButtonStyleClass="border-primary text-primary surface-card"
+  [rejectLabel]="'Non'"
+  rejectButtonStyleClass="border-red-600 text-red-600 surface-card"
+/>
+
+<app-shopping-list-modal
+  [shopListDialog]="shopListDialog"
+  [shopList]="shopList"
+  [editMode]="editMode"
+  [haveRecipesList]="recipeListSelected"
+  (shopListEvent)="shopListEvent($event)"
+  (shopListDialogEvent)="isShopListDialogOpen($event)"
+/>

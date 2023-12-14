@@ -31,7 +31,20 @@ export class MenuComponent implements OnInit {
             {
                 label: 'Liste des courses',
                 icon: 'pi pi-fw pi-shopping-cart',
-                routerLink: '/shopping-list'
+                // routerLink: '/shopping-list',
+                items: [
+                    {
+                        label: 'Liste de recettes',
+                        icon: 'pi pi-fw pi-tags',
+                        routerLink: '/shopping-list/recipe-list',
+                    },
+                    {
+                        label: 'Liste des courses personnalisé',
+                        icon: 'pi pi-fw pi-shopping-bag',
+                        routerLink: '/shopping-list/customize-shop-list',
+                    }
+
+                ]
             },
             {
                 label: 'Recettes',

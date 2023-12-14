@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, effect } from '@angular/core';
+import { asapScheduler } from 'rxjs';
+
 import { ConfirmationService, MessageService } from 'primeng/api';
 
 import { ShoppingListService } from '../services/shopping-list.service';
@@ -38,29 +40,14 @@ export class ShoppingListComponent implements OnInit {
     private productService: ProductService,
     private router: Router,
     private messageService: MessageService,
-    private confirmationService: ConfirmationService
-  ) { }
+    private confirmationService: ConfirmationService,
+  ) {}
 
   ngOnInit(): void {
     this.shopListService.getAllShopLists().subscribe(res => this.shopLists = res);
     this.productService.getProducts().subscribe(res => this.productsInStock = res);
-    this.recipeListService.getRecipeLists().subscribe(res => { this.recipeLists = res, console.log(res); });
+    this.recipeListService.getRecipeLists().subscribe(res => { this.recipeLists = res });
   }
-
-
-  // handleSelectShopList(shopList: ShoppingList) {
-  //   let recipes: any = [];
-  //   console.log(shopList);
-
-  //   shopList.recipeListId?.recipeIds.map((el: any) => {
-  //     this.recipeService.getRecipeById(el.recipeId).subscribe(res => recipes.push({ ...res, quantity: el.quantity }));
-  //   })
-
-  //   this.shopListSelected = {
-  //     ...shopList,
-  //     recipes: recipes
-  //   };
-  // }
 
   handleSelectRecipeList(recipeList: RecipeList | any) {
     if (this.recipeListSelected && (this.recipeListSelected._id === recipeList._id)) {
@@ -78,27 +65,27 @@ export class ShoppingListComponent implements OnInit {
   }
 
   // Delete
-  deleteRecipeList(recipeList: any) {
-    this.recipeListService.deleteRecipeListById(recipeList._id).subscribe(res => {
-      if (!res) {
-        this.recipeLists = this.recipeLists.filter((el: any) => el._id !== recipeList._id);
-        this.showMessage(false, 'Félicitation !', `${recipeList.name} est suprimée`);
-      } else {
-        this.showMessage(true, 'Erreur !', `Une erreur survenue lors de la suppression de ${recipeList.name}`);
-      }
-    })
-  }
+  // deleteRecipeList(recipeList: any) {
+  //   this.recipeListService.deleteRecipeListById(recipeList._id).subscribe(res => {
+  //     if (!res) {
+  //       this.recipeLists = this.recipeLists.filter((el: any) => el._id !== recipeList._id);
+  //       this.showMessage(false, 'Félicitation !', `${recipeList.name} est suprimée`);
+  //     } else {
+  //       this.showMessage(true, 'Erreur !', `Une erreur survenue lors de la suppression de ${recipeList.name}`);
+  //     }
+  //   })
+  // }
 
-  confirmDelete(recipeList: any) {
-    this.confirmationService.confirm({
-      message: 'Êtes-vous sûr de vouloir supprimer cette liste ?',
-      header: 'Confirmation',
-      icon: 'pi pi-exclamation-triangle',
-      accept: () => {
-        this.deleteRecipeList(recipeList);
-      }
-    });
-  }
+  // confirmDelete(recipeList: any) {
+  //   this.confirmationService.confirm({
+  //     message: 'Êtes-vous sûr de vouloir supprimer cette liste ?',
+  //     header: 'Confirmation',
+  //     icon: 'pi pi-exclamation-triangle',
+  //     accept: () => {
+  //       this.deleteRecipeList(recipeList);
+  //     }
+  //   });
+  // }
 
   goToRecipes() {
     this.router.navigateByUrl('/recipes');
@@ -117,9 +104,10 @@ export class ShoppingListComponent implements OnInit {
   }
 
   handleAddCustomizeShopListToRecipeList() {
+    console.log(this.recipeListSelected.shopListId);
     this.shopListDialog = true;
     this.editMode = false;
-    this.shopList = this.recipeListSelected.shopListCustomize || { ...new ShoppingList, name: this.recipeListSelected.name };
+    this.shopList = this.recipeListSelected.shopListId || { ...new ShoppingList, name: this.recipeListSelected.name };
   }
 
   shopListEvent(event: any): void {
@@ -138,7 +126,13 @@ export class ShoppingListComponent implements OnInit {
       )),
       createdDate: new Date()
     }
-    this.createCustomizeShopList(this.recipeListSelected?._id ? true : false, transformData);
+    if (this.recipeListSelected) {
+
+    } else {
+
+    }
+    this.updateCustomizeShopList(this.recipeListSelected?._id ? true : false, transformData);
+    // this.createCustomizeShopList(this.recipeListSelected?._id ? true : false, transformData);
   }
 
   isShopListDialogOpen(event: any) {
@@ -194,7 +188,39 @@ export class ShoppingListComponent implements OnInit {
   }
 
   updateCustomizeShopList(haveRecipeListId: boolean, data: any) {
+    // updateShopList
+    if (haveRecipeListId) {
+      console.log(this.recipeListSelected.shopListId);
+      this.shopListService
+        .updateShopList(this.recipeListSelected.shopListId._id, data)
+        .subscribe((res) => {
+          if (res) {
+            const foundRecipeList = this.recipeLists.findIndex((el: RecipeList) => el._id === this.recipeListSelected._id);
+            if (foundRecipeList !== -1) {
+              this.recipeLists[foundRecipeList].shopListId = res;
+              this.showMessage(false, 'Félicitation', 'La liste est modifiée');
+              this.recipeListSelected.shopListId = res;
+              this.shopListDialog = false;
+            } else {
+              this.showMessage(true, 'Error', 'recipes list not updated');
+            }
+          }
+        })
+    }
 
+    if (!haveRecipeListId) {
+      this.shopListService.updateShopList(this.recipeListSelected.shopListId._id, data).subscribe((res) => {
+        if (res) {
+          this.shopLists.unshift(res);
+          this.showMessage(false, 'Félicitation', 'La liste est modifiée');
+          console.log(this.shopLists);
+          this.shopListDialog = false;
+        } else {
+          this.showMessage(true, 'Error', 'recipes list not updated');
+        }
+
+      })
+    }
   }
 
   /*** Display a message using the MessageService  ***/

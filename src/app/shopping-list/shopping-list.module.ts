@@ -5,8 +5,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 
 import { ShoppingListComponent } from './shopping-list.component';
-import { RecipeListComponent } from './recipe-list/recipe-list.component';
 import { ShoppingListModalComponent } from './shopping-list-modal/shopping-list-modal.component';
+import { RecipeListComponent } from './recipe-list/recipe-list.component';
+import { CustomizeShopListComponent } from './customize-shop-list/customize-shop-list.component';
 
 
 import { TabViewModule } from 'primeng/tabview';
@@ -24,15 +25,31 @@ import { AutoCompleteModule } from 'primeng/autocomplete';
 
 
 const shoppingListRoutes: Routes = [
-  { path: 'shopping-list/recipes', component: RecipeListComponent },
-  { path: 'shopping-list', component: ShoppingListComponent },
+
+  {
+    path: 'shopping-list', component: ShoppingListComponent,
+    children: [
+      {
+        path: 'recipe-list',  // child route path
+        title: '',
+        component: RecipeListComponent,
+      },
+      {
+        path: 'customize-shop-list',
+        title: 'child b',
+        component: CustomizeShopListComponent,
+      },
+    ],
+  },
+
 ];
 
 @NgModule({
   declarations: [
     ShoppingListComponent,
     RecipeListComponent,
-    ShoppingListModalComponent
+    ShoppingListModalComponent,
+    CustomizeShopListComponent
   ],
   imports: [
     CommonModule,
