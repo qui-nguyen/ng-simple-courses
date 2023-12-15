@@ -126,7 +126,7 @@ export class RecipeListModalComponent implements OnInit {
   /*** Show the shop list => review shop list (not saved) ***/
   showShopList(): void {
     this.shopListDialog = true;
-    this.shopListService.getShopList(this.newSelectedRecipes).subscribe(res => this.shopListData = res);
+    this.shopListService.getShopListByRecipeList(this.newSelectedRecipes).subscribe(res => this.shopListData = res);
   }
 
   /*** Return to the recipe list view from the shop list view ***/

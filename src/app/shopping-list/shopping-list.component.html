@@ -1,49 +1,5 @@
 <div class="card">
   <p-toast></p-toast>
-  <!-- <div class="w-full flex justify-content-end">
-    <button
-      pButton
-      pRipple
-      type="button"
-      [label]="'Nouvelle list de recettes'"
-      class="p-button-outlined p-button-primary mr-6 mt-3"
-      (click)="goToRecipes()"
-    ></button>
-    <button
-      pButton
-      pRipple
-      type="button"
-      [label]="'Nouvelle list des courses personnalisée'"
-      class="p-button-outlined p-button-primary mr-6 mt-3"
-      (click)="handleCreateCustomizeShopList()"
-    ></button>
-  </div> -->
-  
-</div>
-
-<div
-  class="card w-full flex justify-content-center align-items-center translate-y-100"
->
-  <p-progressSpinner *ngIf="!recipeLists" />
 </div>
 
 <router-outlet></router-outlet>
-
-
-<!-- 
-<p-confirmDialog
-  [style]="{ width: '450px' }"
-  [acceptLabel]="'Oui'"
-  acceptButtonStyleClass="border-primary text-primary surface-card"
-  [rejectLabel]="'Non'"
-  rejectButtonStyleClass="border-red-600 text-red-600 surface-card"
-/> -->
-
-<app-shopping-list-modal
-  [shopListDialog]="shopListDialog"
-  [shopList]="shopList"
-  [editMode]="editMode"
-  [haveRecipesList]="recipeListSelected"
-  (shopListEvent)="shopListEvent($event)"
-  (shopListDialogEvent)="isShopListDialogOpen($event)"
-/>

@@ -1,13 +1,10 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormArray, FormControl } from '@angular/forms';
 
-import { ConfirmationService, MessageService } from 'primeng/api';
 import { AutoCompleteCompleteEvent } from 'primeng/autocomplete';
 import { Subject, debounceTime, distinctUntilChanged, switchMap } from 'rxjs';
 import { ProductBrutService } from 'src/app/services/product-brut.service';
-import { RecipeListService } from 'src/app/services/recipe-list.service';
-import { ShoppingListService } from 'src/app/services/shopping-list.service';
-import { IngredientRecipe, IngredientShopList, ProductBrut, ShoppingList } from 'src/app/type';
+import {IngredientShopList, ProductBrut, ShoppingList } from 'src/app/type';
 
 @Component({
   selector: 'app-shopping-list-modal',
@@ -30,12 +27,8 @@ export class ShoppingListModalComponent implements OnInit {
   searchTerms = new Subject<string>();
 
   constructor(
-    private shopListService: ShoppingListService,
-    private recipeListService: RecipeListService,
     private productBrutService: ProductBrutService,
     private formBuilder: FormBuilder,
-    private confirmationService: ConfirmationService,
-    private messageService: MessageService,
     private cdr: ChangeDetectorRef
   ) { }
 
@@ -103,7 +96,6 @@ export class ShoppingListModalComponent implements OnInit {
   }
 
   saveShopList() {
-    console.log(this._shopListFormGroup?.value);
     this.shopListEvent.emit(this._shopListFormGroup?.value);
   }
 }

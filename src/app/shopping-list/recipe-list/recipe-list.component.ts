@@ -57,7 +57,7 @@ export class RecipeListComponent implements OnInit {
 
     this.recipeListSelected = recipeList;
     const RecipeIdExtendedQtyArray = recipeList.recipeIds.map((el: any) => ({ ...el.recipeId, quantity: el.quantity }));
-    this.shopListService.getShopList(RecipeIdExtendedQtyArray).subscribe(res => this.shopListSelected = res);
+    this.shopListService.getShopListByRecipeList(RecipeIdExtendedQtyArray).subscribe(res => this.shopListSelected = res);
   }
 
   handleClose() { // accordion close
@@ -80,7 +80,7 @@ export class RecipeListComponent implements OnInit {
 
   confirmDelete(recipeList: any) {
     const message = recipeList.shopListId
-        ? `La liste des courses personnalisée sera supprimmée avec ${recipeList.name}. Êtes-vous sûr de vouloir supprimer cette liste ?`
+      ? `La liste des courses personnalisée sera supprimmée avec ${recipeList.name}. Êtes-vous sûr de vouloir supprimer cette liste ?`
       : 'Êtes-vous sûr de vouloir supprimer cette liste ?';
 
     this.confirmationService.confirm({
@@ -121,7 +121,6 @@ export class RecipeListComponent implements OnInit {
   }
 
   handleAddCustomizeShopListToRecipeList() {
-    console.log(this.recipeListSelected.shopListId);
     this.shopListDialog = true;
     this.editMode = false;
     this.shopList = this.recipeListSelected.shopListId || { ...new ShoppingList, name: this.recipeListSelected.name };
@@ -157,7 +156,15 @@ export class RecipeListComponent implements OnInit {
 
   /*** Shop List Actions ***/
   createCustomizeShopList(data: any) {
-    this.shopListService.createShopList(data).pipe(
+    this.shopListService.checkShopListName(data.name).pipe(
+      switchMap(res => {
+        if (res === false) { // response = false
+          return this.shopListService.createShopList(data);
+        } else {
+          this.showMessage(true, 'Erreur', "Nom existe, veuillez vérifier les noms des listes de recettes et des listes personnalisées !");
+          return of(null)
+        };
+      }),
       switchMap(res => {
         if (res) {
           this.showMessage(false, 'Félicitation', 'Shop liste personnalisé rajouté');
@@ -165,7 +172,7 @@ export class RecipeListComponent implements OnInit {
             this.recipeListSelected._id, { ...this.recipeListSelected, shopListId: res._id }
           )
         } else {
-          this.showMessage(true, 'Error', "Shop liste personnalisé n'est pas enregistrée");
+          this.showMessage(true, 'Erreur', "Shop liste personnalisé n'est pas enregistrée");
           return of(null)
         };
       })
@@ -174,16 +181,14 @@ export class RecipeListComponent implements OnInit {
         const foundRecipeList = this.recipeLists.findIndex((el: RecipeList) => el._id === res._id);
         if (foundRecipeList !== -1) {
           this.recipeLists[foundRecipeList].shopListId = res;
-          this.showMessage(false, 'Félicitation', 'added');
+          this.showMessage(false, 'Félicitation', 'Nouvelle liste est crée !');
           this.recipeListSelected.shopListId = res;
           this.shopListDialog = false;
-          console.log(this.shopList);
         } else {
-          this.showMessage(true, 'Error', 'recipes list not updated');
+          this.showMessage(true, 'Erreur', "Liste personnalisée n'est pas modifiée");
         }
       }
-    })
-
+    });
   }
 
   updateCustomizeShopList(data: any) {

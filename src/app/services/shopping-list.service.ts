@@ -2,7 +2,9 @@ import { Injectable } from '@angular/core';
 import { Observable, catchError, of, tap } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
-import { RecipeExtendedQty, ShoppingList, ShoppingListBody } from '../type';
+import { Product, RecipeExtendedQty, ShoppingList, ShoppingListBody } from '../type';
+
+import * as _ from 'lodash';
 
 const API = `${environment.apiURL}shoplists`;
 
@@ -18,7 +20,33 @@ export class ShoppingListService {
       catchError((err) => this.catchError(err, [])))
   }
 
-  getShopList(recipes: RecipeExtendedQty[]): Observable<any> {
+  getShopList(shopList: ShoppingList, prodStock: Product[]) {
+    const totalIngredientsBrut = _.cloneDeep(shopList.shopListCustomize);
+
+    const notExistInStock = totalIngredientsBrut?.filter(total =>
+      !prodStock.some(stock => stock.productBrut._id === total.productBrutId)
+    ) || [];
+
+    const existInStockAndNeedAdd = totalIngredientsBrut?.filter(total =>
+      prodStock.some(stock => {
+
+        if (stock.productBrut._id === total.productBrutId) {
+          if (stock.unit === total.unit) {
+            // Modify the quantity and include the modified stock in the result
+            if (stock.quantity < total.quantity) {
+              total.quantity = total.quantity - stock.quantity;
+            } else return false;
+          }
+          return true;
+        }
+        return false; // Don't find
+      })
+    ) || [];
+
+    return { notExistInStock, existInStockAndNeedAdd }
+  }
+
+  getShopListByRecipeList(recipes: RecipeExtendedQty[]): Observable<any> {
 
     const httpOptions = {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -38,6 +66,13 @@ export class ShoppingListService {
     };
 
     return this.http.put(`${API}/${id}`, data, httpOptions).pipe(
+      tap((result) => this.log(result)),
+      catchError((error => this.catchError(error, undefined)))
+    )
+  }
+
+  checkShopListName(shopListName: string): Observable<any> {
+    return this.http.get(`${API}/shop-list-name-check?name=${shopListName}`).pipe(
       tap((result) => this.log(result)),
       catchError((error => this.catchError(error, undefined)))
     )
@@ -63,6 +98,7 @@ export class ShoppingListService {
       })
     );
   }
+
 
   private log(response: any) {
     // console.log(response);

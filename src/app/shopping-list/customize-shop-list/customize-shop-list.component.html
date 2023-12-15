@@ -4,8 +4,9 @@
       pButton
       pRipple
       type="button"
-      [label]="'Nouvelle list des courses personnalisée'"
+      [label]="'Ajouter'"
       class="p-button-outlined p-button-primary mr-6 mt-3"
+      icon="pi pi-plus"
       (click)="handleCreateCustomizeShopList()"
     ></button>
   </div>
@@ -48,35 +49,108 @@
       <p-tabView>
         <!-- LISTE COURSES -->
         <p-tabPanel header="List des courses" *ngIf="shopListSelected">
-          <div class="w-full flex justify-content-end">
+          <div class="w-full flex justify-content-end align-items-center gap-6 mb-6">
+            <p-toggleButton
+              [ngModel]="compareResult"
+              onLabel="Liste comparée"
+              offLabel="Comparer avec stock"
+              onIcon="pi pi-check"
+              [style]="{ width: 'auto' }"
+              (click)="
+                toogleCompareWithStock()
+              "
+            />
+            <p-toggleButton
+              [ngModel]="isSimplifyVersion"
+              [disabled]="compareResult ? false : true"
+              onLabel="Version simplifiée"
+              offLabel="Version simplifiée"
+              onIcon="pi pi-check"
+              [style]="{ width: 'auto' }"
+              (click)="toogleSimplifyVersion()"
+            />
             <button
               pButton
               pRipple
               type="button"
               icon="pi pi-pencil"
-              class="p-button-outlined p-button-primary mr-6 mt-3 relative right-0"
+              class="p-button-outlined p-button-primary ml-6 relative right-0"
               (click)="handleUpdateCustomizeShopList()"
             ></button>
           </div>
-          <!-- PAS DANS STOCK -->
-          <h3 *ngIf="shopListSelected.shopListCustomize" class="uppercase"></h3>
-          <div
-            *ngFor="let item of shopListSelected.shopListCustomize"
-            class="w-full flex flex-column"
-          >
-            <div class="w-full flex justify-content-between align-items-center">
-              <p class="w-7 m-0">{{ item.alim_nom_fr }}</p>
-              <p class="w-1 m-0">{{ item.quantity }}</p>
-              <p class="w-1 m-0">{{ item.unit }}</p>
+
+          <div *ngIf="!compareResult">
+            <h3
+              *ngIf="shopListSelected.shopListCustomize"
+              class="uppercase"
+            >Liste personnalisée</h3>
+            <div
+              *ngFor="let item of shopListSelected.shopListCustomize"
+              class="w-full flex flex-column"
+            >
+              <div
+                class="w-full flex justify-content-between align-items-center"
+              >
+                <p class="w-7 m-0">{{ item.alim_nom_fr }}</p>
+                <p class="w-1 m-0">{{ item.quantity }}</p>
+                <p class="w-1 m-0">{{ item.unit }}</p>
+              </div>
+              <p-divider class="w-full m-0" type="dashed"></p-divider>
             </div>
-            <p-divider class="w-full m-0" type="dashed"></p-divider>
+          </div>
+
+          <div *ngIf="compareResult">
+            <h3
+              *ngIf="compareResult.notExistInStock.length && !isSimplifyVersion"
+              class="uppercase"
+            >
+              Pas dans stock
+            </h3>
+            <div
+              *ngFor="let item of compareResult.notExistInStock"
+              class="w-full flex flex-column"
+            >
+              <div
+                class="w-full flex justify-content-between align-items-center"
+              >
+                <p class="w-7 m-0">{{ item.alim_nom_fr }}</p>
+                <p class="w-1 m-0">{{ item.quantity }}</p>
+                <p class="w-1 m-0">{{ item.unit }}</p>
+              </div>
+              <p-divider class="w-full m-0" type="dashed"></p-divider>
+            </div>
+
+            <h3
+              *ngIf="compareResult.existInStockAndNeedAdd.length && !isSimplifyVersion"
+              class="uppercase"
+            >
+              A rajouter
+            </h3>
+            <div
+              *ngFor="let item of compareResult.existInStockAndNeedAdd"
+              class="w-full flex flex-column"
+            >
+              <div
+                class="w-full flex justify-content-between align-items-center"
+              >
+                <p class="w-7 m-0">{{ item.alim_nom_fr }}</p>
+                <p class="w-1 m-0">{{ item.quantity }}</p>
+                <p class="w-1 m-0">{{ item.unit }}</p>
+              </div>
+              <p-divider class="w-full m-0" type="dashed"></p-divider>
+            </div>
+
+            <h3
+              *ngIf="!compareResult.existInStockAndNeedAdd.length && !compareResult.notExistInStock.length"
+              class="uppercase"
+            >
+              Vous avez tous les ingrédients !
+            </h3>
+
           </div>
         </p-tabPanel>
 
-        <!-- EN STOCK -->
-
         <p-tabPanel header="Produits en stock" *ngIf="productsInStock">
-          <h3 class="uppercase">Produits en stock</h3>
           <div
             *ngFor="let item of productsInStock"
             class="w-full flex flex-column"

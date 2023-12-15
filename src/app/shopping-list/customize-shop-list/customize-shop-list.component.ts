@@ -3,7 +3,10 @@ import { Router } from '@angular/router';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ProductService } from 'src/app/services/product.service';
 import { ShoppingListService } from 'src/app/services/shopping-list.service';
-import { IngredientRecipe, Product, RecipeList, ShoppingList } from 'src/app/type';
+import { IngredientRecipe, Product, RecipeList, ShoppingList, ShopList } from 'src/app/type';
+
+import * as _ from 'lodash';
+import { of, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-customize-shop-list',
@@ -20,6 +23,8 @@ export class CustomizeShopListComponent implements OnInit {
   editMode: boolean = false;
   shopListData: any = null;
 
+  compareResult: ShopList | undefined = undefined;
+  isSimplifyVersion: boolean = false;
 
   constructor(
     private shopListService: ShoppingListService,
@@ -67,6 +72,22 @@ export class CustomizeShopListComponent implements OnInit {
       return;
     }
     this.shopListSelected = shopList;
+    this.compareResult = undefined;
+    this.isSimplifyVersion = false;
+  }
+
+  toogleCompareWithStock() {
+    if (this.compareResult) {
+      this.compareResult = undefined;
+      this.isSimplifyVersion = false;
+      return;
+    }
+
+    this.compareResult = this.shopListService.getShopList(this.shopListSelected!, this.productsInStock);
+  }
+
+  toogleSimplifyVersion() {
+    this.isSimplifyVersion = !this.isSimplifyVersion;
   }
 
   /*** Shop List Modal Signal ***/
@@ -112,36 +133,68 @@ export class CustomizeShopListComponent implements OnInit {
 
   /*** Shop List Actions Trigger By Shop List Modal ***/
   createCustomizeShopList(data: any) {
-    this.shopListService.createShopList(data).subscribe((res) => {
+    this.shopListService.checkShopListName(data.name).pipe(
+      switchMap(res => {
+        if (res === false) { // response = false
+          return this.shopListService.createShopList(data);
+        } else {
+          this.showMessage(true, 'Erreur', `Nom ${data.name} existe, veuillez vérifier les noms des listes de recettes et des listes personnalisées !`);
+          return of(null)
+        };
+      })
+    ).subscribe((res) => {
       if (res) {
         this.shopLists.unshift(res);
-        this.showMessage(false, 'Félicitation', 'added');
-        console.log(this.shopLists);
+        this.showMessage(false, 'Félicitation', 'Nouvelle liste est crée !');
         this.shopListDialog = false;
       } else {
-        this.showMessage(true, 'Error', 'recipes list not updated');
+        this.showMessage(true, 'Error', "Veuillez sélectionner des ingrédients proposées !");
       }
     })
   }
 
   updateCustomizeShopList(data: any) {
-    this.shopListService.updateShopList(this.shopListSelected!._id, data).subscribe((res) => {
-      if (res) {
-        const foundShopList = this.shopLists.findIndex((el: ShoppingList) => el._id === this.shopListSelected?._id);
-        console.log(foundShopList);
-        if (foundShopList !== -1) {
-          console.log(res);
-          this.shopLists[foundShopList] = res;
-          this.shopListSelected = res;
-          this.showMessage(false, 'Félicitation', 'La liste est modifiée');
-          this.shopListDialog = false;
+    if (this.shopListSelected?.name !== data.name) {
+      this.shopListService.checkShopListName(data.name).pipe(
+        switchMap(res => {
+          if (res === false) { // response = false
+            return this.shopListService.updateShopList(this.shopListSelected!._id, data);
+          } else {
+            this.showMessage(true, 'Erreur', `Nom ${data.name} existe, veuillez vérifier les noms des listes de recettes et des listes personnalisées !`);
+            return of(null)
+          };
+        })
+      ).subscribe((res) => {
+        if (res) {
+          const foundShopList = this.shopLists.findIndex((el: ShoppingList) => el._id === this.shopListSelected?._id);
+          if (foundShopList !== -1) {
+            this.shopLists[foundShopList] = res;
+            this.shopListSelected = res;
+            this.showMessage(false, 'Félicitation', 'La liste est modifiée');
+            this.shopListDialog = false;
+          }
         }
-      }
 
-      if (!res) {
-        this.showMessage(true, 'Error', 'Shop list not updated');
-      }
-    })
+        if (!res) {
+          this.showMessage(true, 'Error', 'Shop list not updated');
+        }
+      })
+    } else {
+      this.shopListService.updateShopList(this.shopListSelected!._id, data).subscribe((res) => {
+        if (res) {
+          const foundShopList = this.shopLists.findIndex((el: ShoppingList) => el._id === this.shopListSelected?._id);
+          if (foundShopList !== -1) {
+            this.shopLists[foundShopList] = res;
+            this.shopListSelected = res;
+            this.showMessage(false, 'Félicitation', 'La liste est modifiée');
+            this.shopListDialog = false;
+          }
+        }
+        if (!res) {
+          this.showMessage(true, 'Error', 'Shop list not updated');
+        }
+      })
+    }
   }
 
   /*** Display a message using the MessageService  ***/

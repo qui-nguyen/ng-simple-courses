@@ -22,6 +22,7 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { InputTextModule } from 'primeng/inputtext';
 import { AutoCompleteModule } from 'primeng/autocomplete';
+import { ToggleButtonModule } from 'primeng/togglebutton';
 
 
 const shoppingListRoutes: Routes = [
@@ -30,13 +31,13 @@ const shoppingListRoutes: Routes = [
     path: 'shopping-list', component: ShoppingListComponent,
     children: [
       {
-        path: 'recipe-list',  // child route path
-        title: '',
+        path: 'recipe-list',
+        title: 'Listes des recettes',
         component: RecipeListComponent,
       },
       {
         path: 'customize-shop-list',
-        title: 'child b',
+        title: 'Listes des courses personnalisées',
         component: CustomizeShopListComponent,
       },
     ],
@@ -67,6 +68,7 @@ const shoppingListRoutes: Routes = [
     InputNumberModule,
     AutoCompleteModule,
     InputTextModule,
+    ToggleButtonModule,
     RouterModule.forChild(shoppingListRoutes)
   ]
 })

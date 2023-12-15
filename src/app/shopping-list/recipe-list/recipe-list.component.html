@@ -1,15 +1,5 @@
 <div class="card">
-  <div class="w-full flex justify-content-end">
-    <button
-      pButton
-      pRipple
-      type="button"
-      [label]="'Nouvelle list de recettes'"
-      class="p-button-outlined p-button-primary mr-6 mt-3"
-      (click)="confirmGoToRecipes()"
-    ></button>
-  </div>
-  <h3>Listes de recettes</h3>
+  <h3 class="mt-6">Listes de recettes</h3>
   <div *ngFor="let item of recipeLists">
     <div class="w-full flex justify-content-between">
       <p class="w-8 cursor-pointer my-0" (click)="handleSelectRecipeList(item)">
