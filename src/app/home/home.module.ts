@@ -6,7 +6,7 @@ import { HomeComponent } from './home.component';
 import { ChartModule } from 'primeng/chart';
 
 const homeRoutes: Routes = [
-  { path: '', component: HomeComponent }
+  { path: '', component: HomeComponent, title: "Page d'acceuil" }
 ];
 
 @NgModule({

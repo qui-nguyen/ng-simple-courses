@@ -31,8 +31,8 @@ import { RecipeListModalComponent } from './recipe-list-modal/recipe-list-modal.
 // import { WindowResizeDirective } from '../directive/window-resize.directive';
 
 const recipeRoutes: Routes = [
-  { path: 'recipes', component: RecipeComponent, pathMatch: 'full' },
-  { path: 'recipes/:id', component: RecipeDetailComponent, pathMatch: 'full' },
+  { path: 'recipes', component: RecipeComponent, pathMatch: 'full',  title: 'Mes recettes' },
+  { path: 'recipes/:id', component: RecipeDetailComponent, pathMatch: 'full', title: 'Ma recette' },
 ];
 
 @NgModule({

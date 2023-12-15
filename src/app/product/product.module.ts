@@ -26,7 +26,7 @@ import { ProductModalComponent } from './product-modal/product-modal.component';
 import { WindowResizeDirective } from '../directive/window-resize.directive';
 
 const productRoutes: Routes = [
-  { path: 'product', component: ProductComponent }
+  { path: 'product', component: ProductComponent, pathMatch: 'full', title: 'Mes produits en stock' }
 ];
 
 @NgModule({
