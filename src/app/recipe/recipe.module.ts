@@ -27,12 +27,25 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RecipeModalComponent } from './recipe-modal/recipe-modal.component';
 import { RecipeDetailComponent } from './recipe-detail/recipe-detail.component';
 import { RecipeListModalComponent } from './recipe-list-modal/recipe-list-modal.component';
+import { authGuard } from '../auth.guard';
 
 // import { WindowResizeDirective } from '../directive/window-resize.directive';
 
 const recipeRoutes: Routes = [
-  { path: 'recipes', component: RecipeComponent, pathMatch: 'full',  title: 'Mes recettes' },
-  { path: 'recipes/:id', component: RecipeDetailComponent, pathMatch: 'full', title: 'Ma recette' },
+  {
+    path: 'recipes',
+    component: RecipeComponent,
+    pathMatch: 'full',
+    title: 'Mes recettes',
+    canActivate: [authGuard()]
+  },
+  {
+    path: 'recipes/:id',
+    component: RecipeDetailComponent,
+    pathMatch: 'full',
+    title: 'Ma recette',
+    canActivate: [authGuard()]
+  },
 ];
 
 @NgModule({

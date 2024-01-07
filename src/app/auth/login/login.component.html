@@ -1,0 +1,26 @@
+<div class="card flex justify-content-center align-content-center mt-6">
+  <form
+    *ngIf="_loginFormGroup"
+    [formGroup]="_loginFormGroup"
+    class="bg-primary-gradient p-6 border-round-sm w-6 mt-6 flex flex-column flex-wrap justify-content-center align-content-center text-center"
+  >
+    <h1 class="m-0">Connexion</h1>
+    <h4 class="">{{ message }}</h4>
+    <span class="p-float-label mb-5">
+      <input pInputText type="email" formControlName="email" />
+      <label for="email">Email</label>
+    </span>
+    <span class="p-float-label mb-5">
+      <p-password formControlName="password" [feedback]="false"></p-password>
+      <label for="password">Password</label>
+    </span>
+
+    <button
+      pButton
+      pRipple
+      label="Se connecter"
+      class="p-button-outlined p-button-primary"
+      (click)="login()"
+    ></button>
+  </form>
+</div>

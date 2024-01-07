@@ -18,11 +18,12 @@ import { RecipeModule } from './recipe/recipe.module';
 import { ShoppingListModule } from './shopping-list/shopping-list.module';
 import { HomeModule } from './home/home.module';
 import { ThemeService } from './theme.service';
+import { LoginModule } from './auth/login/login.module';
 
 @NgModule({
   declarations: [
     AppComponent,
-    MenuComponent
+    MenuComponent,
   ],
   imports: [
     BrowserModule,
@@ -30,6 +31,7 @@ import { ThemeService } from './theme.service';
     ProductModule,
     RecipeModule,
     ShoppingListModule,
+    LoginModule,
     AppRoutingModule,
     HttpClientModule,
     BrowserAnimationsModule,

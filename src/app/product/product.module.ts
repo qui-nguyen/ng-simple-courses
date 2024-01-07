@@ -24,9 +24,15 @@ import { ProductComponent } from './product.component';
 import { CategoryBadgePipe } from '../pipe/category-badge.pipe';
 import { ProductModalComponent } from './product-modal/product-modal.component';
 import { WindowResizeDirective } from '../directive/window-resize.directive';
+import { authGuard } from '../auth.guard';
 
 const productRoutes: Routes = [
-  { path: 'product', component: ProductComponent, pathMatch: 'full', title: 'Mes produits en stock' }
+  {
+    path: 'product', component: ProductComponent,
+    pathMatch: 'full',
+    title: 'Mes produits en stock',
+    canActivate: [authGuard()]
+  }
 ];
 
 @NgModule({

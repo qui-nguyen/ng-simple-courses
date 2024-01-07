@@ -9,7 +9,6 @@ import { ShoppingListModalComponent } from './shopping-list-modal/shopping-list-
 import { RecipeListComponent } from './recipe-list/recipe-list.component';
 import { CustomizeShopListComponent } from './customize-shop-list/customize-shop-list.component';
 
-
 import { TabViewModule } from 'primeng/tabview';
 import { DividerModule } from 'primeng/divider';
 import { ButtonModule } from 'primeng/button';
@@ -23,10 +22,10 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { InputTextModule } from 'primeng/inputtext';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { ToggleButtonModule } from 'primeng/togglebutton';
+import { authGuard } from '../auth.guard';
 
 
 const shoppingListRoutes: Routes = [
-
   {
     path: 'shopping-list', component: ShoppingListComponent,
     children: [
@@ -41,8 +40,8 @@ const shoppingListRoutes: Routes = [
         component: CustomizeShopListComponent,
       },
     ],
+    canActivate: [authGuard()]
   },
-
 ];
 
 @NgModule({

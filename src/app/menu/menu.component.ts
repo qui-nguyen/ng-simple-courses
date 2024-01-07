@@ -3,6 +3,8 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
 import { MenuItem } from 'primeng/api';
 import { ThemeService } from '../theme.service';
+import { AuthService } from '../services/auth.service';
+import { StorageService } from '../services/storage.service';
 
 
 @Component({
@@ -18,7 +20,9 @@ export class MenuComponent implements OnInit {
 
     constructor(
         private router: Router,
-        private themeService: ThemeService
+        private themeService: ThemeService,
+        private authService: AuthService,
+        private storageService: StorageService,
     ) { }
 
     ngOnInit() {
@@ -31,7 +35,6 @@ export class MenuComponent implements OnInit {
             {
                 label: 'Liste des courses',
                 icon: 'pi pi-fw pi-shopping-cart',
-                // routerLink: '/shopping-list',
                 items: [
                     {
                         label: 'Liste de recettes',
@@ -54,6 +57,7 @@ export class MenuComponent implements OnInit {
             {
                 label: 'Profil',
                 icon: 'pi pi-fw pi-user',
+                visible: this.storageService.isLoggedIn(),
                 items: [
                     {
                         label: 'Paramètre',
@@ -61,7 +65,9 @@ export class MenuComponent implements OnInit {
                     },
                     {
                         label: 'Déconnexion',
-                        icon: 'pi pi-fw pi-times'
+                        icon: 'pi pi-fw pi-times',
+                        routerLink: '/login',
+                        command: () => this.logout()
                     }
 
                 ]
@@ -75,7 +81,11 @@ export class MenuComponent implements OnInit {
 
     switchDarkMode(darkModeState: boolean): void {
         this.isDarkMode = !darkModeState;
-        // const theme = this.isDarkMode ? 'soho-dark' : 'soho-light';
         this.themeService.switchTheme(!darkModeState);
+    }
+
+    logout() {
+        this.authService.logout();
+        window.location.reload();
     }
 }

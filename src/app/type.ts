@@ -240,3 +240,27 @@ export interface ShopListData {
     shopList: ShopList;
 }
 
+// User
+export interface Login {
+    token: string
+    user: User
+}
+
+export interface User {
+    _id: string
+    userName: string
+    firstName: string
+    lastName: string
+    gender: string
+    email: string
+    bio?: string
+    roles: Role[]
+    createdAt: string
+    updatedAt: string
+}
+
+export interface Role {
+    _id: string
+    title: string
+    description?: string
+}
